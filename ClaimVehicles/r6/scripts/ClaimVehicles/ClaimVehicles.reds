@@ -55,7 +55,7 @@ public class VehicleSummonWidgetGameController extends inkHUDGameController {
 
 public class ClaimedVehicleTracking {
   public let player: wref<PlayerPuppet>;
-  public let experimentalListON: Bool;
+  public let experimentalModeON: Bool;
 
   public let debugON: Bool;
   public let warningsON: Bool;  
@@ -69,6 +69,7 @@ public class ClaimedVehicleTracking {
   public let matchVehicle: PlayerVehicle; 
   public let matchVehicleModel: String; 
   public let matchVehicleString: String;  
+  public let matchVehiclePaintString: String;  
   public let matchVehicleUnlocked: Bool;
 
   public func init(player: wref<PlayerPuppet>) -> Void {
@@ -92,8 +93,8 @@ public class ClaimedVehicleTracking {
     // For developers only 
     this.debugON = true;
 
-    // For developers only 
-    this.experimentalListON = false;
+    // To add support for alternate models and paint jobs
+    this.experimentalModeON = false;
 
   }
 
@@ -104,6 +105,7 @@ public class ClaimedVehicleTracking {
 
     this.matchVehicleModel = "";
     this.matchVehicleString = "";
+    this.matchVehiclePaintString = "";
     this.matchVehicleUnlocked = false;
 
     // LogChannel(n"DEBUG", "N.C.L.A.I.M: Test: claimedVehicleModel: '"+claimedVehicleModel+"' - Target: 'Type-66 640 TX'  - StrCmp: '"+StrCmp(claimedVehicleModel, "Type-66 640 TX")+"'"  );
@@ -284,6 +286,11 @@ public class ClaimedVehicleTracking {
 
       // Mizutani - Shion
       case "shion mz1":
+        this.matchVehicleModel = "Shion MZ2";
+        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_player";
+        this.matchVehiclePaintString = "Vehicle.mizutani_shion__basic_targa_red";
+        break;
+
       case "shion mz2":
         this.matchVehicleModel = "Shion MZ2";
         this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_player";
@@ -555,6 +562,15 @@ public class ClaimedVehicleTracking {
         }
 
         if (StrCmp(this.matchVehicleString, "")!=0) {
+          if (this.experimentalModeON)  { 
+            if (this.warningsON) {     
+              LogChannel(n"DEBUG", ">>> Checking for alternate paint job: " + this.matchVehiclePaintString );   
+            }             
+            if (StrCmp(this.matchVehiclePaintString, "")!=0) {
+              this.matchVehicleString = this.matchVehiclePaintString;
+            }
+          }
+
           GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, true, false);
 
           GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, true);  
@@ -567,39 +583,6 @@ public class ClaimedVehicleTracking {
       }
 
     } 
-
-    // Checking custom database - NOT WORKING YET
-    /* Custom vehicle list - disabled for now    */
-
-    if (matchFound < 0) && (this.experimentalListON)  {  
-      
-      matchFound = this.isVehicleClaimed(claimedVehicle);
-
-      // Add vehicle if not found in player's claimed list
-      if (matchFound == 1) {
-        if (this.warningsON) {
-          LogChannel(n"DEBUG", "N.C.L.A.I.M: Vehicle already in Field Asset Forfeiture database  '"+claimedVehicleModel+"'.");
-        }
-        if (this.warningsON) {
-          this.player.SetWarningMessage("N.C.L.A.I.M: Vehicle already in Field Asset Forfeiture database '"+claimedVehicleModel+"'.");
-        }
-
-      } else {
-        if (this.debugON) {
-          LogChannel(n"DEBUG", "N.C.L.A.I.M: Vehicle not found. Adding '"+claimedVehicleModel+"' to Vehicle already in Field Asset Forfeiture database." );
-        }
-        if (this.warningsON) { 
-          this.player.SetWarningMessage("N.C.L.A.I.M: Vehicle not found. Adding '"+claimedVehicleModel+"' to Vehicle already in Field Asset Forfeiture database." );
-        }
-
-        let thisPlayerVehicle: PlayerVehicle;
-        thisPlayerVehicle.recordID = claimedVehicle.recordID; 
-        thisPlayerVehicle.vehicleType = claimedVehicle.vehicleType;
-        thisPlayerVehicle.isUnlocked = true;
-
-        ArrayPush(this.claimedVehiclesList, thisPlayerVehicle);   
-      }
-    }  
 
     if (this.warningsON) && (matchFound == 0) {     
       this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
@@ -655,27 +638,7 @@ public let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
       i += 1;
     };
 
-    // Add list of claimed vehicles
-    /* Custom vehicle list - Disabled for now */
-
-    if (owner.m_claimedVehicleTracking.experimentalListON) {
-
-      claimedVehiclesList = owner.m_claimedVehicleTracking.claimedVehiclesList;
-      i = 0;
-      while i < ArraySize(claimedVehiclesList) {
-        vehicle = claimedVehiclesList[i];
-        if (TDBID.IsValid(vehicle.recordID)){
-          vehicleRecord = TweakDBInterface.GetVehicleRecord(vehicle.recordID);
-          currentData = new VehicleListItemData();
-          currentData.m_displayName = vehicleRecord.DisplayName();
-          currentData.m_icon = vehicleRecord.Icon();
-          currentData.m_data = vehicle;
-          ArrayPush(result, currentData);
-        };
-        i += 1;
-      };
       
-    }
 
     return result;
   }

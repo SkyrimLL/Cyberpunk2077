@@ -164,6 +164,8 @@ public final func EvaluateEncumbrance() -> Void {
     if !IsDefined(this.m_limitedEncumbranceTracking) {
       this.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
       this.m_limitedEncumbranceTracking.init(this);
+    } else {
+      this.m_limitedEncumbranceTracking.reset();
     };
 
     if this.m_curInventoryWeight < 0.00 {
@@ -250,6 +252,8 @@ public final func EvaluateEncumbrance() -> Void {
     if !IsDefined(this.m_player.m_limitedEncumbranceTracking) {
       this.m_player.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
       this.m_player.m_limitedEncumbranceTracking.init(this.m_player);
+    } else {
+      this.m_player.m_limitedEncumbranceTracking.reset();
     };    
 
     this.m_subMenuCtrl.HandlePlayerMaxWeightUpdated(carryCapacity, this.m_player.m_curInventoryWeight);
