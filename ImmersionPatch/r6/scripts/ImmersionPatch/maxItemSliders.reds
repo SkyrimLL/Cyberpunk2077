@@ -12,6 +12,7 @@
       this.m_quantityChangedEvent = new PickerChoosenQuantityChangedEvent();
     };
     // Patch - Set slider to max items by default if dropping or selling
+    LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
     switch this.m_actionType {
       case QuantityPickerActionType.Drop:
       case QuantityPickerActionType.TransferToStorage:
@@ -24,6 +25,11 @@
         this.m_choosenQuantity = 1;
         break;
     }
+
+    if (StrCmp(ToString(this.m_actionType), "Sell")==0) { // Action = Selling?
+      this.m_choosenQuantity = this.m_maxValue; 
+    }
+    // End Patch
 
     this.m_sliderController.Setup(1.00, Cast<Float>(this.m_maxValue), Cast<Float>(this.m_choosenQuantity), 1.00);
     itemRecord = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(InventoryItemData.GetID(this.m_gameData)));
