@@ -11,3 +11,9 @@ Mods for Cyberpunk 2077.
 
 - Keep the vehicles you steal (sort of)
 - [Nexus link](https://www.nexusmods.com/cyberpunk2077/mods/5036/)
+
+**Immersion Patch**
+
+- A few Quality of Life and experimental scripts
+- Adaptive sliders -  [Nexus link](https://www.nexusmods.com/cyberpunk2077/mods/5036/)
+- Vehicle Fast Travel - Nexus link
