@@ -12,8 +12,37 @@ For redscript mod developers
 @addField(DataTerm) public let iVehicleMenuOpen: Bool = false;
 
 :: New class
+public class VehicleFastTravelTracking
 public class TriggeredVehicleManagerEvent extends Event
 */
+
+public class VehicleFastTravelTracking {
+  public let player: wref<PlayerPuppet>;
+  public let enableCallVehicleKeyON: Bool;
+
+  public let debugON: Bool;
+  public let warningsON: Bool;   
+
+  public func init(player: wref<PlayerPuppet>) -> Void {
+    this.player = player;
+    this.reset();
+  }
+
+  private func reset() -> Void {
+    // ------------------ Edit these values to configure the mod
+    // Toggle warnings when exceeding your carry capacity without powerlevel bonus
+    this.warningsON = true;
+
+    // ------------------ End of Mod Options
+
+    // For developers only 
+    this.debugON = true;
+
+    // To enable call vehicle key for emergencies
+    this.enableCallVehicleKeyON = false;
+
+  }
+}
 
 public class TriggeredVehicleManagerEvent extends Event {
 
@@ -81,6 +110,33 @@ public let iVehicleMenuOpen: Bool = false;
   }
  
 // public native class PopupsManager extends inkGameController {
+@addField(PopupsManager)
+public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
+
+@replaceMethod(PopupsManager)
+
+  protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool {
+    this.m_blackboard = this.GetUIBlackboard();
+    this.m_bbDefinition = GetAllBlackboardDefs().UIGameData;
+    this.m_journalManager = GameInstance.GetJournalManager(playerPuppet.GetGame());
+    this.m_uiSystemBB = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
+    this.m_uiSystemBBDef = GetAllBlackboardDefs().UI_System;
+    this.m_uiSystemId = this.m_uiSystemBB.RegisterListenerBool(this.m_uiSystemBBDef.IsInMenu, this, n"OnMenuUpdate");
+    this.m_isShownBbId = this.m_blackboard.RegisterDelayedListenerBool(this.m_bbDefinition.Popup_IsShown, this, n"OnUpdateVisibility");
+    this.m_dataBbId = this.m_blackboard.RegisterDelayedListenerVariant(this.m_bbDefinition.Popup_Data, this, n"OnUpdateData");
+    this.m_photomodeActiveId = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().PhotoMode).RegisterListenerBool(GetAllBlackboardDefs().PhotoMode.IsActive, this, n"OnPhotomodeUpdate");
+
+    // set up tracker if it doesn't exist
+    if !IsDefined(this.m_vehicleFasTravelTracking) {
+      let m_player: wref<PlayerPuppet>;
+      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+      this.m_vehicleFasTravelTracking.init(m_player);
+    } else {
+      // Reset if already exists (in case of changed default values)
+      this.m_vehicleFasTravelTracking.reset();
+    };
+  }
+
 @replaceMethod(PopupsManager)
 
   protected cb func OnQuickSlotButtonHoldStartEvent(evt: ref<QuickSlotButtonHoldStartEvent>) -> Bool {
@@ -89,7 +145,15 @@ public let iVehicleMenuOpen: Bool = false;
       /* Patch - disable popup menu on action key hold 
         this.SpawnVehiclesManagerPopup();
         */
-        this.SpawnVehicleRadioPopup();
+        let m_player: wref<PlayerPuppet> = this.m_vehicleFasTravelTracking.player;
+        let isVictorHUDInstalled: Int32 = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"tutorial_ripperdoc_buy");
+
+        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableCallVehicleKeyON) {
+            this.SpawnVehiclesManagerPopup();
+        } else {
+            this.SpawnVehicleRadioPopup();
+        }
+        
         break;
       case EDPadSlot.VehicleInsideWheel:
         this.SpawnVehicleRadioPopup();
@@ -119,6 +183,9 @@ public let iVehicleMenuOpen: Bool = false;
   */
 
 // public class PlayerPuppet extends ScriptedPuppet {
+@addField(PlayerPuppet)
+public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
+
 @replaceMethod(PlayerPuppet)
 
   protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
@@ -131,13 +198,29 @@ public let iVehicleMenuOpen: Bool = false;
         this.ActivateIconicCyberware();
       };
     } else {
-      /* Patch - Disable call vehicle key -> replaced by fast travel action 
+      /* Patch - Disable call vehicle key -> replaced by fast travel action     */
       if Equals(ListenerAction.GetName(action), n"CallVehicle") {
-        if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
-          this.ProcessCallVehicleAction(ListenerAction.GetType(action));
+        // set up tracker if it doesn't exist
+        if !IsDefined(this.m_vehicleFasTravelTracking) {
+          this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+          this.m_vehicleFasTravelTracking.init(this);
+        } else {
+          // Reset if already exists (in case of changed default values)
+          this.m_vehicleFasTravelTracking.reset();
         };
-      };
-      */
+
+        let isVictorHUDInstalled: Int32 = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"tutorial_ripperdoc_buy");
+        // LogChannel(n"DEBUG", ">>> isVictorHUDInstalled: " + isVictorHUDInstalled  );
+
+        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableCallVehicleKeyON) {
+          if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
+            this.ProcessCallVehicleAction(ListenerAction.GetType(action));
+          };
+        };        
+      }
+
+
+  
     };
   }
 
