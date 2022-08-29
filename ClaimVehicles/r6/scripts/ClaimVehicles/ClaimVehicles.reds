@@ -1,57 +1,22 @@
 // ClaimVehicles - by DeepBlueFrog 
 
-// Reference code
- 
-// :: From vehicleSystem
-// public final native func EnablePlayerVehicle(vehicle: String, enable: Bool, opt despawnIfDisabling: Bool) -> Bool;
-// public final native func EnableAllPlayerVehicles() -> Void;
-// public final native func GetPlayerVehicles(out vehicles: array<PlayerVehicle>) -> Void;
-// public final native func GetPlayerUnlockedVehicles(out unlockedVehicles: array<PlayerVehicle>) -> Void;
-
-
-// let thisPlayerVehicle: PlayerVehicle;
-// thisPlayerVehicle.recordID = recordID; 
-// thisPlayerVehicle.vehicleType = vehType;
-// thisPlayerVehicle.isUnlocked = true;
-
-// currentData = new VehicleListItemData();
-// currentData.m_displayName = vehicleRecord.DisplayName();
-// currentData.m_icon = vehicleRecord.Icon();
-// currentData.m_data = thisPlayerVehicle;
-
-// ArrayPush(vehiclesList, thisPlayerVehicle);   
-
-
-
 /*
-public class VehicleSummonWidgetGameController extends inkHUDGameController {
+For redscript mod developers
 
-  protected cb func OnVehiclePurchased(value: Variant) -> Bool {
-    let vehicleRecordID: TweakDBID;
-    this.m_rootWidget.SetVisible(true);
-    inkWidgetRef.SetVisible(this.m_subText, true);
-    this.PlayAnim(n"OnVehiclePurchase", n"OnTimeOut");
-    vehicleRecordID = FromVariant<TweakDBID>(value);
-    this.m_vehicleRecord = TweakDBInterface.GetVehicleRecord(vehicleRecordID);
-    inkTextRef.SetLocalizedTextScript(this.m_vehicleNameLabel, this.m_vehicleRecord.DisplayName());
-    inkTextRef.SetText(this.m_subText, "LocKey#43690");
-    this.SetVehicleIcon(this.m_vehicleRecord.Type().Type());
-    this.SetVehicleIconManufactorIcon(this.m_vehicleRecord.Manufacturer().EnumName());
-  }
+:: Replaced methods
+@replaceMethod(VehiclesManagerDataHelper) public final static func GetVehicles(player: ref<GameObject>) -> array<ref<IScriptable>> 
+@replaceMethod(DriveEvents) public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void 
+@replaceMethod(VehicleComponent) private final func StealVehicle(opt slotID: MountingSlotId) -> Void 
 
-  */
-  /*
-  public importonly struct PlayerVehicle {
+:: Added methods which can cause incompatibilities
+@addMethod(PlayerPuppet) private final func InitClaimVehicleSystem() -> Void 
 
-    public native let name: CName;
+:: Added fields
+@addField(PlayerPuppet) public let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
 
-    public native let recordID: TweakDBID;
-
-    public native let vehicleType: gamedataVehicleType;
-
-    public native let isUnlocked: Bool;
-  }
-  */
+:: New class
+public class ClaimedVehicleTracking
+*/
 
 public class ClaimedVehicleTracking {
   public let player: wref<PlayerPuppet>;
@@ -118,9 +83,14 @@ public class ClaimedVehicleTracking {
     switch StrLower(claimedVehicleModel) {
 
   /*
-     TO DO 
-     - map all variants - https://cyberpunk.fandom.com/wiki/Cyberpunk_2077_Vehicles
-     - Test all cars
+    TO DO 
+    - map all variants - https://cyberpunk.fandom.com/wiki/Cyberpunk_2077_Vehicles
+    - Test all cars
+
+    - Unsupported
+    - Zeya U420  (Short dump truck)
+    - Behemoth  (literally just called that, its from militech and used primarily by arasaka)
+ 
   */
 
   // Cars - Economy
@@ -235,8 +205,9 @@ public class ClaimedVehicleTracking {
         this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
         break;
 
+      case "quartz \"barghest\"":  
+      case "quartz \"sidewinder\"":  
       case "quartz \"bandit\"": // Mission Reward (spared Nash)
-      case "quartz \"sidewinder\"": // Mission Reward (spared Nash)
         this.matchVehicleModel = "Quartz \"Bandit\"";
         this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
         break;
@@ -306,25 +277,27 @@ public class ClaimedVehicleTracking {
   // Motorcycles
       /* 
         [reserved] Apollo Nomad - Vehicle.v_sportbike3_brennan_apollo_nomad_player - Life During Wartime reward 
-        [reserved] Apollo Scorpion - no string? - Life During Wartime reward   
+        [reserved] Apollo Scorpion - Life During Wartime reward   
         [reserved] Nazaré Jackie - Vehicle.v_sportbike2_arch_jackie_player  - Heroes reward 
         [reserved] Nazaré Jackie - Vehicle.v_sportbike2_arch_jackie_tuned_player  
       */
       // [DEBUG] N.C.L.A.I.M: Reading Vehicle ID from Model: 'ARCH NAZARÉ'
       // Arch - Nazare
+      case "nazarÉ \"racer\"":  
       case "arch nazarÉ":  
         this.matchVehicleModel = "ARCH NAZARÉ";
         this.matchVehicleString = "Vehicle.v_sportbike2_arch_player";
         break;
 
       // Arch - Nazare
-      case "nazaré \"itsumade\"": // The Highwayman reward 
+      case "nazarÉ \"itsumade\"": // The Highwayman reward 
         this.matchVehicleModel = "Nazaré \"Itsumade\"";
         this.matchVehicleString = "Vehicle.v_sportbike2_arch_tyger_player";
         break;
 
       // Brennan - Apollo
       case "apollo":
+      case "apollo \"cicada\"":
         this.matchVehicleModel = "Apollo";
         this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo_player";
         break;
@@ -336,6 +309,7 @@ public class ClaimedVehicleTracking {
         break;
 
       // Yaiba - Kusanagi
+      case "kusanagi \"misfit\"":
       case "kusanagi ct-3x":
         this.matchVehicleModel = "Kusanagi CT-3X";
         this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_player";
@@ -815,3 +789,56 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
     playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(vehicle);
   }
+
+// Reference code
+ 
+// :: From vehicleSystem
+// public final native func EnablePlayerVehicle(vehicle: String, enable: Bool, opt despawnIfDisabling: Bool) -> Bool;
+// public final native func EnableAllPlayerVehicles() -> Void;
+// public final native func GetPlayerVehicles(out vehicles: array<PlayerVehicle>) -> Void;
+// public final native func GetPlayerUnlockedVehicles(out unlockedVehicles: array<PlayerVehicle>) -> Void;
+
+
+// let thisPlayerVehicle: PlayerVehicle;
+// thisPlayerVehicle.recordID = recordID; 
+// thisPlayerVehicle.vehicleType = vehType;
+// thisPlayerVehicle.isUnlocked = true;
+
+// currentData = new VehicleListItemData();
+// currentData.m_displayName = vehicleRecord.DisplayName();
+// currentData.m_icon = vehicleRecord.Icon();
+// currentData.m_data = thisPlayerVehicle;
+
+// ArrayPush(vehiclesList, thisPlayerVehicle);   
+
+
+
+/*
+public class VehicleSummonWidgetGameController extends inkHUDGameController {
+
+  protected cb func OnVehiclePurchased(value: Variant) -> Bool {
+    let vehicleRecordID: TweakDBID;
+    this.m_rootWidget.SetVisible(true);
+    inkWidgetRef.SetVisible(this.m_subText, true);
+    this.PlayAnim(n"OnVehiclePurchase", n"OnTimeOut");
+    vehicleRecordID = FromVariant<TweakDBID>(value);
+    this.m_vehicleRecord = TweakDBInterface.GetVehicleRecord(vehicleRecordID);
+    inkTextRef.SetLocalizedTextScript(this.m_vehicleNameLabel, this.m_vehicleRecord.DisplayName());
+    inkTextRef.SetText(this.m_subText, "LocKey#43690");
+    this.SetVehicleIcon(this.m_vehicleRecord.Type().Type());
+    this.SetVehicleIconManufactorIcon(this.m_vehicleRecord.Manufacturer().EnumName());
+  }
+
+  */
+  /*
+  public importonly struct PlayerVehicle {
+
+    public native let name: CName;
+
+    public native let recordID: TweakDBID;
+
+    public native let vehicleType: gamedataVehicleType;
+
+    public native let isUnlocked: Bool;
+  }
+  */

@@ -1,5 +1,27 @@
-/// LimitedEncumbrance - by DeepBlueFrog
-/// Inspired by modNoEncumbrance - by rfuzzo
+// LimitedEncumbrance - by DeepBlueFrog
+// Inspired by modNoEncumbrance - by rfuzzo
+
+/*
+For redscript mod developers
+
+:: Replaced methods
+@replaceMethod(PlayerPuppet) public final func EvaluateEncumbrance() -> Void 
+@replaceMethod(MenuHubGameController) protected cb func OnPlayerMaxWeightUpdated(value: Int32) -> Bool 
+@replaceMethod(MenuHubGameController) public final func HandlePlayerWeightUpdated(opt dropQueueWeight: Float) -> Void 
+@replaceMethod(SubMenuPanelLogicController) public final func HandlePlayerWeightUpdated(value: Float, maxWeight: Int32) -> Void 
+@replaceMethod(SubMenuPanelLogicController) public final func HandlePlayerMaxWeightUpdated(value: Int32, curInventoryWeight: Float) -> Void 
+@replaceMethod(VendorHubMenuGameController) protected cb func OnPlayerWeightUpdated(value: Float) -> Bool 
+
+:: Added methods which can cause incompatibilities
+
+:: Added fields
+@addField(GameObject) public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
+@addField(PlayerPuppet) public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
+@addField(SubMenuPanelLogicController) public let m_player: wref<PlayerPuppet>;
+
+:: New class
+public class LimitedEncumbranceTracking
+*/
 
 public class LimitedEncumbranceTracking {
   public let player: wref<PlayerPuppet>;

@@ -1,3 +1,12 @@
+/*
+For redscript mod developers
+
+:: Replaced methods
+@replaceMethod(ItemQuantityPickerController) private final func SetData() -> Void 
+
+*/
+
+
 // public class ItemQuantityPickerController extends inkGameController {
 @replaceMethod(ItemQuantityPickerController)
 
@@ -13,23 +22,20 @@
     };
     // Patch - Set slider to max items by default if dropping or selling
     LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
-    switch this.m_actionType {
-      case QuantityPickerActionType.Drop:
-      case QuantityPickerActionType.TransferToStorage:
+
+    switch ToString(this.m_actionType) {
+      // case "Buy":
+      case "Sell":
+      case "Drop":
+      case "Disassembly":
+      case "TransferToStorage":
         this.m_choosenQuantity = this.m_maxValue;
-        break;
-      case  QuantityPickerActionType.TransferToPlayer:
-        this.m_choosenQuantity = 1;
         break;
       default:
         this.m_choosenQuantity = 1;
         break;
-    }
-
-    if (StrCmp(ToString(this.m_actionType), "Sell")==0) { // Action = Selling?
-      this.m_choosenQuantity = this.m_maxValue; 
-    }
-    // End Patch
+    };
+    // End of patch
 
     this.m_sliderController.Setup(1.00, Cast<Float>(this.m_maxValue), Cast<Float>(this.m_choosenQuantity), 1.00);
     itemRecord = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(InventoryItemData.GetID(this.m_gameData)));
