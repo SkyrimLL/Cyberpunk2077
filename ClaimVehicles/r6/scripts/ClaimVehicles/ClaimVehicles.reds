@@ -309,12 +309,12 @@ public class ClaimedVehicleTracking {
         break;
 
       // Yaiba - Kusanagi
-      case "kusanagi \"misfit\"":
       case "kusanagi ct-3x":
         this.matchVehicleModel = "Kusanagi CT-3X";
         this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_player";
         break;
 
+      case "kusanagi \"misfit\"":
       case "kusanagi \"misuchi\"":
         // Looks like some Tyger customized bikes in game still have the "Kusanagi CT-3X" model name instead of "Kusanagi "Misuchi", which means they will trigger the default model instead of the Tyger customized one
         this.matchVehicleModel = "Kusanagi \"Misuchi\"";

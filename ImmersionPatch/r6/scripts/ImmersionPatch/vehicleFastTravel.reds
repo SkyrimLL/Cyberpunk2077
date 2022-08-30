@@ -11,14 +11,15 @@ For redscript mod developers
 :: Added fields
 @addField(DataTerm) public let iVehicleMenuOpen: Bool = false;
 
-:: New class
+:: New classes
 public class VehicleFastTravelTracking
 public class TriggeredVehicleManagerEvent extends Event
 */
 
 public class VehicleFastTravelTracking {
   public let player: wref<PlayerPuppet>;
-  public let enableCallVehicleKeyON: Bool;
+  public let enableVehicleRecallKeyON: Bool;
+  public let enableVehicleMenuKeyON: Bool;
 
   public let debugON: Bool;
   public let warningsON: Bool;   
@@ -39,7 +40,10 @@ public class VehicleFastTravelTracking {
     this.debugON = true;
 
     // To enable call vehicle key for emergencies
-    this.enableCallVehicleKeyON = false;
+    this.enableVehicleRecallKeyON = false;
+
+    // To enable vehicle menu key for emergencies (Hold)
+    this.enableVehicleMenuKeyON = false;
 
   }
 }
@@ -148,7 +152,7 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
         let m_player: wref<PlayerPuppet> = this.m_vehicleFasTravelTracking.player;
         let isVictorHUDInstalled: Int32 = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"tutorial_ripperdoc_buy");
 
-        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableCallVehicleKeyON) {
+        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) {
             this.SpawnVehiclesManagerPopup();
         } else {
             this.SpawnVehicleRadioPopup();
@@ -213,7 +217,7 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
         let isVictorHUDInstalled: Int32 = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"tutorial_ripperdoc_buy");
         // LogChannel(n"DEBUG", ">>> isVictorHUDInstalled: " + isVictorHUDInstalled  );
 
-        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableCallVehicleKeyON) {
+        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
           if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
             this.ProcessCallVehicleAction(ListenerAction.GetType(action));
           };
