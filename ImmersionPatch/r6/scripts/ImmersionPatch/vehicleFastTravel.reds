@@ -61,7 +61,7 @@ public let iVehicleMenuOpen: Bool = false;
     this.UpdateFastTravelPointRecord();
     GameInstance.GetUISystem(this.GetGame()).RequestFastTravelMenu();
     */
-    LogChannel(n"DEBUG", ">>> Requesting fast travel menu - popup manager for vehicles should go here."  );
+    // LogChannel(n"DEBUG", ">>> Requesting fast travel menu - popup manager for vehicles should go here."  );
 
     let player: ref<GameObject> = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerMainGameObject();
 
@@ -152,6 +152,7 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
             this.SpawnVehiclesManagerPopup();
         } else {
             this.SpawnVehicleRadioPopup();
+            // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
         }
         
         break;
