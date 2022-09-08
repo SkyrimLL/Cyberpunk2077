@@ -14,7 +14,7 @@ For redscript mod developers
 :: Added fields
 @addField(PlayerPuppet) public let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
 
-:: New class
+:: New classes
 public class ClaimedVehicleTracking
 */
 
