@@ -19,7 +19,7 @@ For redscript mod developers
 @addField(PlayerPuppet) public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
 @addField(SubMenuPanelLogicController) public let m_player: wref<PlayerPuppet>;
 
-:: New class
+:: New classes
 public class LimitedEncumbranceTracking
 */
 
