@@ -11,15 +11,18 @@ For redscript mod developers
 @replaceMethod(ItemQuantityPickerController)
 
   private final func SetData() -> Void {
+    let itemData: ref<gameItemData>;
     let itemRecord: ref<Item_Record>;
     this.m_maxValue = this.m_data.maxValue;
     this.m_gameData = this.m_data.gameItemData;
+    this.m_inventoryItem = this.m_data.inventoryItem;
     this.m_actionType = this.m_data.actionType;
     this.m_isBuyback = this.m_data.isBuyback;
     this.m_sendQuantityChangedEvent = this.m_data.sendQuantityChangedEvent;
     if this.m_sendQuantityChangedEvent {
       this.m_quantityChangedEvent = new PickerChoosenQuantityChangedEvent();
     };
+    
     // Patch - Set slider to max items by default if dropping or selling
     LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
 
@@ -38,16 +41,22 @@ For redscript mod developers
     // End of patch
 
     this.m_sliderController.Setup(1.00, Cast<Float>(this.m_maxValue), Cast<Float>(this.m_choosenQuantity), 1.00);
-    itemRecord = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(InventoryItemData.GetID(this.m_gameData)));
-    inkTextRef.SetText(this.m_itemNameText, UIItemsHelper.GetItemName(itemRecord, InventoryItemData.GetGameItemData(this.m_gameData)));
+    if IsDefined(this.m_inventoryItem) {
+      itemRecord = this.m_inventoryItem.GetItemRecord();
+      itemData = this.m_inventoryItem.GetItemData();
+    } else {
+      itemRecord = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(InventoryItemData.GetID(this.m_gameData)));
+      itemData = InventoryItemData.GetGameItemData(this.m_gameData);
+    };
+    inkTextRef.SetText(this.m_itemNameText, UIItemsHelper.GetItemName(itemRecord, itemData));
     inkTextRef.SetText(this.m_quantityTextMax, IntToString(this.m_maxValue));
     inkTextRef.SetText(this.m_quantityTextMin, "1");
     inkTextRef.SetText(this.m_quantityTextChoosen, IntToString(this.m_choosenQuantity));
     inkWidgetRef.SetVisible(this.m_priceText, IsDefined(this.m_data.vendor));
     if IsDefined(this.m_data.vendor) {
-      this.m_itemPrice = Equals(this.m_actionType, QuantityPickerActionType.Buy) ? MarketSystem.GetBuyPrice(this.m_data.vendor, InventoryItemData.GetGameItemData(this.m_gameData).GetID()) : RPGManager.CalculateSellPrice(this.m_data.vendor.GetGame(), this.m_data.vendor, InventoryItemData.GetGameItemData(this.m_gameData).GetID());
+      this.m_itemPrice = Equals(this.m_actionType, QuantityPickerActionType.Buy) ? MarketSystem.GetBuyPrice(this.m_data.vendor, itemData.GetID()) : RPGManager.CalculateSellPrice(this.m_data.vendor.GetGame(), this.m_data.vendor, itemData.GetID());
     };
-    this.m_itemWeight = InventoryItemData.GetGameItemData(this.m_gameData).GetStatValueByType(gamedataStatType.Weight);
+    this.m_itemWeight = itemData.GetStatValueByType(gamedataStatType.Weight);
     switch this.m_actionType {
       case QuantityPickerActionType.Drop:
         inkTextRef.SetText(this.m_buttonOkText, "UI-ScriptExports-Drop0");
@@ -67,12 +76,16 @@ For redscript mod developers
         break;
       default:
         inkTextRef.SetText(this.m_buttonOkText, "LocKey#22269");
+        inkWidgetRef.SetVisible(this.m_priceWrapper, true);
     };
-    inkWidgetRef.SetVisible(this.m_priceWrapper, true);
-    if !InventoryItemData.IsEmpty(this.m_gameData) {
-      inkWidgetRef.SetState(this.m_rairtyBar, InventoryItemData.GetQuality(this.m_gameData));
+    if IsDefined(this.m_inventoryItem) {
+      inkWidgetRef.SetState(this.m_rairtyBar, this.m_inventoryItem.GetQualityName());
     } else {
-      inkWidgetRef.SetState(this.m_rairtyBar, n"Common");
+      if !InventoryItemData.IsEmpty(this.m_gameData) {
+        inkWidgetRef.SetState(this.m_rairtyBar, InventoryItemData.GetQuality(this.m_gameData));
+      } else {
+        inkWidgetRef.SetState(this.m_rairtyBar, n"Common");
+      };
     };
     this.UpdatePriceText();
     this.UpdateWeight();
