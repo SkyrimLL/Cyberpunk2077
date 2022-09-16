@@ -209,23 +209,23 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
         if !IsDefined(this.m_vehicleFasTravelTracking) {
           this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
           this.m_vehicleFasTravelTracking.init(this);
+          LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking not found - initializing"  );
         } else {
           // Reset if already exists (in case of changed default values)
           this.m_vehicleFasTravelTracking.reset();
+          LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking found - resetting"  );
         };
 
         let isVictorHUDInstalled: Int32 = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"tutorial_ripperdoc_buy");
-        // LogChannel(n"DEBUG", ">>> isVictorHUDInstalled: " + isVictorHUDInstalled  );
+        LogChannel(n"DEBUG", ">>> isVictorHUDInstalled: " + isVictorHUDInstalled  );
 
-        if (isVictorHUDInstalled < 0) || (this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
+        if (isVictorHUDInstalled <= 0) || (this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
           if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
             this.ProcessCallVehicleAction(ListenerAction.GetType(action));
           };
         };        
       }
 
-
-  
     };
   }
 
