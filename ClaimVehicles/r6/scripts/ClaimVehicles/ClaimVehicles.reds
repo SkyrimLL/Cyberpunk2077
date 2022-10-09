@@ -492,20 +492,21 @@ public class ClaimedVehicleTracking {
 
       this.addClaimedVehicle(thisPlayerVehicle);
 
-      // Adding tweaks to current vehicle to help delay despawn
-      // ============ Simulate a delay from passengers in the vehicle??
-      let delayReactionEvt: ref<DelayReactionToMissingPassengersEvent>;
-      delayReactionEvt = new DelayReactionToMissingPassengersEvent(); 
-      GameInstance.GetDelaySystem(vehicle.GetGame()).DelayEvent(vehicle, delayReactionEvt, 20000.00);
-
-      vehicle.GetVehiclePS().SetIsPlayerVehicle(true);  // Not enough to prevent de-spawn
-      vehicle.GetVehiclePS().SetIsStolen(false);   
-      vehicle.m_abandoned = true;  // 'true' or false' is not enough to prevent de-spawn
+      this.tryPersistVehicle(vehicle);
 
     }        
+  }
 
+  public func tryPersistVehicle(vehicle: ref<VehicleObject>) -> Void {
+    // Adding tweaks to current vehicle to help delay despawn
+    // ============ Simulate a delay from passengers in the vehicle??
+    let delayReactionEvt: ref<DelayReactionToMissingPassengersEvent>;
+    delayReactionEvt = new DelayReactionToMissingPassengersEvent(); 
+    GameInstance.GetDelaySystem(vehicle.GetGame()).DelayEvent(vehicle, delayReactionEvt, 20000.00);
 
-
+    vehicle.GetVehiclePS().SetIsPlayerVehicle(true);  // Not enough to prevent de-spawn
+    vehicle.GetVehiclePS().SetIsStolen(false);   
+    vehicle.m_abandoned = true;  // 'true' or false' is not enough to prevent de-spawn
   }
 
   public func addClaimedVehicle(claimedVehicle: PlayerVehicle) -> Void {
@@ -718,6 +719,8 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
               }
 
             }
+
+            playerOwner.m_claimedVehicleTracking.tryPersistVehicle(vehicle);
         
         }
 

@@ -25,13 +25,16 @@ public class LimitedEncumbranceTracking
 
 public class LimitedEncumbranceTracking {
   public let player: wref<PlayerPuppet>;
+
+  public let config: ref<LimitedEncumbranceConfig>;
+
   public let debugON: Bool;
   public let warningsON: Bool;
   public let newEncumbranceDisplayON: Bool;
 
   public let carryCapacityBase: Float; 
   public let limitedCarryCapacity: Float;
-  public let playerPowerlevelMod: Float;
+  public let playerLevelMod: Float;
   public let playerPackMuleMod: Float;
   public let carryCapacityCapMod: Float;
   public let encumbranceEquipmentBonus: Float;
@@ -44,38 +47,56 @@ public class LimitedEncumbranceTracking {
   }
 
   private func reset() -> Void {
+
+    this.refreshConfig();
+
     // ------------------ Edit these values to configure the mod
 
-    // Toggle warnings when exceeding your carry capacity without powerlevel bonus
-    this.warningsON = true;
-
-    // Set to true to replace the default display of how much you are carrying, by a display of how much you CAN carry.
-    this.newEncumbranceDisplayON = true;
-
     // How much you can carry if you had only your backpack (no clothes)
-    this.carryCapacityBase = 25.0;
+    // this.carryCapacityBase = 25.0;
 
-    // Contribution of player powerlevel to the carry capacity bonus. By default, 1/10 of playerPowerlevel.
-    this.playerPowerlevelMod = 0.1;   
+    // Contribution of player level to the carry capacity bonus. 
+    // this.playerLevelMod = 0.5;   
 
     // Contribution of player Pack Mule perk to the base carry capacity. By default, (1.5 * base capacity, or 50% more). 
     // Simulates being able to function with larger/heavier backpacks
-    this.playerPackMuleMod = 1.5;   
+    // this.playerPackMuleMod = 1.5;   
 
     // Multiplier to the base Capacity to create a max value. By default, (2.0 * base capacity). Should be > 1.0.
-    this.carryCapacityCapMod = 2.0;   
+    // this.carryCapacityCapMod = 2.0;   
 
     // Add a bonus to compensate for the weight of items already equiped. By default (0.8 * player equipment weight). Should be < 1.0 to account for pockets, or > 1.0 to add to encumbrance.  
-    this.encumbranceEquipmentBonus = 0.8; 
+    // this.encumbranceEquipmentBonus = 0.8; 
+
+    // Toggle warnings when exceeding your carry capacity without powerlevel bonus
+    // this.warningsON = true;
+
+    // Set to true to replace the default display of how much you are carrying, by a display of how much you CAN carry.
+    // this.newEncumbranceDisplayON = true;
 
     // ------------------ End of Mod Options
 
     // For developers only 
     this.debugON = false;
-    // Internal variable - gets recalculated all the time - no needto edit
+    // Internal variable - gets recalculated all the time - no need to edit
     this.limitedCarryCapacity = 30.0;
 
   }
+
+  public func refreshConfig() -> Void {
+    this.config = new LimitedEncumbranceConfig();
+    this.invalidateCurrentState();
+  }
+
+  public func invalidateCurrentState() -> Void {
+    this.carryCapacityBase = Cast<Float>(this.config.carryCapacityBase);
+    this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0; 
+    this.playerPackMuleMod = Cast<Float>(this.config.playerPackMuleMod) / 100.0;  
+    this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod) / 100.0;  
+    this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
+    this.warningsON = this.config.warningsON;
+    this.newEncumbranceDisplayON = this.config.newEncumbranceDisplayON;    
+  }  
 
   public func getPlayerSlotItemWeight(object: ref<GameObject>, slot: TweakDBID) -> Float {
     let slotName: String = TweakDBInterface.GetAttachmentSlotRecord(slot).EntitySlotName();
@@ -120,15 +141,11 @@ public class LimitedEncumbranceTracking {
   }
 
   public func calculateLimitedEncumbrance() -> Void {
-    let playerPowerLevel = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast(this.player.GetEntityID()), gamedataStatType.PowerLevel);
+    let playerLevel: Float = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.Level);
     let playerInventoryWeight = this.calculatePlayerInventoryWeights();
     let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
     let playerPackMuleLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_01_Perk_2);
     let playerPackMuleMod = 1.0;
-
-    if (this.debugON) {
-      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - Pack Mule level: '"+playerPackMuleLevel+"'"  );
-    }
 
     // Reduce base carry capacity
     // 1 Rifle + 2 Handguns + 1 long blade + 1 knife + coat + outer torso + inner torso + pants + shoes + headgear = about 30 weight
@@ -138,7 +155,7 @@ public class LimitedEncumbranceTracking {
       playerPackMuleMod = this.playerPackMuleMod;
     }
 
-    this.limitedCarryCapacity = (this.carryCapacityBase * playerPackMuleMod) + (playerPowerLevel * this.playerPowerlevelMod);
+    this.limitedCarryCapacity = (this.carryCapacityBase * playerPackMuleMod) + (playerLevel * this.playerLevelMod);
 
 
     if (playerInventoryWeight > 0.0) {
@@ -148,6 +165,18 @@ public class LimitedEncumbranceTracking {
     if (this.limitedCarryCapacity >= (this.carryCapacityBase * this.carryCapacityCapMod ) ) {
       this.limitedCarryCapacity = (this.carryCapacityBase * this.carryCapacityCapMod );
     } 
+
+    // if (this.debugON) {
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - Pack Mule level: '"+playerPackMuleLevel+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerLevel: '"+playerLevel+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerInventoryWeight: '"+playerInventoryWeight+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
+    // }
+
   }
 
   public func printEncumbrance(playerWeight: Float) -> String {
@@ -180,7 +209,6 @@ public final func EvaluateEncumbrance() -> Void {
     let exhaustedEffectID: TweakDBID;
     let overweightEffectID: TweakDBID;
     let ses: ref<StatusEffectSystem>;
-    let playerPowerLevel = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast(this.GetEntityID()), gamedataStatType.PowerLevel);
 
     // set up tracker if it doesn't exist
     if !IsDefined(this.m_limitedEncumbranceTracking) {
@@ -211,8 +239,6 @@ public final func EvaluateEncumbrance() -> Void {
       this.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
 
       carryCapacity = this.m_limitedEncumbranceTracking.limitedCarryCapacity;
-
-      if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage("Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "playerPowerLevel:" + FloatToString(playerPowerLevel) ); }
 
       if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
         // this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
@@ -266,7 +292,6 @@ public final func EvaluateEncumbrance() -> Void {
   protected cb func OnPlayerMaxWeightUpdated(value: Int32) -> Bool {
     let gameInstance: GameInstance = this.m_player.GetGame();
     let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-    let playerPowerLevel = GameInstance.GetStatsSystem(this.m_player.GetGame()).GetStatValue(Cast(this.m_player.GetEntityID()), gamedataStatType.PowerLevel);
 
     this.m_subMenuCtrl.m_player = this.m_player;
 
@@ -289,7 +314,6 @@ public final func EvaluateEncumbrance() -> Void {
   public final func HandlePlayerWeightUpdated(opt dropQueueWeight: Float) -> Void {
     let gameInstance: GameInstance = this.m_player.GetGame();
     let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-    let playerPowerLevel = GameInstance.GetStatsSystem(this.m_player.GetGame()).GetStatValue(Cast(this.m_player.GetEntityID()), gamedataStatType.PowerLevel);
 
     this.m_subMenuCtrl.m_player = this.m_player;
 
@@ -310,29 +334,21 @@ public let m_player: wref<PlayerPuppet>;
 @replaceMethod(SubMenuPanelLogicController)
 
   public final func HandlePlayerWeightUpdated(value: Float, maxWeight: Int32) -> Void {
-    // let player: wref<GameObject> = GetPlayer(this.GetGameInstance());
-    //let playerPowerLevel = GameInstance.GetStatsSystem(player.GetGame()).GetStatValue(Cast(player.GetEntityID()), gamedataStatType.PowerLevel);
-    // let player: wref<GameObject> =  super.m_player; 
        
     this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
 
     inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(value));
-    // this.PlaySound(n"Item", n"OnBuy");
     GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
   }
 
 @replaceMethod(SubMenuPanelLogicController)
 
   public final func HandlePlayerMaxWeightUpdated(value: Int32, curInventoryWeight: Float) -> Void {
-    // let player: wref<GameObject> = GetPlayer(this.GetGameInstance());
-    // let playerPowerLevel = GameInstance.GetStatsSystem(player.GetGame()).GetStatValue(Cast(player.GetEntityID()), gamedataStatType.PowerLevel); 
-       
+ 
     this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
 
-    // inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(curInventoryWeight)) + "/" + ToString(value));
     inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(curInventoryWeight));
-    // this.PlaySound(n"Item", n"OnBuy");
-    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_perk_buy");
+
   }
 
 
@@ -341,16 +357,9 @@ public let m_player: wref<PlayerPuppet>;
 
   protected cb func OnPlayerWeightUpdated(value: Float) -> Bool {
     let gameInstance: GameInstance = this.m_player.GetGame();
-    // let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-       
+
     this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
 
-    // inkTextRef.SetText(this.m_playerWeight, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
     inkTextRef.SetText(this.m_playerWeight, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
-
-
-    // this.PlaySound(n"Item", n"OnBuy");
-    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_perk_buy");
-
 
   }
