@@ -32,12 +32,15 @@ public class LimitedEncumbranceTracking {
   public let warningsON: Bool;
   public let newEncumbranceDisplayON: Bool;
 
-  public let carryCapacityBase: Float; 
   public let limitedCarryCapacity: Float;
+
+  public let carryCapacityBase: Float; 
+  public let carryCapacityBackpack: Float; 
   public let playerLevelMod: Float;
   public let playerPackMuleMod: Float;
-  public let carryCapacityCapMod: Float;
   public let encumbranceEquipmentBonus: Float;
+  public let carryCapacityCapMod: Float;
+
   public let lastInventoryWeight: Float; 
 
 
@@ -90,9 +93,10 @@ public class LimitedEncumbranceTracking {
 
   public func invalidateCurrentState() -> Void {
     this.carryCapacityBase = Cast<Float>(this.config.carryCapacityBase);
+    this.carryCapacityBackpack= Cast<Float>(this.config.carryCapacityBackpack);
     this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0; 
     this.playerPackMuleMod = Cast<Float>(this.config.playerPackMuleMod) / 100.0;  
-    this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod) / 100.0;  
+    this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod);  
     this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
     this.warningsON = this.config.warningsON;
     this.newEncumbranceDisplayON = this.config.newEncumbranceDisplayON;    
@@ -126,16 +130,51 @@ public class LimitedEncumbranceTracking {
   public exec func calculatePlayerInventoryWeights() -> Float {
     let i: Int32;
     let slots: array<wref<AttachmentSlot_Record>>; 
+    let slotName: String;
+    let equipmentSystem: ref<EquipmentSystem>;
+    let playerData: ref<EquipmentSystemPlayerData>;
     let equipmentWeight: Float;
+    let slotWeight: Float;
 
     equipmentWeight = 0.0;
+    slotWeight = 0.0;
 
     TweakDBInterface.GetCharacterRecord(this.player.GetRecordID()).AttachmentSlots(slots);
     i = 0;
     while i < ArraySize(slots) {
-      equipmentWeight += 0.2 + this.getPlayerSlotItemWeight(this.player, slots[i].GetID());
+      slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName();
+      slotWeight = this.getPlayerSlotItemWeight(this.player, slots[i].GetID());
+        
+      // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - slot name: " + slotName + " - weight: " + slotWeight);
+
+      if ( ( StrCmp(slotName, "Chest") == 0 ) || ( StrCmp(slotName, "Torso") == 0 ) || ( StrCmp(slotName, "Legs") == 0 ) || ( StrCmp(slotName, "Feet") == 0 ) || ( StrCmp(slotName, "Head") == 0 ) || ( StrCmp(slotName, "Eyes") == 0 ) || ( StrCmp(slotName, "Outfit") == 0 ) ) {
+        equipmentWeight += slotWeight;
+
+      }
       i += 1;
     };
+
+    equipmentSystem = EquipmentSystem.GetInstance(this.player);
+    playerData = equipmentSystem.GetPlayerData(this.player);
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Head, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Face, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.OuterChest, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.InnerChest, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Legs, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Feet, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Outfit, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, 0));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, 1));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, 2));
+    // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.QuickSlot, 0));
+
+    // if (ItemID.IsValid(playerData.GetItemInEquipSlot(gamedataEquipmentArea.OuterChest, 0))) { 
+    //   LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - Player is wearing outer torso item"  );
+    // } else {
+    //   LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - Player is NOT wearing outer torso item"  );      
+    // }
+
+    LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - equipmentWeight: " + equipmentWeight);
 
     return equipmentWeight;
   }
@@ -155,18 +194,18 @@ public class LimitedEncumbranceTracking {
       playerPackMuleMod = this.playerPackMuleMod;
     }
 
-    this.limitedCarryCapacity = (this.carryCapacityBase * playerPackMuleMod) + (playerLevel * this.playerLevelMod);
+    this.limitedCarryCapacity = this.carryCapacityBase + (this.carryCapacityBackpack * playerPackMuleMod) + (playerLevel * this.playerLevelMod);
 
 
     if (playerInventoryWeight > 0.0) {
       this.limitedCarryCapacity = this.limitedCarryCapacity + ( playerInventoryWeight * this.encumbranceEquipmentBonus );
     }
 
-    if (this.limitedCarryCapacity >= (this.carryCapacityBase * this.carryCapacityCapMod ) ) {
-      this.limitedCarryCapacity = (this.carryCapacityBase * this.carryCapacityCapMod );
+    if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
+      this.limitedCarryCapacity = this.carryCapacityCapMod;
     } 
 
-    // if (this.debugON) {
+    if (this.debugON) {
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - Pack Mule level: '"+playerPackMuleLevel+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerLevel: '"+playerLevel+"'"  );
@@ -175,7 +214,7 @@ public class LimitedEncumbranceTracking {
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
-    // }
+    }
 
   }
 
@@ -275,7 +314,7 @@ public final func EvaluateEncumbrance() -> Void {
       }
 
       // Why isn't this working to display the adjusted carry Capacity?
-      GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetInt(GetAllBlackboardDefs().UI_PlayerStats.weightMax, Cast<Int32>(carryCapacity), true);
+      // GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetInt(GetAllBlackboardDefs().UI_PlayerStats.weightMax, Cast<Int32>(carryCapacity), true);
 
       // This works to display new inventory weight
       GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.m_curInventoryWeight, true);
