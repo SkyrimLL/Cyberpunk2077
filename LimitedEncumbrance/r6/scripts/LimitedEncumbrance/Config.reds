@@ -34,21 +34,21 @@ public class LimitedEncumbranceConfig {
 
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Encumbrance System")
-  @runtimeProperty("ModSettings.displayName", "PackMuke Perk Modifier")
-  @runtimeProperty("ModSettings.description", "Contribution of the PackMule Perk to the carry capacity bonus (percentage applied to the backpack carry capacity).")
+  @runtimeProperty("ModSettings.displayName", "Perk Modifier")
+  @runtimeProperty("ModSettings.description", "Contribution of Perks to the carry capacity bonus (each perk add a percentage applied to the backpack carry capacity).")
   @runtimeProperty("ModSettings.step", "10")
-  @runtimeProperty("ModSettings.min", "100")
-  @runtimeProperty("ModSettings.max", "200")
-  let playerPackMuleMod: Int32 = 150;
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "100")
+  let playerPerkMod: Int32 = 25;
 
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Encumbrance System")
   @runtimeProperty("ModSettings.displayName", "Encumbrance Equipment Bonus")
-  @runtimeProperty("ModSettings.description", "Modifier applied to equipped items. 100 means worn items have no impact. More than 100 means worn items add pockets. Less than 100 means worn item limit movement.")
+  @runtimeProperty("ModSettings.description", "Modifier applied to equipped items. 100 means worn items have no impact. More than 100 means worn items improve movement. Less than 100 means worn items limit movement.")
   @runtimeProperty("ModSettings.step", "10")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "400")
-  let encumbranceEquipmentBonus: Int32 = 200;
+  let encumbranceEquipmentBonus: Int32 = 50;
 
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Encumbrance System")
@@ -57,7 +57,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.step", "10")
   @runtimeProperty("ModSettings.min", "10")
   @runtimeProperty("ModSettings.max", "200")
-  let carryCapacityCapMod: Int32 = 50;
+  let carryCapacityCapMod: Int32 = 100;
 
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Notifications")
@@ -70,6 +70,12 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.displayName", "Use New Encumbrance Display")
   @runtimeProperty("ModSettings.description", "Changes the carry capacity display with how much you can carry.")
   let newEncumbranceDisplayON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "LEncumbrance")
+  @runtimeProperty("ModSettings.category", "Testing only")
+  @runtimeProperty("ModSettings.displayName", "Display Test Messages")
+  @runtimeProperty("ModSettings.description", "Display Test Messages in the console and on screen")
+  let debugON: Bool = false;
 
 }
 

@@ -37,7 +37,7 @@ public class LimitedEncumbranceTracking {
   public let carryCapacityBase: Float; 
   public let carryCapacityBackpack: Float; 
   public let playerLevelMod: Float;
-  public let playerPackMuleMod: Float;
+  public let playerPerkMod: Float;
   public let encumbranceEquipmentBonus: Float;
   public let carryCapacityCapMod: Float;
 
@@ -63,7 +63,7 @@ public class LimitedEncumbranceTracking {
 
     // Contribution of player Pack Mule perk to the base carry capacity. By default, (1.5 * base capacity, or 50% more). 
     // Simulates being able to function with larger/heavier backpacks
-    // this.playerPackMuleMod = 1.5;   
+    // this.playerPerkMod = 1.5;   
 
     // Multiplier to the base Capacity to create a max value. By default, (2.0 * base capacity). Should be > 1.0.
     // this.carryCapacityCapMod = 2.0;   
@@ -74,13 +74,15 @@ public class LimitedEncumbranceTracking {
     // Toggle warnings when exceeding your carry capacity without powerlevel bonus
     // this.warningsON = true;
 
+    // For developers only 
+    // this.debugON = true;
+
     // Set to true to replace the default display of how much you are carrying, by a display of how much you CAN carry.
     // this.newEncumbranceDisplayON = true;
 
     // ------------------ End of Mod Options
 
-    // For developers only 
-    this.debugON = false;
+
     // Internal variable - gets recalculated all the time - no need to edit
     this.limitedCarryCapacity = 30.0;
 
@@ -95,10 +97,11 @@ public class LimitedEncumbranceTracking {
     this.carryCapacityBase = Cast<Float>(this.config.carryCapacityBase);
     this.carryCapacityBackpack= Cast<Float>(this.config.carryCapacityBackpack);
     this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0; 
-    this.playerPackMuleMod = Cast<Float>(this.config.playerPackMuleMod) / 100.0;  
+    this.playerPerkMod = Cast<Float>(this.config.playerPerkMod) / 100.0;  
     this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod);  
     this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
     this.warningsON = this.config.warningsON;
+    this.debugON = this.config.debugON;
     this.newEncumbranceDisplayON = this.config.newEncumbranceDisplayON;    
   }  
 
@@ -136,6 +139,7 @@ public class LimitedEncumbranceTracking {
     let equipmentWeight: Float;
     let slotWeight: Float;
 
+    // Find weight of equiped clothing
     equipmentWeight = 0.0;
     slotWeight = 0.0;
 
@@ -174,27 +178,131 @@ public class LimitedEncumbranceTracking {
     //   LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - Player is NOT wearing outer torso item"  );      
     // }
 
-    LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - equipmentWeight: " + equipmentWeight);
+    // Find weight of equipped weapons
+
+    let currentItem: ItemID;
+    let itemData: ref<gameItemData>;
+    // let weaponWeight: Float;
+    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.Weapon, 0);
+    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+    if IsDefined(itemData) {
+      equipmentWeight +=  itemData.GetStatValueByType(gamedataStatType.Weight);
+    }
+
+    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.Weapon, 1);
+    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+    if IsDefined(itemData) {
+      equipmentWeight +=  itemData.GetStatValueByType(gamedataStatType.Weight);
+    }
+
+    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.Weapon, 2);
+    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+    if IsDefined(itemData) {
+      equipmentWeight +=  itemData.GetStatValueByType(gamedataStatType.Weight);
+    }
+
+    if (this.debugON) {
+      LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - equipmentWeight: " + equipmentWeight);
+    }
 
     return equipmentWeight;
   }
+
+  public final const func GetCyberwareFromSkeletonSlots() -> Bool {
+    let result: array<ref<Item_Record>>;
+    let record: ref<Item_Record>;
+    let equipSlots: array<SEquipSlot>;
+    let i: Int32;
+    let cyberwareType: CName;
+    let hasTitaniumBones: Bool;
+    let equipmentSystem: ref<EquipmentSystem>;
+    let playerData: ref<EquipmentSystemPlayerData>;
+    let currentItem: ItemID;
+    let itemData: ref<gameItemData>;
+
+    equipmentSystem = EquipmentSystem.GetInstance(this.player);
+    playerData = equipmentSystem.GetPlayerData(this.player);
+    hasTitaniumBones = false;
+
+    // Detecting Titanium Bones CW - TitaniumInfusedBones
+    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.MusculoskeletalSystemCW, 0);
+    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+    if IsDefined(itemData) {
+      cyberwareType = TweakDBInterface.GetCName(ItemID.GetTDBID(itemData.GetID()) + t".cyberwareType", n"type");
+
+      if ( StrCmp(NameToString(cyberwareType), "TitaniumInfusedBones") == 0 ) {
+        hasTitaniumBones = true;
+      }
+      
+      if (this.debugON) {
+        LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 0 : " + NameToString(cyberwareType));
+      }
+    }
+ 
+    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.MusculoskeletalSystemCW, 1);
+    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+    if IsDefined(itemData) {
+      cyberwareType = TweakDBInterface.GetCName(ItemID.GetTDBID(itemData.GetID()) + t".cyberwareType", n"type");
+
+      if ( StrCmp(NameToString(cyberwareType), "TitaniumInfusedBones") == 0 ) {
+        hasTitaniumBones = true;
+      }
+
+      if (this.debugON) {
+        LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 1 : " + NameToString(cyberwareType));
+      }
+    }
+
+    if (this.debugON) {
+      LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - TitaniumBones: " + ToString(hasTitaniumBones) + "");
+    }
+ 
+    return hasTitaniumBones;
+  }
+
 
   public func calculateLimitedEncumbrance() -> Void {
     let playerLevel: Float = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.Level);
     let playerInventoryWeight = this.calculatePlayerInventoryWeights();
     let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
     let playerPackMuleLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_01_Perk_2);
-    let playerPackMuleMod = 1.0;
+    let playerTransporterLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_06_Perk_1);
+    let playerBloodrushLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Demolition_Area_03_Perk_1);
+    let playerPerks = 0.0;
+    // let ses: ref<StatusEffectSystem>;
+    let hasCarryCapacityBoosterEffect: Bool;
+    let hasTitaniumBones: Bool;
 
     // Reduce base carry capacity
     // 1 Rifle + 2 Handguns + 1 long blade + 1 knife + coat + outer torso + inner torso + pants + shoes + headgear = about 30 weight
     // Carry capacity is default capacity (30) + a bonus based on player power level -> capped at 60 total to allow for combat/runnning
 
+    // ses = GameInstance.GetStatusEffectSystem(this.player.GetGame()); 
+    hasCarryCapacityBoosterEffect = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"BaseStatusEffect.CarryCapacityBooster");  
+    hasTitaniumBones = this.GetCyberwareFromSkeletonSlots();
+
     if (playerPackMuleLevel > 0) {
-      playerPackMuleMod = this.playerPackMuleMod;
+      playerPerks += 1.0;
     }
 
-    this.limitedCarryCapacity = this.carryCapacityBase + (this.carryCapacityBackpack * playerPackMuleMod) + (playerLevel * this.playerLevelMod);
+    if (playerTransporterLevel > 0) {
+      playerPerks += 1.0;
+    }
+
+    if (playerBloodrushLevel > 0) {
+      playerPerks += 1.0;
+    }
+
+    if (hasTitaniumBones) {
+     playerPerks += 1.0;
+    }
+
+    if (hasCarryCapacityBoosterEffect) {
+      playerPerks += 1.0;
+      playerPerks *= 2.0;
+    }
+
+    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + (this.carryCapacityBackpack * playerPerks * this.playerPerkMod) + (playerLevel * this.playerLevelMod);
 
 
     if (playerInventoryWeight > 0.0) {
@@ -207,13 +315,18 @@ public class LimitedEncumbranceTracking {
 
     if (this.debugON) {
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  );
-      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - Pack Mule level: '"+playerPackMuleLevel+"'"  );
+      LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerPerks: '"+playerPerks+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerLevel: '"+playerLevel+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - playerInventoryWeight: '"+playerInventoryWeight+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
       LogChannel(n"DEBUG", "::: EvaluateEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance  - playerPackMuleLevel: " + ToString(playerPackMuleLevel));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance  - playerTransporterLevel: " + ToString(playerTransporterLevel));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance  - playerBloodrushLevel: " + ToString(playerBloodrushLevel));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance  - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect));
+
     }
 
   }
