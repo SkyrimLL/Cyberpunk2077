@@ -4,6 +4,12 @@ public class LimitedEncumbranceConfig {
     let self: ref<LimitedEncumbranceConfig> = new LimitedEncumbranceConfig();
     return self;
   } 
+
+  @runtimeProperty("ModSettings.mod", "LEncumbrance")
+  @runtimeProperty("ModSettings.category", "Main switch")
+  @runtimeProperty("ModSettings.displayName", "Mod toggle")
+  @runtimeProperty("ModSettings.description", "Enable or disable the mod if you need to revert back to the default system in certain situations.")
+  let modON: Bool = true;
  
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Encumbrance System")

@@ -28,6 +28,7 @@ public class LimitedEncumbranceTracking {
 
   public let config: ref<LimitedEncumbranceConfig>;
 
+  public let modON: Bool;
   public let debugON: Bool;
   public let warningsON: Bool;
   public let newEncumbranceDisplayON: Bool;
@@ -104,6 +105,7 @@ public class LimitedEncumbranceTracking {
     this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
+    this.modON = this.config.modON;
     this.newEncumbranceDisplayON = this.config.newEncumbranceDisplayON;    
   }  
 
@@ -436,67 +438,92 @@ public final func EvaluateEncumbrance() -> Void {
       this.m_limitedEncumbranceTracking.reset();
     };
 
-    if this.m_curInventoryWeight < 0.00 {
-      this.m_curInventoryWeight = 0.00;
-    };
-
-    if (this.m_curInventoryWeight!=this.m_limitedEncumbranceTracking.lastInventoryWeight) {
-      this.m_limitedEncumbranceTracking.lastInventoryWeight = this.m_curInventoryWeight;
-
-      // Only calculate effect if inventory weight actually changed
-
-      ses = GameInstance.GetStatusEffectSystem(this.GetGame());
-      exhaustedEffectID = t"BaseStatusEffect.PlayerExhausted";
-      overweightEffectID = t"BaseStatusEffect.Encumbered";
-      hasExhaustedEffect = ses.HasStatusEffect(this.GetEntityID(), exhaustedEffectID);
-      hasEncumbranceEffect = ses.HasStatusEffect(this.GetEntityID(), overweightEffectID);
-      isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this, n"NoEncumbrance");
-
-      // carryCapacity = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast<StatsObjectID>(this.GetEntityID()), gamedataStatType.CarryCapacity);
-
-      this.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
-
-      carryCapacity = this.m_limitedEncumbranceTracking.limitedCarryCapacity;
-
-      if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
-        // this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
-
-      } else { 
-        if (this.m_curInventoryWeight >= this.m_limitedEncumbranceTracking.carryCapacityBase) {
-          if (this.m_limitedEncumbranceTracking.warningsON) { 
-            let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(Cast<Int32>(carryCapacity) - Cast<Int32>(this.m_curInventoryWeight)));
-  
-            this.SetWarningMessage(message); }
-        } 
-      }
-
-      if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted {
-        if (this.m_limitedEncumbranceTracking.warningsON) { this.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
-        ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
-      } else {
-        if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted {
-          if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
-          ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
-        };
+    if (this.m_limitedEncumbranceTracking.modON) {
+      if this.m_curInventoryWeight < 0.00 {
+        this.m_curInventoryWeight = 0.00;
       };
 
+      if (this.m_curInventoryWeight!=this.m_limitedEncumbranceTracking.lastInventoryWeight) {
+        this.m_limitedEncumbranceTracking.lastInventoryWeight = this.m_curInventoryWeight;
 
-      if (hasEncumbranceEffect) {
-          if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage("Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"); }
+        // Only calculate effect if inventory weight actually changed
 
-          if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect {
+        ses = GameInstance.GetStatusEffectSystem(this.GetGame());
+        exhaustedEffectID = t"BaseStatusEffect.PlayerExhausted";
+        overweightEffectID = t"BaseStatusEffect.Encumbered";
+        hasExhaustedEffect = ses.HasStatusEffect(this.GetEntityID(), exhaustedEffectID);
+        hasEncumbranceEffect = ses.HasStatusEffect(this.GetEntityID(), overweightEffectID);
+        isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this, n"NoEncumbrance");
+
+        // carryCapacity = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast<StatsObjectID>(this.GetEntityID()), gamedataStatType.CarryCapacity);
+
+        this.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
+
+        carryCapacity = this.m_limitedEncumbranceTracking.limitedCarryCapacity;
+
+        if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
+          // this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
+
+        } else { 
+          if (this.m_curInventoryWeight >= this.m_limitedEncumbranceTracking.carryCapacityBase) {
+            if (this.m_limitedEncumbranceTracking.warningsON) { 
+              let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(Cast<Int32>(carryCapacity) - Cast<Int32>(this.m_curInventoryWeight)));
+    
+              this.SetWarningMessage(message); }
+          } 
+        }
+
+        if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted {
+          if (this.m_limitedEncumbranceTracking.warningsON) { this.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
+          ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
+        } else {
+          if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted {
             if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
             ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
           };
-      } else {
-          // if (debugON) { this.SetWarningMessage("hasEncumbranceEffect OFF"); }
+        };
+
+
+        if (hasEncumbranceEffect) {
+            if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage("Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"); }
+
+            if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect {
+              if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
+              ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
+            };
+        } else {
+            // if (debugON) { this.SetWarningMessage("hasEncumbranceEffect OFF"); }
+        }
+
+        // Why isn't this working to display the adjusted carry Capacity?
+        // GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetInt(GetAllBlackboardDefs().UI_PlayerStats.weightMax, Cast<Int32>(carryCapacity), true);
+
+        // This works to display new inventory weight
+        GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.m_curInventoryWeight, true);
       }
+    } else {
+      // Vanilla code
 
-      // Why isn't this working to display the adjusted carry Capacity?
-      // GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetInt(GetAllBlackboardDefs().UI_PlayerStats.weightMax, Cast<Int32>(carryCapacity), true);
-
-      // This works to display new inventory weight
+      if this.m_curInventoryWeight < 0.00 {
+        this.m_curInventoryWeight = 0.00;
+      };
+      ses = GameInstance.GetStatusEffectSystem(this.GetGame());
+      overweightEffectID = t"BaseStatusEffect.Encumbered";
+      hasEncumbranceEffect = ses.HasStatusEffect(this.GetEntityID(), overweightEffectID);
+      isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this, n"NoEncumbrance");
+      carryCapacity = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast<StatsObjectID>(this.GetEntityID()), gamedataStatType.CarryCapacity);
+      if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
+        this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
+      };
+      if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted {
+        ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
+      } else {
+        if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted {
+          ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
+        };
+      };
       GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.m_curInventoryWeight, true);
+
     }
 
   }
@@ -525,6 +552,7 @@ public final func EvaluateEncumbrance() -> Void {
     if RoundF(this.m_player.m_curInventoryWeight) >= carryCapacity {
       this.PlayLibraryAnimation(n"overburden");
     };
+  
   }
 
 @replaceMethod(MenuHubGameController)
@@ -542,6 +570,7 @@ public final func EvaluateEncumbrance() -> Void {
     };     
 
     this.m_subMenuCtrl.HandlePlayerWeightUpdated(this.m_player.m_curInventoryWeight - dropQueueWeight, carryCapacity);
+
   }
 
 
@@ -553,20 +582,34 @@ public let m_player: wref<PlayerPuppet>;
 
   public final func HandlePlayerWeightUpdated(value: Float, maxWeight: Int32) -> Void {
        
-    this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
+    if (this.m_player.m_limitedEncumbranceTracking.modON) {
+      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
 
-    inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(value));
+      inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(value));
+
+    } else {
+      // Vanilla code
+
+      inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(value)) + "/" + ToString(maxWeight));
+    }
+      
     GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
   }
 
 @replaceMethod(SubMenuPanelLogicController)
 
   public final func HandlePlayerMaxWeightUpdated(value: Int32, curInventoryWeight: Float) -> Void {
- 
-    this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
 
-    inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(curInventoryWeight));
+    if (this.m_player.m_limitedEncumbranceTracking.modON) { 
+      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
 
+      inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(curInventoryWeight));
+    } else {
+      // Vanilla code
+
+      inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(curInventoryWeight)) + "/" + ToString(value));
+
+    }
   }
 
 
@@ -575,9 +618,16 @@ public let m_player: wref<PlayerPuppet>;
 
   protected cb func OnPlayerWeightUpdated(value: Float) -> Bool {
     let gameInstance: GameInstance = this.m_player.GetGame();
+    let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
 
-    this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
+    if (this.m_player.m_limitedEncumbranceTracking.modON) {
+      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
 
-    inkTextRef.SetText(this.m_playerWeight, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
+      inkTextRef.SetText(this.m_playerWeight, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
+    } else {
+      // Vanilla code
 
+      inkTextRef.SetText(this.m_playerWeight, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
+
+    }
   }
