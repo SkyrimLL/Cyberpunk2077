@@ -52,6 +52,15 @@ public class LimitedEncumbranceConfig {
 
   @runtimeProperty("ModSettings.mod", "LEncumbrance")
   @runtimeProperty("ModSettings.category", "Encumbrance System")
+  @runtimeProperty("ModSettings.displayName", "Player Athletics Level Modifier")
+  @runtimeProperty("ModSettings.description", "Contribution of the player's Athletics level to the carry capacity bonus (percentage of player Athletics level added to base carry capacity).")
+  @runtimeProperty("ModSettings.step", "10")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "200")
+  let playerAthleticsLevelMod: Int32 = 100;
+
+  @runtimeProperty("ModSettings.mod", "LEncumbrance")
+  @runtimeProperty("ModSettings.category", "Encumbrance System")
   @runtimeProperty("ModSettings.displayName", "Carry Capacity Cap")
   @runtimeProperty("ModSettings.description", "Sets the maximum value assigned to the carry capacity (in total value)")
   @runtimeProperty("ModSettings.step", "10")
