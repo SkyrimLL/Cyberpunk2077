@@ -336,7 +336,7 @@ public class LimitedEncumbranceTracking {
     let statsSystem: ref<StatsSystem> = GameInstance.GetStatsSystem(this.player.GetGame());
     let playerAthleticsLevel: Float = statsSystem.GetStatValue(Cast(this.player.GetEntityID()), gamedataStatType.Athletics);
     let playerPerks = 0.0;
-    let playerPerksMod = 1.0;
+    let playerPerksBonus = 1.0;
     // let ses: ref<StatusEffectSystem>;
     let hasCarryCapacityBoosterEffect: Bool;
     let qualityTitaniumBones: Float;
@@ -363,15 +363,15 @@ public class LimitedEncumbranceTracking {
 
     if (qualityTitaniumBones > 0.0) {
       playerPerks += 1.0;
-      playerPerksMod += qualityTitaniumBones;
+      playerPerksBonus += qualityTitaniumBones;
     }
 
     if (hasCarryCapacityBoosterEffect) {
       playerPerks += 1.0;
-      playerPerksMod += 2.0;
+      playerPerksBonus += 2.0;
     }
 
-    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + (this.carryCapacityBackpack * playerPerks * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + (playerAthleticsLevel * this.playerAthleticsLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus ) + playerEquipmentBonus;
+    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus ) * playerPerks * playerPerksBonus * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + (playerAthleticsLevel * this.playerAthleticsLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
 
     if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
       this.limitedCarryCapacity = this.carryCapacityCapMod;
@@ -389,7 +389,7 @@ public class LimitedEncumbranceTracking {
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerAthleticsLevel: '"+ToString(playerAthleticsLevel)+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - qualityTitaniumBones: " + ToString(qualityTitaniumBones));
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: " + ToString(playerPerks));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksMod: " + ToString(playerPerksMod));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksBonus: " + ToString(playerPerksBonus));
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
