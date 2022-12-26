@@ -50,7 +50,7 @@ public class ClaimedVehicleTracking {
     this.chanceFieldTechnicianHack = 25;
     this.chanceHackerOverlordHack = 100;
 
-    // Toggle warnings when exceeding your carry capacity without powerlevel bonus
+    // Toggle warning messages 
     this.warningsON = true;
 
     // ------------------ End of Mod Options
@@ -283,14 +283,14 @@ public class ClaimedVehicleTracking {
       */
       // [DEBUG] N.C.L.A.I.M: Reading Vehicle ID from Model: 'ARCH NAZARÉ'
       // Arch - Nazare
-      case "nazarÉ \"racer\"":  
-      case "arch nazarÉ":  
+      case "nazaré \"racer\"":  
+      case "arch nazaré":  
         this.matchVehicleModel = "ARCH NAZARÉ";
         this.matchVehicleString = "Vehicle.v_sportbike2_arch_player";
         break;
 
-      // Arch - Nazare
-      case "nazarÉ \"itsumade\"": // The Highwayman reward 
+      // Arch - Nazare - Nazaré "Itsumade"
+      case "nazaré \"itsumade\"": // The Highwayman reward 
         this.matchVehicleModel = "Nazaré \"Itsumade\"";
         this.matchVehicleString = "Vehicle.v_sportbike2_arch_tyger_player";
         break;
@@ -560,7 +560,8 @@ public class ClaimedVehicleTracking {
     } 
 
     if (this.warningsON) && (matchFound == 0) {     
-      this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      //  this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      LogChannel(n"DEBUG", "N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
     }       
    
   }
@@ -619,6 +620,7 @@ public let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
   }
 
 // public class DriveEvents extends VehicleEventsTransition {
+
 @replaceMethod(DriveEvents) 
 
 public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
