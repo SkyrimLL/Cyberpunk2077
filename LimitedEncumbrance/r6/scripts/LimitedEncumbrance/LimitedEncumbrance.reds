@@ -158,15 +158,27 @@ public class LimitedEncumbranceTracking {
       let itemData: ref<gameItemData>;
       let inventoryManager: wref<InventoryDataManagerV2>;
       let inventoryItem: InventoryItemData;
+
       let innerPart: InnerItemData;
       let innerPartID: ItemID;
+      let innerPartTweakID: TweakDBID;
       let innerPartData: ref<gameItemData>;
+      let innerPartEntityName: CName;
+      let innerPartFriendlyName: String;
+
       let clothFriendlyName: String;
+
+      let currentItemEntityName: CName;
       let currentItemFriendlyName: String;
-      let clothModQuality: gamedataQuality;
+      let clothModQuality: wref<Quality_Record>;
+      let clothModQualityName: String;
+      let clothModQualityValue: Int32;
+
       let clothSlotBonus: Float;
       let clothSlotMod: Float;
+
       let i: Int32;
+
       let clothMod: ItemID;
       let clothSlots: array<TweakDBID>;
 
@@ -180,22 +192,23 @@ public class LimitedEncumbranceTracking {
       // - Detect multiple items are on the same slot
       // - Detect transmogrify outfit system is used
        
+      // --
       // Alternate ways of getting the equiped item on that slot
 
       // equipmentSystem = EquipmentSystem.GetInstance(this.player);
       // currentItem = equipmentSystem.GetItemInEquipSlot(this.player, slotArea, 0);
 
+      // --
       // playerData = equipmentSystem.GetPlayerData(this.player);
       // currentItem = playerData.GetItemInEquipSlot(slotArea, 0);
 
 
       itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
       if IsDefined(itemData) {
-        currentItemTweakID = ItemID.GetTDBID(itemData.GetID());
-        // GetName, FriendlNames come up empty for some reason ??!
-        // currentItemFriendlyName = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(itemData.GetID())).FriendlyName();
-        currentItemFriendlyName = TDBID.ToStringDEBUG(currentItemTweakID);
 
+        // --
+        // friendlyName through inventoryManager comes up empty
+      
         // inventoryManager = equipmentSystem.GetInventoryManager(this.player);
         // inventoryItem = inventoryManager.GetInventoryItemData(itemData);
 
@@ -207,21 +220,37 @@ public class LimitedEncumbranceTracking {
         // itemLevel = InventoryItemData.GetItemLevel(inventoryItem);
         // iconic = InventoryItemData.GetGameItemData(inventoryItem).GetStatValueByType(gamedataStatType.IsItemIconic) > 0.00;
 
+        currentItemTweakID = ItemID.GetTDBID(itemData.GetID()); 
+        currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).AppearanceName();
+        currentItemFriendlyName = s"\(currentItemEntityName)";
+
+        // --
+        // GetName, FriendlNames come up empty for some reason ??!
+        // currentItemFriendlyName = TweakDBInterface.GetItemRecord(currentItemTweakID).FriendlyName();
+
+        // --
+        // TDBID.ToStringDEBUG() is meant for debug and shouldn't be used this way
+        // currentItemFriendlyName = TDBID.ToStringDEBUG(currentItemTweakID);
+
+        // --
+        // Record -> Entity name returns a generic name without possibility of distinction between types of backpacks
+        // currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).EntityName();
+        // currentItemFriendlyName = GetLocalizedItemNameByCName(currentItemEntityName);
+
         // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
         // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
-        LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + currentItemFriendlyName); 
-        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking ID : " + TDBID.ToStringDEBUG(currentItemTweakID)); 
+        LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
         LogChannel(n"DEBUG", "::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
         // LogChannel(n"DEBUG", "::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
 
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
-        if StrContains(currentItemFriendlyName,"backpack01") {
+        if StrContains(currentItemFriendlyName,"milbackpack") {
           clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
           LogChannel(n"DEBUG", "::: GetClothSlotMods  - Military backpack bonus : " + clothSlotMod);
         }
 
-        if StrContains(currentItemFriendlyName,"backpack03") {
+        if StrContains(currentItemFriendlyName,"fashbackpack") {
           clothSlotMod = 25.0 * this.playerAthleticsLevelMod;
           LogChannel(n"DEBUG", "::: GetClothSlotMods  - Fashion backpack bonus : " + clothSlotMod);
         }
@@ -247,10 +276,15 @@ public class LimitedEncumbranceTracking {
         while i < ArraySize(clothSlots) {
           itemData.GetItemPart(innerPart, clothSlots[i]);
           innerPartID = InnerItemData.GetItemID(innerPart);
-          innerPartData = RPGManager.GetItemData(this.player.GetGame(), this.player, innerPartID);
-          clothModQuality = RPGManager.GetItemQuality(innerPartData);
+          innerPartTweakID = ItemID.GetTDBID(innerPartID); 
+          // innerPartData = RPGManager.GetItemData(this.player.GetGame(), this.player, innerPartID);
+          innerPartEntityName = TweakDBInterface.GetItemRecord(innerPartTweakID).EntityName();
+          innerPartFriendlyName = s"\(innerPartEntityName)";
+          clothModQuality = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality();
+          clothModQualityName = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality().Name();
+          clothModQualityValue = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality().Value();
 
-          // LogChannel(n"DEBUG", "::: GetClothSlotMods  - clothSlots[" + i + "] : " + TDBID.ToStringDEBUG(ItemID.GetTDBID(innerPartData.GetID())) + " - quality: " + ToString(clothModQuality));
+          // LogChannel(n"DEBUG", s"::: GetClothSlotMods  - clothSlots[\(i)] : \(innerPartFriendlyName) - quality: \(clothModQualityName)");
   /* 
           clothMod = clothSlots[i].GetID();
           if ItemID.IsValid(clothMod) {
@@ -510,11 +544,11 @@ public class LimitedEncumbranceTracking {
     qualityTitaniumBones = this.GetCyberwareFromSkeletonSlots();
 
     if (playerPackMuleLevel > 0) {
-      playerPerks += 1.0;
+      playerPerks += 3.0;
     }
 
     if (playerTransporterLevel > 0) {
-      playerPerks += 1.0;
+      playerPerks += 2.0;
     }
 
     if (playerBloodrushLevel > 0) {
