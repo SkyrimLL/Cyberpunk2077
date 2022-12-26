@@ -25,7 +25,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.displayName", "Backpack size")
   @runtimeProperty("ModSettings.description", "How much weight you can carry in your backpack and still be able to run and jump.")
   @runtimeProperty("ModSettings.step", "5")
-  @runtimeProperty("ModSettings.min", "5")
+  @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
   let carryCapacityBackpack: Int32 = 10;
 

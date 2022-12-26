@@ -111,9 +111,6 @@ public class LimitedEncumbranceTracking {
 
   public func getPlayerSlotItemWeight(object: ref<GameObject>, slot: TweakDBID) -> Float {
     let slotName: String = TweakDBInterface.GetAttachmentSlotRecord(slot).EntitySlotName();
-
-    // Can't coerce ref<ItemObject> to ref<gameItemData>
-    // Figure out the link between gameItemData and ItemObject
     let itemObj: ref<ItemObject> = GameInstance.GetTransactionSystem(this.player.GetGame()).GetItemInSlot(object as PlayerPuppet, slot);
 
     let itemWeight: Float;
@@ -134,7 +131,170 @@ public class LimitedEncumbranceTracking {
     return itemWeight;
   }
 
-  public exec func calculatePlayerEquipmentWeights() -> Float {
+  public func calculatePlayerClothMod() -> Float {
+    let clothModWeight: Float;
+
+    // Find weight of equiped clothing
+    clothModWeight = 0.0;
+
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.OuterChest);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.InnerChest);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Legs);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Feet);  
+
+    if (this.debugON) {
+      LogChannel(n"DEBUG", "::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
+    }
+
+    return clothModWeight;
+  }
+
+  // Check mods on item
+  public func GetClothSlotMods(slotArea: gamedataEquipmentArea) -> Float {
+      let equipmentSystem: ref<EquipmentSystem>; 
+      let currentItem: ItemID;
+      let currentItemTweakID: TweakDBID;
+      let playerData: ref<EquipmentSystemPlayerData>;
+      let itemData: ref<gameItemData>;
+      let inventoryManager: wref<InventoryDataManagerV2>;
+      let inventoryItem: InventoryItemData;
+      let innerPart: InnerItemData;
+      let innerPartID: ItemID;
+      let innerPartData: ref<gameItemData>;
+      let clothFriendlyName: String;
+      let currentItemFriendlyName: String;
+      let clothModQuality: gamedataQuality;
+      let clothSlotBonus: Float;
+      let clothSlotMod: Float;
+      let i: Int32;
+      let clothMod: ItemID;
+      let clothSlots: array<TweakDBID>;
+
+      let equipmentData = EquipmentSystem.GetData(this.player);
+      currentItem = equipmentData.GetActiveItem(slotArea);
+ 
+      clothSlotBonus = 0.0;
+      clothSlotMod = 0.0;
+
+      // Improvements to research
+      // - Detect multiple items are on the same slot
+      // - Detect transmogrify outfit system is used
+       
+      // Alternate ways of getting the equiped item on that slot
+
+      // equipmentSystem = EquipmentSystem.GetInstance(this.player);
+      // currentItem = equipmentSystem.GetItemInEquipSlot(this.player, slotArea, 0);
+
+      // playerData = equipmentSystem.GetPlayerData(this.player);
+      // currentItem = playerData.GetItemInEquipSlot(slotArea, 0);
+
+
+      itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+      if IsDefined(itemData) {
+        currentItemTweakID = ItemID.GetTDBID(itemData.GetID());
+        // GetName, FriendlNames come up empty for some reason ??!
+        // currentItemFriendlyName = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(itemData.GetID())).FriendlyName();
+        currentItemFriendlyName = TDBID.ToStringDEBUG(currentItemTweakID);
+
+        // inventoryManager = equipmentSystem.GetInventoryManager(this.player);
+        // inventoryItem = inventoryManager.GetInventoryItemData(itemData);
+
+        // friendlyName = InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString();
+        // localizedName = InventoryItemData.GetName(inventoryItem);
+        // itemID = InventoryItemData.GetID(inventoryItem);
+        // quality = InventoryItemData.GetComparedQuality(inventoryItem);
+        // itemType = InventoryItemData.GetItemType(inventoryItem);
+        // itemLevel = InventoryItemData.GetItemLevel(inventoryItem);
+        // iconic = InventoryItemData.GetGameItemData(inventoryItem).GetStatValueByType(gamedataStatType.IsItemIconic) > 0.00;
+
+        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
+        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
+        LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + currentItemFriendlyName); 
+        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking ID : " + TDBID.ToStringDEBUG(currentItemTweakID)); 
+        LogChannel(n"DEBUG", "::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
+        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
+
+
+        // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
+        if StrContains(currentItemFriendlyName,"backpack01") {
+          clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - Military backpack bonus : " + clothSlotMod);
+        }
+
+        if StrContains(currentItemFriendlyName,"backpack03") {
+          clothSlotMod = 25.0 * this.playerAthleticsLevelMod;
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - Fashion backpack bonus : " + clothSlotMod);
+        }
+
+        if StrContains(currentItemFriendlyName,"bandoleer") {
+          clothSlotMod = 10.0 * this.playerAthleticsLevelMod;
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
+        }
+
+        if StrContains(currentItemFriendlyName,"waistbag") {
+          clothSlotMod = 5.0 * this.playerAthleticsLevelMod;
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+        }
+
+        clothSlotBonus = clothSlotBonus + clothSlotMod;
+
+        // Detection of 'Backpacker' cloth modifier
+        // Not working at the moment - inner part Data comes up empty
+
+        clothSlots = RPGManager.GetModsSlotIDs(itemData.GetItemType()); 
+        i = 0;
+        // Find way to get ItemID from TweakDBID
+        while i < ArraySize(clothSlots) {
+          itemData.GetItemPart(innerPart, clothSlots[i]);
+          innerPartID = InnerItemData.GetItemID(innerPart);
+          innerPartData = RPGManager.GetItemData(this.player.GetGame(), this.player, innerPartID);
+          clothModQuality = RPGManager.GetItemQuality(innerPartData);
+
+          // LogChannel(n"DEBUG", "::: GetClothSlotMods  - clothSlots[" + i + "] : " + TDBID.ToStringDEBUG(ItemID.GetTDBID(innerPartData.GetID())) + " - quality: " + ToString(clothModQuality));
+  /* 
+          clothMod = clothSlots[i].GetID();
+          if ItemID.IsValid(clothMod) {
+            clothModFriendlyName = InventoryItemData.GetGameItemData(clothMod).GetNameAsString();
+            clothModQuality = InventoryItemData.GetComparedQuality(clothMod);
+
+            LogChannel(n"DEBUG", "::: GetClothSlotMods  - mod name: " + clothModFriendlyName + " - quality: " + clothModQuality);
+
+            if ( StrCmp(clothModFriendlyName, "Backpacker") == 0 ) {
+              switch (clothModQuality) {
+                case gamedataQuality.Common:
+                  clothSlotMod = 1.0;
+                  break;
+                case gamedataQuality.Uncommon:
+                  clothSlotMod = 1.5;
+                  break;
+                case gamedataQuality.Rare:
+                  clothSlotMod = 2.0;
+                  break;
+                case gamedataQuality.Epic:
+                  clothSlotMod = 3.0;
+                  break;
+                case gamedataQuality.Legendary:
+                  clothSlotMod = 5.0;
+                  break;
+              };  
+
+              clothSlotBonus = clothSlotBonus + clothSlotMod;
+            }
+          };
+
+   */        i += 1;
+        } 
+      } else {         
+        LogChannel(n"DEBUG", "::: GetClothSlotMods  - Item undefined " );
+      };
+
+
+
+ 
+      return clothSlotBonus;
+  }
+
+  public func calculatePlayerEquipmentWeights() -> Float {
     let i: Int32;
     let slots: array<wref<AttachmentSlot_Record>>; 
     let slotName: String;
@@ -150,13 +310,12 @@ public class LimitedEncumbranceTracking {
     TweakDBInterface.GetCharacterRecord(this.player.GetRecordID()).AttachmentSlots(slots);
     i = 0;
     while i < ArraySize(slots) {
-      slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName();
-      slotWeight = this.getPlayerSlotItemWeight(this.player, slots[i].GetID());
+      slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
         
       // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - slot name: " + slotName + " - weight: " + slotWeight);
 
       if ( ( StrCmp(slotName, "Chest") == 0 ) || ( StrCmp(slotName, "Torso") == 0 ) || ( StrCmp(slotName, "Legs") == 0 ) || ( StrCmp(slotName, "Feet") == 0 ) || ( StrCmp(slotName, "Head") == 0 ) || ( StrCmp(slotName, "Eyes") == 0 ) || ( StrCmp(slotName, "Outfit") == 0 ) ) {
-        equipmentWeight += slotWeight;
+        equipmentWeight += this.getPlayerSlotItemWeight(this.player, slots[i].GetID());
       }
       i += 1;
     };
@@ -211,7 +370,7 @@ public class LimitedEncumbranceTracking {
     return equipmentWeight;
   }
 
-  public exec func calculatePlayerEquipmentBonus() -> Float {
+  public func calculatePlayerEquipmentBonus() -> Float {
     let i: Int32;
     let slots: array<wref<AttachmentSlot_Record>>; 
     let slotName: String;
@@ -246,7 +405,7 @@ public class LimitedEncumbranceTracking {
     return slotBonus;
   }
 
-  public final const func GetCyberwareFromSkeletonSlots() -> Float {
+  public func GetCyberwareFromSkeletonSlots() -> Float {
     let result: array<ref<Item_Record>>;
     let record: ref<Item_Record>;
     let equipSlots: array<SEquipSlot>;
@@ -328,6 +487,7 @@ public class LimitedEncumbranceTracking {
   public func calculateLimitedEncumbrance() -> Void {
     let playerLevel: Float = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.Level);
     let playerEquipmentWeight = this.calculatePlayerEquipmentWeights();
+    let playerClothSlot = this.calculatePlayerClothMod();
     let playerEquipmentBonus = this.calculatePlayerEquipmentBonus();
     let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
     let playerPackMuleLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_01_Perk_2);
@@ -371,15 +531,14 @@ public class LimitedEncumbranceTracking {
       playerPerksBonus += 2.0;
     }
 
-    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus ) * playerPerks * playerPerksBonus * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + (playerAthleticsLevel * this.playerAthleticsLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
+    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus + playerClothSlot ) * playerPerks * playerPerksBonus * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + (playerAthleticsLevel * this.playerAthleticsLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
 
     if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
       this.limitedCarryCapacity = this.carryCapacityCapMod;
     } 
 
     if (this.debugON) {
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: '"+playerPerks+"'"  );
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  ); 
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevel: '"+playerLevel+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPackMuleLevel: " + ToString(playerPackMuleLevel));
@@ -391,6 +550,7 @@ public class LimitedEncumbranceTracking {
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: " + ToString(playerPerks));
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksBonus: " + ToString(playerPerksBonus));
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerClothSlot: '"+playerClothSlot+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
       LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
@@ -593,7 +753,9 @@ public let m_player: wref<PlayerPuppet>;
       inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(value)) + "/" + ToString(maxWeight));
     }
       
-    GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
+    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
+    GameObject.PlaySoundEvent(this.m_player, n"ui_menu_item_consumable_generic");
+ 
   }
 
 @replaceMethod(SubMenuPanelLogicController)
