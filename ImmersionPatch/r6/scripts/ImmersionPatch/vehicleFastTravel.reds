@@ -112,7 +112,23 @@ public let iVehicleMenuOpen: Bool = false;
     };
     */
   }
- 
+
+
+/* public class DriveEvents extends VehicleEventsTransition {
+
+  Idea 1
+  
+  1- Create function to display Fast Travel menu (instead of always blocked)
+  2- Create event to display menu remotely
+  3- OnEnter event -> Get Vehicle record -> Get Model name -> If Delamain, trigger fast travel menu with event
+      Crash if OnEnter method override
+
+  Idea 2
+
+  If in Delamain, override Radio with Fast Travel menu
+
+  */
+
 // public native class PopupsManager extends inkGameController {
 @addField(PopupsManager)
 public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
