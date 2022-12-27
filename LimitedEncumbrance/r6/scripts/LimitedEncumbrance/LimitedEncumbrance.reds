@@ -139,8 +139,9 @@ public class LimitedEncumbranceTracking {
 
     clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.OuterChest);  
     clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.InnerChest);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Legs);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Feet);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Head);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Face);  
+    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Outfit);  
 
     if (this.debugON) {
       LogChannel(n"DEBUG", "::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
@@ -247,12 +248,12 @@ public class LimitedEncumbranceTracking {
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
         if StrContains(currentItemFriendlyName,"milbackpack") {
           clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - Military backpack bonus : " + clothSlotMod);
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
           clothSlotMod = 25.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - Fashion backpack bonus : " + clothSlotMod);
+          LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
         }
 
         if StrContains(currentItemFriendlyName,"bandoleer") {
@@ -267,64 +268,10 @@ public class LimitedEncumbranceTracking {
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
 
-        // Detection of 'Backpacker' cloth modifier
-        // Not working at the moment - inner part Data comes up empty
-
-        clothSlots = RPGManager.GetModsSlotIDs(itemData.GetItemType()); 
-        i = 0;
-        // Find way to get ItemID from TweakDBID
-        while i < ArraySize(clothSlots) {
-          itemData.GetItemPart(innerPart, clothSlots[i]);
-          innerPartID = InnerItemData.GetItemID(innerPart);
-          innerPartTweakID = ItemID.GetTDBID(innerPartID); 
-          // innerPartData = RPGManager.GetItemData(this.player.GetGame(), this.player, innerPartID);
-          innerPartEntityName = TweakDBInterface.GetItemRecord(innerPartTweakID).EntityName();
-          innerPartFriendlyName = s"\(innerPartEntityName)";
-          clothModQuality = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality();
-          clothModQualityName = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality().Name();
-          clothModQualityValue = TweakDBInterface.GetItemRecord(innerPartTweakID).Quality().Value();
-
-          // LogChannel(n"DEBUG", s"::: GetClothSlotMods  - clothSlots[\(i)] : \(innerPartFriendlyName) - quality: \(clothModQualityName)");
-  /* 
-          clothMod = clothSlots[i].GetID();
-          if ItemID.IsValid(clothMod) {
-            clothModFriendlyName = InventoryItemData.GetGameItemData(clothMod).GetNameAsString();
-            clothModQuality = InventoryItemData.GetComparedQuality(clothMod);
-
-            LogChannel(n"DEBUG", "::: GetClothSlotMods  - mod name: " + clothModFriendlyName + " - quality: " + clothModQuality);
-
-            if ( StrCmp(clothModFriendlyName, "Backpacker") == 0 ) {
-              switch (clothModQuality) {
-                case gamedataQuality.Common:
-                  clothSlotMod = 1.0;
-                  break;
-                case gamedataQuality.Uncommon:
-                  clothSlotMod = 1.5;
-                  break;
-                case gamedataQuality.Rare:
-                  clothSlotMod = 2.0;
-                  break;
-                case gamedataQuality.Epic:
-                  clothSlotMod = 3.0;
-                  break;
-                case gamedataQuality.Legendary:
-                  clothSlotMod = 5.0;
-                  break;
-              };  
-
-              clothSlotBonus = clothSlotBonus + clothSlotMod;
-            }
-          };
-
-   */        i += 1;
-        } 
       } else {         
         LogChannel(n"DEBUG", "::: GetClothSlotMods  - Item undefined " );
       };
 
-
-
- 
       return clothSlotBonus;
   }
 
