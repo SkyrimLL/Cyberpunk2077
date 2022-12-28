@@ -20,21 +20,21 @@ public class ClaimedVehicleTracking
 
 public class ClaimedVehicleTracking {
   public let player: wref<PlayerPuppet>;
-  public let experimentalModeON: Bool;
+  public let config: ref<ClaimVehiclesConfig>;
 
+  public let modON: Bool;
   public let debugON: Bool;
   public let warningsON: Bool;  
 
-  public let chanceWorkshopHack: Int32;
-  public let chanceFieldTechnicianHack: Int32;
-  public let chanceHackerOverlordHack: Int32;
+  public let chanceWorkshopHack: Float;
+  public let chanceFieldTechnicianHack: Float;
+  public let chanceHackerOverlordHack: Float;
 
   public let claimedVehiclesList: array<PlayerVehicle>;
 
   public let matchVehicle: PlayerVehicle; 
   public let matchVehicleModel: String; 
   public let matchVehicleString: String;  
-  public let matchVehiclePaintString: String;  
   public let matchVehicleUnlocked: Bool;
 
   public func init(player: wref<PlayerPuppet>) -> Void {
@@ -43,25 +43,38 @@ public class ClaimedVehicleTracking {
   }
 
   private func reset() -> Void {
+    this.refreshConfig();
+
     // ------------------ Edit these values to configure the mod
     // Percent chance of successful hack of a vehicle without first stealing it
     // Aligned with three perks
-    this.chanceWorkshopHack = 10;
-    this.chanceFieldTechnicianHack = 25;
-    this.chanceHackerOverlordHack = 100;
+    // this.chanceWorkshopHack = 20;
+    // this.chanceFieldTechnicianHack = 50;
+    // this.chanceHackerOverlordHack = 100;
 
     // Toggle warning messages 
-    this.warningsON = true;
+    // this.warningsON = true;
 
     // ------------------ End of Mod Options
 
     // For developers only 
-    this.debugON = true;
-
-    // To add support for alternate models and paint jobs
-    this.experimentalModeON = false;
+    // this.debugON = true; 
 
   }
+
+  public func refreshConfig() -> Void {
+    this.config = new ClaimVehiclesConfig();
+    this.invalidateCurrentState();
+  }
+
+  public func invalidateCurrentState() -> Void { 
+    this.chanceWorkshopHack = Cast<Float>(this.config.chanceWorkshopHack); 
+    this.chanceFieldTechnicianHack = Cast<Float>(this.config.chanceFieldTechnicianHack); 
+    this.chanceHackerOverlordHack = Cast<Float>(this.config.chanceHackerOverlordHack);   
+    this.warningsON = this.config.warningsON;
+    this.debugON = this.config.debugON;
+    this.modON = this.config.modON;  
+  }  
 
   // Mapping Vehicle plain text model string -> internal vehicle string ID
   //    Also converts variant vehicle model name to model name found in list of potential player vehicles
@@ -70,7 +83,6 @@ public class ClaimedVehicleTracking {
 
     this.matchVehicleModel = "";
     this.matchVehicleString = "";
-    this.matchVehiclePaintString = "";
     this.matchVehicleUnlocked = false;
 
     // LogChannel(n"DEBUG", "N.C.L.A.I.M: Test: claimedVehicleModel: '"+claimedVehicleModel+"' - Target: 'Type-66 640 TX'  - StrCmp: '"+StrCmp(claimedVehicleModel, "Type-66 640 TX")+"'"  );
@@ -79,9 +91,6 @@ public class ClaimedVehicleTracking {
       LogChannel(n"DEBUG", "N.C.L.A.I.M: Reading Vehicle ID from Model: '"+claimedVehicleModel+"'"  );
       LogChannel(n"DEBUG", ">>> Looking for: '"+StrLower(claimedVehicleModel)+"'"  );
     }
- 
-    switch StrLower(claimedVehicleModel) {
-
   /*
     TO DO 
     - map all variants - https://cyberpunk.fandom.com/wiki/Cyberpunk_2077_Vehicles
@@ -91,7 +100,9 @@ public class ClaimedVehicleTracking {
     - Zeya U420  (Short dump truck)
     - Behemoth  (literally just called that, its from militech and used primarily by arasaka)
  
-  */
+  */ 
+
+    switch StrLower(claimedVehicleModel) {
 
   // Cars - Economy
       /*
@@ -110,10 +121,22 @@ public class ClaimedVehicleTracking {
         break;
 
       // Thornton - Colby
-      case "colby c125":
       case "colby c210 camper":
+        this.matchVehicleModel = "Colby C210 Camper";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby";
+        break;
+
       case "colby c240T":
+        this.matchVehicleModel = "Colby C240T";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_family";
+        break;
+
       case "colby \"vaquero\"": // Valentino variant
+        this.matchVehicleModel = "Colby  \"Vaquero\"";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_valentinos";
+        break;
+
+      case "colby c125":
         this.matchVehicleModel = "Colby C125";
         this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_player";
         break;
@@ -154,6 +177,24 @@ public class ClaimedVehicleTracking {
         break;
 
   // Cars - Executive
+      // Archer - Enforcer - Police
+      case "hella ec-h i860 enforcer":
+        this.matchVehicleModel = "Hella EC-H i860 Enforcer";
+        this.matchVehicleString = "Vehicle.v_standard2_archer_hella_police";
+        break;
+
+      // Emperor - Police
+      case "emperor 720 ncpd ironclad":
+        this.matchVehicleModel = "Emperor 720 NCPD Ironclad";
+        this.matchVehicleString = "Vehicle.v_standard3_chevalier_emperor_police";
+        break;
+
+      // Villefort - Cortes - Police
+      case "villefort cortes v6000 overlord":
+        this.matchVehicleModel = "Villefort Cortes V6000 Overlord";
+        this.matchVehicleString = "Vehicle.v_standard2_villefort_cortes_police";
+        break;
+
       // Chevalier - Emperor
       case "emperor 620 ragnar":
         this.matchVehicleModel = "Emperor 620 Ragnar";
@@ -257,9 +298,8 @@ public class ClaimedVehicleTracking {
 
       // Mizutani - Shion
       case "shion mz1":
-        this.matchVehicleModel = "Shion MZ2";
-        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_player";
-        this.matchVehiclePaintString = "Vehicle.mizutani_shion__basic_targa_red";
+        this.matchVehicleModel = "Shion MZ1";
+        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion";
         break;
 
       case "shion mz2":
@@ -359,14 +399,16 @@ public class ClaimedVehicleTracking {
   public func isVehicleOwned() -> Int32 {
     let vehiclesList: array<PlayerVehicle>;
 
-    GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerVehicles(vehiclesList);
-    // GameInstance.GetVehicleSystem(player.GetGame()).GetPlayerUnlockedVehicles(vehiclesList);
     let matchFound = 0;
     let i = 0;
 
+    // First look for a match in unlocked vehicles
+    GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerUnlockedVehicles(vehiclesList);
+
     if (this.warningsON) {
       LogChannel(n"DEBUG", " ");
-      LogChannel(n"DEBUG", "N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database");
+      LogChannel(n"DEBUG", "----- ");
+      LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning known vehicles for '" +StrLower(this.matchVehicleModel) + "'");
     }
 
     // Retrieve RecordID and vehicle type for the matched vehicle model
@@ -375,7 +417,7 @@ public class ClaimedVehicleTracking {
       let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
 
       if (this.warningsON) {
-        LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+_this_vehicleModel+"' -   '"+this.matchVehicleModel+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+        LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+StrLower(_this_vehicleModel)+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
       }
 
       if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
@@ -386,56 +428,50 @@ public class ClaimedVehicleTracking {
  
         this.matchVehicle.recordID = vehiclesList[i].recordID;
         this.matchVehicle.vehicleType = vehiclesList[i].vehicleType;
-        this.matchVehicleUnlocked = vehiclesList[i].isUnlocked;
+        this.matchVehicleUnlocked = true;
       }
 
       i += 1;
     };  
 
-    if (this.warningsON) && (matchFound == 0){ 
-      LogChannel(n"DEBUG", ">>>  NO matching vehicle record ID.");
-    }
+    // If not nfound, scan whole list of known vehicles
+    if (matchFound==0) {
+      i = 0;
 
-    return matchFound;
-  }
-
-  // Matches vehicle model name to custom list of vehicles (separate from standard list of potential player vehicles)
-  public func isVehicleClaimed(claimedVehicle: PlayerVehicle) -> Int32 {
-    let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(claimedVehicle.recordID);
-    let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
-
-    let matchFound = 0;
-    let i = 0;
-
-    if (this.warningsON) {
-      LogChannel(n"DEBUG", " ");
-      LogChannel(n"DEBUG", "N.C.L.A.I.M:  Scanning Field Asset Forfeiture database");
-    }
-
-    // First check if vehicle is already in the list
-    // Retrieve RecordID and vehicle type for the matched vehicle model
-    while i < ArraySize(this.claimedVehiclesList) {
-      // let _this_recordID: TweakDBID = vehiclesList[i].recordID;
-      let _this_vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(this.claimedVehiclesList[i].recordID);
-      let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
+      GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerVehicles(vehiclesList);
 
       if (this.warningsON) {
-        LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+_this_vehicleModel+"' -   '"+claimedVehicleModel+"'. Match found ["+matchFound+"] - strCmp: " + ToString(StrCmp(_this_vehicleModel, claimedVehicleModel, 80, true )));
+        LogChannel(n"DEBUG", " ");
+        LogChannel(n"DEBUG", "----- ");
+        LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" +StrLower(this.matchVehicleModel) + "'");
       }
 
-      if ( StrCmp(StrLower(_this_vehicleModel), StrLower(claimedVehicleModel) ) == 0 ) {
-        if (this.warningsON) { 
-          LogChannel(n"DEBUG", ">>> Found matching vehicle record ID.");
+      // Retrieve RecordID and vehicle type for the matched vehicle model
+      while i < ArraySize(vehiclesList) { 
+        let _this_vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehiclesList[i].recordID);
+        let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
+
+        if (this.warningsON) {
+          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+StrLower(_this_vehicleModel)+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
         }
-        matchFound = 1;
-      }
 
-      if (this.warningsON) && (matchFound == 0){ 
-        LogChannel(n"DEBUG", ">>>  NO matching vehicle record ID.");
-      }
+        if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
+          if (this.warningsON) { 
+            LogChannel(n"DEBUG", ">>> Found matching vehicle record ID.");
+          }
+          matchFound = 1;
+   
+          this.matchVehicle.recordID = vehiclesList[i].recordID;
+          this.matchVehicle.vehicleType = vehiclesList[i].vehicleType;
+          this.matchVehicleUnlocked = vehiclesList[i].isUnlocked;
+        }
 
-      i += 1;
- 
+        i += 1;
+      };  
+    }
+
+    if (this.warningsON) && (matchFound == 0){ 
+      LogChannel(n"DEBUG", ">>>  NO matching vehicle record ID.");
     }
 
     return matchFound;
@@ -528,7 +564,7 @@ public class ClaimedVehicleTracking {
              
       } else {
 
-        if (this.warningsON) {
+        if (this.debugON) {
           LogChannel(n"DEBUG", "N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'. Match found ["+matchFound+"]");        
         }
 
@@ -537,14 +573,6 @@ public class ClaimedVehicleTracking {
         }
 
         if (StrCmp(this.matchVehicleString, "")!=0) {
-          if (this.experimentalModeON)  { 
-            if (this.warningsON) {     
-              LogChannel(n"DEBUG", ">>> Checking for alternate paint job: " + this.matchVehiclePaintString );   
-            }             
-            if (StrCmp(this.matchVehiclePaintString, "")!=0) {
-              this.matchVehicleString = this.matchVehiclePaintString;
-            }
-          }
 
           GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, true, false);
 
@@ -637,7 +665,10 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
  
     playerOwner = scriptInterface.executionOwner as PlayerPuppet;
     if IsDefined(playerOwner) {
-        playerOwner.InitClaimVehicleSystem();
+      playerOwner.InitClaimVehicleSystem();
+      
+      if (playerOwner.m_claimedVehicleTracking.modON) {
+
         vehicle = scriptInterface.owner as VehicleObject;
 
         // Added here to display vehicle Model strings in logs even when mod doesn't trigger - Remove once testing is done
@@ -674,6 +705,8 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
         if (playerOwner.m_claimedVehicleTracking.debugON) {
           LogChannel(n"DEBUG", "::: addClaimedVehicle - Workshop perk level: '"+playerWorkshopLevel+"'"  );
+          LogChannel(n"DEBUG", "::: addClaimedVehicle - Field Technician perk level: '"+playerFieldTechnicianLevel+"'"  );
+          LogChannel(n"DEBUG", "::: addClaimedVehicle - Hacker Overlord perk level: '"+playerHackerOverlordLevel+"'"  );
         }
 
         // Ignore automatic hacking of car if:
@@ -684,16 +717,19 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
         if (isVictorHUDInstalled>0) {
             let isVehicleHackable: Bool = false;
             let chanceHack: Int32 = RandRange(0,100);
+            let playerWorkshopLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceWorkshopHack);
+            let playerFieldTechnicianLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceFieldTechnicianHack);
+            let playerHackerOverlordLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceHackerOverlordHack);
 
-            if ((playerWorkshopLevel > 0) && (chanceHack>= (100 - playerOwner.m_claimedVehicleTracking.chanceWorkshopHack))) {
+            if (playerWorkshopLevel > 0) && ((chanceHack * playerWorkshopLevel) >= playerWorkshopLevelTrigger) {
               isVehicleHackable = true;
             }  
 
-            if ((playerFieldTechnicianLevel > 0) && (chanceHack>= (100 - playerOwner.m_claimedVehicleTracking.chanceFieldTechnicianHack))) {
+            if (playerFieldTechnicianLevel > 0) && ((chanceHack * playerFieldTechnicianLevel) >= playerFieldTechnicianLevelTrigger) {
               isVehicleHackable = true;
             }  
 
-            if (playerHackerOverlordLevel > 0) && (chanceHack>=(100 - playerOwner.m_claimedVehicleTracking.chanceHackerOverlordHack)) {
+            if (playerHackerOverlordLevel > 0) && ((chanceHack * playerHackerOverlordLevel) >= playerHackerOverlordLevelTrigger) {
               isVehicleHackable = true;
             }  
  
@@ -702,28 +738,48 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
             } else {             
               // if (playerOwner.m_claimedVehicleTracking.debugON) {  playerOwner.SetWarningMessage("Warning: Leaving your vehicle."); }
-              if ((playerWorkshopLevel < 0) || (chanceHack< (100 - playerOwner.m_claimedVehicleTracking.chanceWorkshopHack))) {
+              if (playerWorkshopLevel < 0) {
                 if (playerOwner.m_claimedVehicleTracking.debugON) {
-                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Workshop perk missing or failed [" + ToString(chanceHack) + "/100]"  );
+                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Workshop perk missing"  );
+                }
+              } else {
+                if ((chanceHack * playerWorkshopLevel) < playerWorkshopLevelTrigger) {
+                  if (playerOwner.m_claimedVehicleTracking.debugON) {
+                    LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Workshop perk failed [" + ToString((chanceHack * playerWorkshopLevel)) + "<" + ToString(playerWorkshopLevelTrigger) + "]"  );
+                  }
+                }                
+              }
+
+              if (playerFieldTechnicianLevel < 0)  {
+                if (playerOwner.m_claimedVehicleTracking.debugON) {
+                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Field Technician perk missing"  );
+                }
+              } else {
+                if ((chanceHack * playerFieldTechnicianLevel) < playerFieldTechnicianLevelTrigger) {
+                  if (playerOwner.m_claimedVehicleTracking.debugON) {
+                    LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Field Technician perk failed [" + ToString(chanceHack)  + "<" + ToString(playerFieldTechnicianLevelTrigger) + "]"  );
+                  }
                 }
               }
 
-              if ((playerFieldTechnicianLevel < 0) || (chanceHack< (100 - playerOwner.m_claimedVehicleTracking.chanceFieldTechnicianHack))) {
+              if (playerHackerOverlordLevel < 0) {
                 if (playerOwner.m_claimedVehicleTracking.debugON) {
-                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Field Technician perk missing or failed [" + ToString(chanceHack) + "/100]"  );
+                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Hacker Overlord perk missing ");
                 }
+              } else {
+                if ((chanceHack * playerHackerOverlordLevel) < playerHackerOverlordLevelTrigger) {
+                  if (playerOwner.m_claimedVehicleTracking.debugON) {
+                    LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Hacker Overlord perk failed [" + ToString(chanceHack)  + "<" + ToString(playerHackerOverlordLevelTrigger) + "]"  );
+                  }
+                }                
               }
 
-              if (playerHackerOverlordLevel < (100 - playerOwner.m_claimedVehicleTracking.chanceHackerOverlordHack)) {
-                if (playerOwner.m_claimedVehicleTracking.debugON) {
-                  LogChannel(n"DEBUG", "::: addClaimedVehicle - Skipped - Hacker Overlord perk missing [" + ToString(chanceHack) + "/100]");
-                }
-              }
+
 
             }
 
             playerOwner.m_claimedVehicleTracking.tryPersistVehicle(vehicle);
-        
+          }
         }
 
 
@@ -737,31 +793,6 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
    this.ResumeStateMachines(scriptInterface.executionOwner);
 }
 
-
-// public class QuickSlotsManager extends ScriptableComponent {
-/* Disabled for now - find way to persist list between saves + teleport vehicle to player
-@replaceMethod(QuickSlotsManager) 
-
-  public final func SetActiveVehicle(vehicleData: PlayerVehicle) -> Void {
-    let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicleData.recordID);
-    let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
-
-    if TDBID.IsValid(vehicleData.recordID) || (this.m_Player.m_claimedVehicleTracking.isVehicleClaimed(vehicleData) > 0) {
-
-      if (this.m_Player.m_claimedVehicleTracking.isVehicleClaimed(vehicleData) > 0) {
-          this.m_Player.SetWarningMessage("N.C.L.A.I.M: Transmition protocol time out. Retrieval failed.");    
-
-        } else {
-          this.m_Player.SetWarningMessage("N.C.L.A.I.M: Setting active vehicle to '"+claimedVehicleModel+"'.");    
-          GameInstance.GetVehicleSystem(this.m_Player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(vehicleData.recordID), vehicleData.vehicleType, true);
-          this.GetPS().SetActiveType(vehicleData.vehicleType);
-
-        }
-
-    }  
-
-  }
-*/
 
  // public class VehicleComponent extends ScriptableDeviceComponent {
 @replaceMethod(VehicleComponent) 
@@ -792,7 +823,9 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
       playerPuppet.m_claimedVehicleTracking.reset();
     };
 
-    playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(vehicle);
+    if (playerPuppet.m_claimedVehicleTracking.modON) {
+      playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(vehicle);
+    }
   }
 
 // Reference code
