@@ -5,3 +5,5 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sport2_mizutani_shion
   - !append Vehicle.v_standard2_thorton_colby_family
   - !append Vehicle.v_standard2_thorton_colby_valentinos
+  - !append Vehicle.v_utility4_kaukaz_bratsk__basic_01
+  - !append Vehicle.v_standard2_archer_hella_combat_cab

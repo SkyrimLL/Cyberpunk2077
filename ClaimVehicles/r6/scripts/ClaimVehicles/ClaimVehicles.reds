@@ -177,6 +177,12 @@ public class ClaimedVehicleTracking {
         break;
 
   // Cars - Executive
+      // Archer - Hella - Cab
+      case "hella ec-v i660 voyage":
+        this.matchVehicleModel = "Hella EC-V i660 Voyage";
+        this.matchVehicleString = "Vehicle.v_standard2_archer_hella_combat_cab";
+        break;
+
       // Archer - Enforcer - Police
       case "hella ec-h i860 enforcer":
         this.matchVehicleModel = "Hella EC-H i860 Enforcer";
@@ -234,6 +240,10 @@ public class ClaimedVehicleTracking {
       /*
         * [reserved] Mackinaw Beast - Vehicle.v_standard3_thorton_mackinaw_ncu_player - ncu = unique? - The Beast in Me Side Job 
       */
+      case "bratsk u4020": // Not working in garage!
+        this.matchVehicleModel = "Bratsk U4020";
+        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk__basic_01";
+        break;
 
   // Cars - Sport   
       /*
@@ -386,6 +396,7 @@ public class ClaimedVehicleTracking {
       /*
         [reserved] Cortes Delamain No. 21 - Vehicle.v_standard2_villefort_cortes_delamain_player - Don’t Lose Your Mind taxi reward 
       */
+
     };
 
     if (this.warningsON) {
