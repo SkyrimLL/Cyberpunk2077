@@ -126,7 +126,12 @@ public class ClaimedVehicleTracking {
         this.matchVehicleString = "Vehicle.v_standard2_thorton_colby";
         break;
 
-      case "colby c240T":
+      case "colby cst40":
+        this.matchVehicleModel = "Colby CST40";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_gt";
+        break;
+
+      case "colby c240t":
         this.matchVehicleModel = "Colby C240T";
         this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_family";
         break;
@@ -196,8 +201,8 @@ public class ClaimedVehicleTracking {
         break;
 
       // Villefort - Cortes - Police
-      case "villefort cortes v6000 overlord":
-        this.matchVehicleModel = "Villefort Cortes V6000 Overlord";
+      case "cortes v6000 ncpd overlord":
+        this.matchVehicleModel = "Cortes V6000 NCPD Overlord";
         this.matchVehicleString = "Vehicle.v_standard2_villefort_cortes_police";
         break;
 
@@ -240,10 +245,10 @@ public class ClaimedVehicleTracking {
       /*
         * [reserved] Mackinaw Beast - Vehicle.v_standard3_thorton_mackinaw_ncu_player - ncu = unique? - The Beast in Me Side Job 
       */
-      case "bratsk u4020": // Not working in garage!
-        this.matchVehicleModel = "Bratsk U4020";
-        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk__basic_01";
-        break;
+      // case "bratsk u4020": // Not working in garage!
+      //   this.matchVehicleModel = "Bratsk U4020";
+      //   this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk__basic_01";
+      //   break;
 
   // Cars - Sport   
       /*
@@ -396,6 +401,11 @@ public class ClaimedVehicleTracking {
       /*
         [reserved] Cortes Delamain No. 21 - Vehicle.v_standard2_villefort_cortes_delamain_player - Don’t Lose Your Mind taxi reward 
       */
+      // Judy's van cannot be interacted with - cannot be stolen or entered as a driver
+      // case "columbus \"sea dragon\"":
+      //  this.matchVehicleModel = "Columbus \"Sea Dragon\"";
+      //  this.matchVehicleString = "Vehicle.v_standard25_villefort_columbus_judy_van";
+      //  break;
 
     };
 
