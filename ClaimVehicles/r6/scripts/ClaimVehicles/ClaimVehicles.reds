@@ -262,7 +262,15 @@ public class ClaimedVehicleTracking {
         break;
 
       case "quartz \"barghest\"":  
+        this.matchVehicleModel = "Quartz \"Barghest\"";
+        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_nomad_wraith";
+        break;
+
       case "quartz \"sidewinder\"":  
+        this.matchVehicleModel = "Quartz \"Sidewinder\"";
+        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_nomad";
+        break;
+
       case "quartz \"bandit\"": // Mission Reward (spared Nash)
         this.matchVehicleModel = "Quartz \"Bandit\"";
         this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
@@ -338,7 +346,11 @@ public class ClaimedVehicleTracking {
       */
       // [DEBUG] N.C.L.A.I.M: Reading Vehicle ID from Model: 'ARCH NAZARÉ'
       // Arch - Nazare
-      case "nazaré \"racer\"":  
+      case "nazaré racer":  
+        this.matchVehicleModel = "Nazaré Racer";
+        this.matchVehicleString = "Vehicle.v_sportbike2_arch_sport";
+        break;
+
       case "arch nazaré":  
         this.matchVehicleModel = "ARCH NAZARÉ";
         this.matchVehicleString = "Vehicle.v_sportbike2_arch_player";

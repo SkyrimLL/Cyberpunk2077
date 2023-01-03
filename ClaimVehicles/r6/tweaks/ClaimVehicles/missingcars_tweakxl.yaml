@@ -7,4 +7,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_thorton_colby_family
   - !append Vehicle.v_standard2_thorton_colby_valentinos
   - !append Vehicle.v_standard2_archer_hella_combat_cab 
+  - !append Vehicle.v_standard2_archer_quartz_nomad
+  - !append Vehicle.v_standard2_archer_quartz_nomad_wraith
+  - !append Vehicle.v_sportbike2_arch_sport
   - !append Vehicle.v_utility4_kaukaz_bratsk__basic_01
