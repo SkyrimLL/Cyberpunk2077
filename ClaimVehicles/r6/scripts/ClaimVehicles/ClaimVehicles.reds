@@ -26,6 +26,7 @@ public class ClaimedVehicleTracking {
   public let debugON: Bool;
   public let warningsON: Bool;  
 
+  public let chanceOnSteal: Float;
   public let chanceWorkshopHack: Float;
   public let chanceFieldTechnicianHack: Float;
   public let chanceHackerOverlordHack: Float;
@@ -68,6 +69,7 @@ public class ClaimedVehicleTracking {
   }
 
   public func invalidateCurrentState() -> Void { 
+    this.chanceOnSteal = Cast<Float>(this.config.chanceOnSteal); 
     this.chanceWorkshopHack = Cast<Float>(this.config.chanceWorkshopHack); 
     this.chanceFieldTechnicianHack = Cast<Float>(this.config.chanceFieldTechnicianHack); 
     this.chanceHackerOverlordHack = Cast<Float>(this.config.chanceHackerOverlordHack);   
@@ -170,6 +172,10 @@ public class ClaimedVehicleTracking {
         break;
 
       case "galena ga32t": // Default Nomad Life Path Vehicle  
+        this.matchVehicleModel = "Galena GA32T";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_nomad";
+        break;
+
       case "galena \"rattler\"": // Default Nomad Life Path Vehicle  
         this.matchVehicleModel = "Galena \"Rattler\"";
         this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_bobas_player";
@@ -179,6 +185,16 @@ public class ClaimedVehicleTracking {
       case "mackinaw mtl1":
         this.matchVehicleModel = "Mackinaw MTL1";
         this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_player";
+        break;
+
+      case "mackinaw larimore":
+        this.matchVehicleModel = "Mackinaw Larimore";
+        this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_country";
+        break;
+
+      case "mackinaw \"saguaro\"":
+        this.matchVehicleModel = "Mackinaw \"Saguaro\""; // Nomad version
+        this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_nomad";
         break;
 
   // Cars - Executive
@@ -213,6 +229,11 @@ public class ClaimedVehicleTracking {
         break;
 
        // Chevalier - Thrax
+      case "thrax 378 decurion":
+        this.matchVehicleModel = "Thrax 378 Decurion";
+        this.matchVehicleString = "Vehicle.v_standard2_chevalier_thrax_sixth_street";
+        break;
+
       case "thrax 388 jefferson":
         this.matchVehicleModel = "Thrax 388 Jefferson";
         this.matchVehicleString = "Vehicle.v_standard2_chevalier_thrax_player";
@@ -256,8 +277,12 @@ public class ClaimedVehicleTracking {
       */  
       // Archer - Quartz
       case "quartz ec-l r275":  
+        this.matchVehicleModel = "Quartz EC-L R275";
+        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz";
+        break;
+
       case "quartz ec-t2 r660": 
-        this.matchVehicleModel = "Quartz EC-T2 r660";
+        this.matchVehicleModel = "Quartz EC-T2 R660";
         this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
         break;
 
@@ -278,9 +303,13 @@ public class ClaimedVehicleTracking {
 
       // Quadra - Turbo-R
       case "turbo-r 740":
-      case "turbo-r \"raijin\"": // Assuming this is the Tyger customized version of the 'Turbo-R 740'
         this.matchVehicleModel = "Turbo-R 740";
         this.matchVehicleString = "Vehicle.v_sport1_quadra_turbo_player";
+        break;
+
+      case "turbo-r \"raijin\"": // Assuming this is the Tyger customized version of the 'Turbo-R 740'
+        this.matchVehicleModel = "Turbo-R \"Raijin\"";
+        this.matchVehicleString = "Vehicle.v_sport1_quadra_turbo_tyger_claw";
         break;
 
       case "turbo-r v-tech": //   Reward from Sex on Wheels
@@ -330,6 +359,11 @@ public class ClaimedVehicleTracking {
         this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_player";
         break;
 
+      case "shion \"kyokotsu\"":
+        this.matchVehicleModel = "Shion \"Kyokotsu\"";
+        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_tyger";
+        break;
+
       case "shion \"coyote\"": // Queen of the Highway Side Job 
         // v_sport2_mizutani_shion_nomad_player is the default model
         // v_sport2_mizutani_shion_nomad_02_player is the red model
@@ -364,9 +398,13 @@ public class ClaimedVehicleTracking {
 
       // Brennan - Apollo
       case "apollo":
-      case "apollo \"cicada\"":
         this.matchVehicleModel = "Apollo";
         this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo_player";
+        break;
+
+      case "apollo \"cicada\"":
+        this.matchVehicleModel = "Apollo \"Cicada\"";
+        this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo";
         break;
 
       // Brennan - Apollo
@@ -382,10 +420,14 @@ public class ClaimedVehicleTracking {
         break;
 
       case "kusanagi \"misfit\"":
-      case "kusanagi \"misuchi\"":
-        // Looks like some Tyger customized bikes in game still have the "Kusanagi CT-3X" model name instead of "Kusanagi "Misuchi", which means they will trigger the default model instead of the Tyger customized one
-        this.matchVehicleModel = "Kusanagi \"Misuchi\"";
+        this.matchVehicleModel = "Kusanagi \"Mifit\"";
         this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player";
+        break;
+
+      case "kusanagi \"mizuchi\"":
+        // Looks like some Tyger customized bikes in game still have the "Kusanagi CT-3X" model name instead of "Kusanagi "Misuchi", which means they will trigger the default model instead of the Tyger customized one
+        this.matchVehicleModel = "Kusanagi \"Mizuchi\"";
+        this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_tyger";
         break;
 
   // Cars - Hypercars    
@@ -749,23 +791,31 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
         if (isVictorHUDInstalled>0) {
             let isVehicleHackable: Bool = false;
-            let chanceHack: Int32 = RandRange(0,100);
+            let chanceHack: Int32 = RandRange(0,99);
             let playerWorkshopLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceWorkshopHack);
             let playerFieldTechnicianLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceFieldTechnicianHack);
             let playerHackerOverlordLevelTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceHackerOverlordHack);
 
-            if (playerWorkshopLevel > 0) && ((chanceHack * playerWorkshopLevel) >= playerWorkshopLevelTrigger) {
+            if (playerWorkshopLevel > 0) && (Min(chanceHack * playerWorkshopLevel, 99) > playerWorkshopLevelTrigger) {
               isVehicleHackable = true;
             }  
 
-            if (playerFieldTechnicianLevel > 0) && ((chanceHack * playerFieldTechnicianLevel) >= playerFieldTechnicianLevelTrigger) {
+            if (playerFieldTechnicianLevel > 0) && (Min(chanceHack * playerFieldTechnicianLevel, 99) > playerFieldTechnicianLevelTrigger) {
               isVehicleHackable = true;
             }  
 
-            if (playerHackerOverlordLevel > 0) && ((chanceHack * playerHackerOverlordLevel) >= playerHackerOverlordLevelTrigger) {
+            if (playerHackerOverlordLevel > 0) && (Min(chanceHack * playerHackerOverlordLevel, 99) > playerHackerOverlordLevelTrigger) {
               isVehicleHackable = true;
             }  
- 
+
+            if (playerOwner.m_claimedVehicleTracking.debugON) {
+              LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHack: '"+ToString(chanceHack)+"'"  );
+              LogChannel(n"DEBUG", "::: addClaimedVehicle - playerWorkshopLevelTrigger: '"+ToString(playerWorkshopLevelTrigger)+"'"  );
+              LogChannel(n"DEBUG", "::: addClaimedVehicle - playerFieldTechnicianLevelTrigger: '"+ToString(playerFieldTechnicianLevelTrigger)+"'"  );
+              LogChannel(n"DEBUG", "::: addClaimedVehicle - playerHackerOverlordLevelTrigger: '"+ToString(playerHackerOverlordLevelTrigger)+"'"  );
+              LogChannel(n"DEBUG", "::: addClaimedVehicle - isVehicleHackable: "+ToString(isVehicleHackable)  );
+            }
+     
             if (isVehicleHackable){ 
                playerOwner.m_claimedVehicleTracking.tryClaimVehicle(vehicle);   
 
@@ -856,7 +906,15 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
       playerPuppet.m_claimedVehicleTracking.reset();
     };
 
-    if (playerPuppet.m_claimedVehicleTracking.modON) {
+    let isVehicleHackable: Bool = false;
+    let chanceHack: Int32 = RandRange(0,99);
+    let playerOnStealTrigger: Int32 = Cast<Int32>(100.0 - playerPuppet.m_claimedVehicleTracking.chanceOnSteal);
+
+    if (chanceHack  > playerOnStealTrigger) {
+      isVehicleHackable = true;
+    }  
+
+    if (isVehicleHackable) && (playerPuppet.m_claimedVehicleTracking.modON) { 
       playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(vehicle);
     }
   }

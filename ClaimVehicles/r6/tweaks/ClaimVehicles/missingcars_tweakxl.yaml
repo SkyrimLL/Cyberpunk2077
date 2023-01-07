@@ -2,7 +2,16 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_archer_hella_police
   - !append Vehicle.v_standard3_chevalier_emperor_police
   - !append Vehicle.v_standard2_villefort_cortes_police
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger
+  - !append Vehicle.v_sportbike3_brennan_apollo
   - !append Vehicle.v_sport2_mizutani_shion
+  - !append Vehicle.v_standard2_archer_quartz
+  - !append Vehicle.v_sport1_quadra_turbo_tyger_claw
+  - !append Vehicle.v_sport2_mizutani_shion_tyger
+  - !append Vehicle.v_standard2_chevalier_thrax_sixth_street
+  - !append Vehicle.v_standard3_thorton_mackinaw_country
+  - !append Vehicle.v_standard3_thorton_mackinaw_nomad
+  - !append Vehicle.v_standard2_thorton_galena_nomad
   - !append Vehicle.v_standard2_thorton_colby_gt
   - !append Vehicle.v_standard2_thorton_colby_family
   - !append Vehicle.v_standard2_thorton_colby_valentinos
