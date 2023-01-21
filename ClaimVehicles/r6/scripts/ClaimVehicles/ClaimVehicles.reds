@@ -266,10 +266,20 @@ public class ClaimedVehicleTracking {
       /*
         * [reserved] Mackinaw Beast - Vehicle.v_standard3_thorton_mackinaw_ncu_player - ncu = unique? - The Beast in Me Side Job 
       */
-      // case "bratsk u4020": // Not working in garage!
-      //   this.matchVehicleModel = "Bratsk U4020";
-      //   this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk__basic_01";
-      //   break;
+      case "zeya u420": 
+        this.matchVehicleModel = "Zeya U420";
+        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_zeya";
+        break;
+
+      case "bratsk u4020": 
+        this.matchVehicleModel = "Bratsk U4020";
+        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk";
+        break;
+
+      case "behemoth": 
+        this.matchVehicleModel = "Behemoth";
+        this.matchVehicleString = "Vehicle.v_utility4_militech_behemoth";
+        break;
 
   // Cars - Sport   
       /*
