@@ -929,40 +929,6 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
     }
   }
 
-
-@wrapMethod(VehiclesManagerPopupGameController)
-protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool
-{
-    let actionType: gameinputActionType = ListenerAction.GetType(action);
-    let actionName: CName = ListenerAction.GetName(action);
-    // LogChannel(n"DEBUG",NameToString(actionName)); // Prints any UI key (at least the working ones)
-
-    if Equals(actionType, gameinputActionType.BUTTON_PRESSED)
-    {
-        switch actionName
-        {
-        case n"popup_moveLeft":
-            // LogChannel(n"DEBUG","N.C.L.A.I.M: ALERT: Vehicle marked for removal");
-            let selectedItem: wref<VehiclesManagerListItemController> = this.m_listController.GetSelectedItem() as VehiclesManagerListItemController;
-            let selectedVehicleData: ref<VehicleListItemData> = selectedItem.GetVehicleData();
-
-            this.m_quickSlotsManager.NCLAIMRemoveVehicle(selectedVehicleData.m_data, GetLocalizedItemNameByCName(selectedVehicleData.m_displayName));
-            this.Close();
-            break;
-        }
-    }
-    return wrappedMethod(action,consumer);
-}
-
-@wrapMethod(VehiclesManagerPopupGameController)
-protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool
-{
-    let playerControlledObject = this.GetPlayerControlledObject();
-    playerControlledObject.RegisterInputListener(this, n"popup_moveLeft");
-    return wrappedMethod(playerPuppet);
-}
- 
-
 @addMethod(QuickSlotsManager) 
 
   public final func NCLAIMRemoveVehicle(vehicleData: PlayerVehicle, vehicleModel: String ) -> Void {
@@ -1026,6 +992,96 @@ protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool
     };
 
   }
+
+// @wrapMethod(VehiclesManagerPopupGameController)
+
+  // protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool
+  // {
+  //     wrappedMethod(action,consumer);
+
+  //     let actionType: gameinputActionType = ListenerAction.GetType(action);
+  //     let actionName: CName = ListenerAction.GetName(action); 
+
+  //     if Equals(actionType, gameinputActionType.BUTTON_PRESSED)
+  //     {
+  //         switch actionName
+  //         {
+  //         case n"popup_moveLeft": 
+  //             let selectedItem: wref<VehiclesManagerListItemController> = this.m_listController.GetSelectedItem() as VehiclesManagerListItemController;
+  //             let selectedVehicleData: ref<VehicleListItemData> = selectedItem.GetVehicleData();
+
+  //             this.m_quickSlotsManager.NCLAIMRemoveVehicle(selectedVehicleData.m_data, GetLocalizedItemNameByCName(selectedVehicleData.m_displayName));
+  //             this.Close();
+  //             break;
+  //         }
+  //     }
+  // }
+
+@addMethod(VehiclesManagerPopupGameController)
+
+  protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
+    let actionType: gameinputActionType = ListenerAction.GetType(action);
+    let actionName: CName = ListenerAction.GetName(action);
+    if Equals(actionType, gameinputActionType.REPEAT) {
+      switch actionName {
+        case n"popup_moveUp":
+          super.ScrollPrior();
+          break;
+        case n"popup_moveDown":
+          super.ScrollNext();
+      };
+    } else {
+      if Equals(actionType, gameinputActionType.BUTTON_PRESSED) {
+        switch actionName {
+          case n"proceed":
+            super.Activate();
+            break;
+          case n"popup_moveUp":
+            super.ScrollPrior();
+            break;
+          case n"popup_moveDown":
+            super.ScrollNext();
+            break;
+          case n"popup_moveLeft":
+            // LogChannel(n"DEBUG","N.C.L.A.I.M: ALERT: Vehicle marked for removal");
+            let selectedItem: wref<VehiclesManagerListItemController> = super.m_listController.GetSelectedItem() as VehiclesManagerListItemController;
+            let selectedVehicleData: ref<VehicleListItemData> = selectedItem.GetVehicleData();
+
+            this.m_quickSlotsManager.NCLAIMRemoveVehicle(selectedVehicleData.m_data, GetLocalizedItemNameByCName(selectedVehicleData.m_displayName));
+            super.Close();
+            break;
+          case n"OpenPauseMenu":
+            ListenerActionConsumer.DontSendReleaseEvent(consumer);
+            super.Close();
+            break;
+          case n"cancel":
+            super.Close();
+        };
+      } else {
+        if Equals(actionType, gameinputActionType.BUTTON_HOLD_COMPLETE) {
+          if Equals(actionName, n"left_stick_y_scroll_up") {
+            super.ScrollPrior();
+          } else {
+            if Equals(actionName, n"left_stick_y_scroll_down") {
+              super.ScrollNext();
+            };
+          };
+        };
+      };
+    };
+  }
+
+@wrapMethod(VehiclesManagerPopupGameController)
+
+  protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool
+  {
+      wrappedMethod(playerPuppet);
+
+      let playerControlledObject = this.GetPlayerControlledObject();
+      playerControlledObject.RegisterInputListener(this, n"popup_moveLeft");
+  }
+ 
+
 
 
 
