@@ -1034,7 +1034,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
       if Equals(actionType, gameinputActionType.BUTTON_PRESSED) {
         switch actionName {
           case n"proceed":
-            super.Activate();
+            this.Activate();
             break;
           case n"popup_moveUp":
             super.ScrollPrior();
