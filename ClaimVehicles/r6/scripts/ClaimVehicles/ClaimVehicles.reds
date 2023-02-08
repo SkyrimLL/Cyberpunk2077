@@ -171,9 +171,9 @@ public class ClaimedVehicleTracking {
         this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_nomad_player";
         break;
 
-      case "galena ga32t": // Default Nomad Life Path Vehicle  
-        this.matchVehicleModel = "Galena GA32T";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_nomad";
+      case "galena ga32t": // Sports model
+        this.matchVehicleModel = "Galena GA32t";
+        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_gt";
         break;
 
       case "galena \"rattler\"": // Default Nomad Life Path Vehicle  
