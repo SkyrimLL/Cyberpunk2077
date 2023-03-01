@@ -21,6 +21,7 @@ public class ClaimedVehicleTracking
 public class ClaimedVehicleTracking {
   public let player: wref<PlayerPuppet>;
   public let config: ref<ClaimVehiclesConfig>;
+  public let vehicleDB: ref<ClaimVehicleDB>;
 
   public let modON: Bool;
   public let debugON: Bool;
@@ -64,6 +65,8 @@ public class ClaimedVehicleTracking {
   }
 
   public func refreshConfig() -> Void {
+    this.vehicleDB = new ClaimVehicleDB();
+    this.vehicleDB.init();
     this.config = new ClaimVehiclesConfig();
     this.invalidateCurrentState();
   }
@@ -104,7 +107,16 @@ public class ClaimedVehicleTracking {
  
   */ 
 
-    switch StrLower(claimedVehicleModel) {
+  let vehicleKey = StrLower(claimedVehicleModel);
+  let matchVehicle = this.vehicleDB.lookupVehicleKey(vehicleKey);
+
+  if !(Equals(matchVehicle.key,"undefined")) {
+    this.matchVehicleModel = matchVehicle.vehicleModel;
+    this.matchVehicleString = matchVehicle.vehicleString;
+
+  } else {
+
+    switch vehicleKey {
 
   // Cars - Economy
       /*
@@ -440,27 +452,6 @@ public class ClaimedVehicleTracking {
         this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_tyger";
         break;
 
-  // Cars - Hypercars    
-      // Herrera - Outlaw GTS
-      case "outlaw gts":
-        this.matchVehicleModel = "Outlaw GTS";
-        this.matchVehicleString = "Vehicle.v_sport1_herrera_outlaw_player";
-        break;
-
-      // Rayfield - Aerondight
-      case "aerondight \"guinevere\"":
-        this.matchVehicleModel = "Aerondight \"Guinevere\"";
-        this.matchVehicleString = "Vehicle.v_sport1_rayfield_aerondight_player";
-        break;
-
-      // Rayfield - Caliburn
-      // v_sport1_rayfield_caliburn_player is the default model
-      // v_sport1_rayfield_caliburn_02_player is the Black model (free in a tunnel in the badlands)
-      case "caliburn":
-        this.matchVehicleModel = "Caliburn";
-        this.matchVehicleString = "Vehicle.v_sport1_rayfield_caliburn_player";
-        break;
-
   // Other      
       /*
         [reserved] Cortes Delamain No. 21 - Vehicle.v_standard2_villefort_cortes_delamain_player - Don’t Lose Your Mind taxi reward 
@@ -471,6 +462,7 @@ public class ClaimedVehicleTracking {
       //  this.matchVehicleString = "Vehicle.v_standard25_villefort_columbus_judy_van";
       //  break;
 
+      };
     };
 
     if (this.warningsON) {
