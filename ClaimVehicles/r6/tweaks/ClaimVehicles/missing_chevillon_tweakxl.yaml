@@ -1,0 +1,2 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.kab_02_backup_thrax

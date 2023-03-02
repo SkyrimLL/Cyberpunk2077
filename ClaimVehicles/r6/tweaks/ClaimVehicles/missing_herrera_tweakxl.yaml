@@ -1,0 +1,4 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_sport1_herrera_outlaw
+  - !append Vehicle.v_sport1_herrera_riptide
+  - !append Vehicle.cs_savable_herrera_outlaw

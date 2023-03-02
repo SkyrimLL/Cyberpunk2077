@@ -1,0 +1,10 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_mahir_mt28_coach
+  - !append Vehicle.v_standard25_mahir_mox
+  - !append Vehicle.v_standard25_mahir_supron
+  - !append Vehicle.v_standard25_mahir_supron_poor
+  - !append Vehicle.v_standard25_mahir_supron_sport
+  - !append Vehicle.v_standard25_mahir_voodoo_boys
+  - !append Vehicle.cs_savable_mahir_mt28_coach
+  - !append Vehicle.cs_savable_mahir_supron
+  - !append Vehicle.cs_savable_mahir_voodoo_boys

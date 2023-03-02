@@ -1,0 +1,16 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_militech_basilisk
+  - !append Vehicle.v_militech_basilisk_militech
+  - !append Vehicle.v_militech_basilisk_transport
+  - !append Vehicle.v_utility4_militech_behemoth
+  - !append Vehicle.v_utility4_militech_behemoth_border_patrol
+  - !append Vehicle.v_utility4_militech_behemoth_kangtao
+  - !append Vehicle.v_utility4_militech_behemoth_maxtac
+  - !append Vehicle.v_utility4_militech_behemoth_netwatch
+  - !append Vehicle.v_utility4_militech_behemoth_police
+  - !append Vehicle.cs_savable_militech_behemoth
+  - !append Vehicle.q114_militech_missile_truck_final
+  - !append Vehicle.q114_militech_panzer
+  - !append Vehicle.q114_militech_response_bike
+  - !append Vehicle.q114_militech_response_car
+  - !append Vehicle.sq027_militech_suv

@@ -1,0 +1,10 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_sportbike3_brennan_apollo
+  - !append Vehicle.v_sportbike3_brennan_apollo_nomad
+  - !append Vehicle.v_sportbike3_brennan_apollo_scorpion
+  - !append Vehicle.v_sportbike3_brennan_apollo_sport
+  - !append Vehicle.v_sportbike3_brennan_apollo_tyger
+  - !append Vehicle.cs_savable_brennan_apollo
+  - !append Vehicle.q114_brennan_apollo_nomad
+  - !append Vehicle.mq001_scorpion_vehicle
+  - !append Vehicle.q104_scorpion_bike

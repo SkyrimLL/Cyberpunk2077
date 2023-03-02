@@ -123,6 +123,7 @@ public class ClaimedVehicleTracking {
       LogChannel(n"DEBUG", " ");
       LogChannel(n"DEBUG", "----- ");
       LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning known vehicles for '" + this.matchVehicleModel + "'");
+      LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  " + ToString(ArraySize(vehiclesList)) + " vehicles currently registered.");
     }
 
     // Retrieve RecordID and vehicle type for the matched vehicle model
@@ -134,7 +135,7 @@ public class ClaimedVehicleTracking {
         if (vehiclesList[i].isUnlocked) {
           LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
         } else {
-          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel );
+          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"'" );
         }
       }
 
@@ -160,6 +161,7 @@ public class ClaimedVehicleTracking {
       if (this.warningsON) {
         LogChannel(n"DEBUG", " ");
         LogChannel(n"DEBUG", "----- Fallback");
+        LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Database online. " + ToString(ArraySize(vehiclesList)) + " records total");
         LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" + this.matchVehicleModel + "'");
       }
       // Retrieve RecordID and vehicle type for the matched vehicle model
@@ -170,7 +172,7 @@ public class ClaimedVehicleTracking {
           if (vehiclesList[i].isUnlocked) {
             LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
           } else {
-            LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel );
+            LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"'");
           }
           
         }

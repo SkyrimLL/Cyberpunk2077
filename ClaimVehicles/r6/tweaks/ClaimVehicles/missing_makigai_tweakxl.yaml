@@ -1,0 +1,7 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_standard2_makigai_maimai
+  - !append Vehicle.v_standard2_makigai_maimai_gt
+  - !append Vehicle.v_standard2_makigai_maimai_poor
+  - !append Vehicle.v_standard2_makigai_maimai_premium
+  - !append Vehicle.cs_savable_makigai_maimai
+  - !append Vehicle.e319_makigai_maimai

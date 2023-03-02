@@ -1,0 +1,6 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_sportbike2_arch 
+  - !append Vehicle.v_sportbike2_arch_sport
+  - !append Vehicle.v_sportbike2_arch_tyger
+  - !append Vehicle.cs_savable_arch
+  - !append Vehicle.ma_pac_cvi_08_bike_arch

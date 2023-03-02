@@ -1,0 +1,12 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.q005_delamain_cab_combat
+  - !append Vehicle.q101_delamain_cab
+  - !append Vehicle.q108_delamain_cab
+  - !append Vehicle.sq025_delamain_cab
+  - !append Vehicle.sq025_delamain_cab_angry
+  - !append Vehicle.sq025_delamain_cab_deep
+  - !append Vehicle.sq025_delamain_cab_manic
+  - !append Vehicle.sq025_delamain_cab_mean
+  - !append Vehicle.sq025_delamain_cab_sad
+  - !append Vehicle.sq025_delamain_cab_scared
+  - !append Vehicle.sq025_delamain_cab_suicidal

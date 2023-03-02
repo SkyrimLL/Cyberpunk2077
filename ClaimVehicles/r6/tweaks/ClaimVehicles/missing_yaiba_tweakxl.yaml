@@ -1,0 +1,8 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_animal
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_mox
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_test5
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger
+  - !append Vehicle.e319_yaiba_kusanagi
+  - !append Vehicle.ma_pac_cvi_08_bike_kusanagi
