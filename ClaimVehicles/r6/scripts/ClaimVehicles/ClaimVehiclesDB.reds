@@ -1,13 +1,11 @@
 public class VehicleProperties {
 
-  let key: String;
-  let vehicleModel: String;
-  let vehicleString: String;
+  let vehicleRecordID: TweakDBID; 
+  let vehicleString: String; 
 
-  public static func CreateItem(_key: String, _model: String, _string: String) -> ref<VehicleProperties> {
+  public static func CreateItem(_id: TweakDBID, _string: String) -> ref<VehicleProperties> {
     let Item = new VehicleProperties();
-    Item.key = _key;
-    Item.vehicleModel = _model;
+    Item.vehicleRecordID = _id; 
     Item.vehicleString = _string;
     return Item;
   }
@@ -17,51 +15,386 @@ public class ClaimVehicleDB {
 
   public let vehiclesDB: array<ref<VehicleProperties>>;
 
-  public func lookupVehicleKey(_key: String) -> ref<VehicleProperties> {
-    LogChannel(n"DEBUG", ">>> ClaimVehicleDB: lookupVehicleKey()...");
+  public func lookupVehicleString(_id: TweakDBID) -> String {
+    LogChannel(n"DEBUG", ">>> ClaimVehicleDB: lookupVehicleKey()..." );
+    LogChannel(n"DEBUG", ">>> ClaimVehicleDB: searching for: " + TDBID.ToStringDEBUG(_id));
 
     let undefinedvehicle: ref<VehicleProperties>; 
 
     for thisVehicle in this.vehiclesDB { 
-      if (Equals(thisVehicle.key, _key)) {
+      if (Equals(thisVehicle.vehicleRecordID, _id)) {
     	LogChannel(n"DEBUG", ">>> ClaimVehicleDB: entry found!"); 
 
-        return thisVehicle;
-      } 
-
-      if (Equals(thisVehicle.key, "undefined")) {
-        undefinedvehicle = thisVehicle;
-      }
+        return thisVehicle.vehicleString;
+      }  
     };
 
     LogChannel(n"DEBUG", ">>> ClaimVehicleDB: entry not found (slot empty / unregistered item)"); 
-    return undefinedvehicle;
+    return "";
   }
 
-  public func init() -> Void {
-    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem("undefined", "", ""));
+  public func init() -> Void { 
 
-    // ======================================================================================================================================
-    // 																TRANSLATIONS START HERE 
-    // Only translate the first two model names.
-    // Do not edit the Vehicle code
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_001_limousine", "Vehicle.v_001_limousine"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_003_smalltruck", "Vehicle.v_003_smalltruck"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_004_bubble_one", "Vehicle.v_004_bubble_one"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_005_lego", "Vehicle.v_005_lego"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_006_golf", "Vehicle.v_006_golf"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_007_aerondight_demo_trigger", "Vehicle.v_007_aerondight_demo_trigger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_007_interceptor", "Vehicle.v_007_interceptor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_007_interceptor_demo_trigger", "Vehicle.v_007_interceptor_demo_trigger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_007_interceptor_police", "Vehicle.v_007_interceptor_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_009_box_car", "Vehicle.v_009_box_car"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_010_v_tek", "Vehicle.v_010_v_tek"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_011_scavenger_van", "Vehicle.v_011_scavenger_van"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_012_corpo_suv", "Vehicle.v_012_corpo_suv"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_013_rayfield_aerodnight", "Vehicle.v_013_rayfield_aerodnight"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_bubble_demo_trigger", "Vehicle.v_bubble_demo_trigger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_golf_demo_trigger", "Vehicle.v_golf_demo_trigger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_kaukaz_z71_aras", "Vehicle.v_kaukaz_z71_aras"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_lego_demo_trigger", "Vehicle.v_lego_demo_trigger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_mahir_mt28_coach", "Vehicle.v_mahir_mt28_coach"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_militech_basilisk", "Vehicle.v_militech_basilisk"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_militech_basilisk_militech", "Vehicle.v_militech_basilisk_militech"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_militech_basilisk_transport", "Vehicle.v_militech_basilisk_transport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_herrera_outlaw", "Vehicle.v_sport1_herrera_outlaw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_herrera_outlaw_player", "Vehicle.v_sport1_herrera_outlaw_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_herrera_outlaw_quest", "Vehicle.v_sport1_herrera_outlaw_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_herrera_riptide", "Vehicle.v_sport1_herrera_riptide"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo", "Vehicle.v_sport1_quadra_turbo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_player", "Vehicle.v_sport1_quadra_turbo_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_poor", "Vehicle.v_sport1_quadra_turbo_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_quest", "Vehicle.v_sport1_quadra_turbo_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_r", "Vehicle.v_sport1_quadra_turbo_r"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_r_player", "Vehicle.v_sport1_quadra_turbo_r_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_quadra_turbo_tyger_claw", "Vehicle.v_sport1_quadra_turbo_tyger_claw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_aerondight", "Vehicle.v_sport1_rayfield_aerondight"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_aerondight_kerry", "Vehicle.v_sport1_rayfield_aerondight_kerry"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_aerondight_player", "Vehicle.v_sport1_rayfield_aerondight_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_aerondight_quest", "Vehicle.v_sport1_rayfield_aerondight_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_caliburn", "Vehicle.v_sport1_rayfield_caliburn"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_caliburn_02_player", "Vehicle.v_sport1_rayfield_caliburn_02_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_caliburn_murdered", "Vehicle.v_sport1_rayfield_caliburn_murdered"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_caliburn_player", "Vehicle.v_sport1_rayfield_caliburn_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport1_rayfield_caliburn_quest", "Vehicle.v_sport1_rayfield_caliburn_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion", "Vehicle.v_sport2_mizutani_shion"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad", "Vehicle.v_sport2_mizutani_shion_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad_02_player", "Vehicle.v_sport2_mizutani_shion_nomad_02_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad_ncu", "Vehicle.v_sport2_mizutani_shion_nomad_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad_player", "Vehicle.v_sport2_mizutani_shion_nomad_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad_quest", "Vehicle.v_sport2_mizutani_shion_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_nomad_wraith", "Vehicle.v_sport2_mizutani_shion_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_player", "Vehicle.v_sport2_mizutani_shion_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_poor", "Vehicle.v_sport2_mizutani_shion_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_quest", "Vehicle.v_sport2_mizutani_shion_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_sport", "Vehicle.v_sport2_mizutani_shion_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_targa", "Vehicle.v_sport2_mizutani_shion_targa"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_mizutani_shion_tyger", "Vehicle.v_sport2_mizutani_shion_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_porsche_911turbo", "Vehicle.v_sport2_porsche_911turbo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_porsche_911turbo_player", "Vehicle.v_sport2_porsche_911turbo_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_porsche_911turbo_quest", "Vehicle.v_sport2_porsche_911turbo_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66", "Vehicle.v_sport2_quadra_type66"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_02_player", "Vehicle.v_sport2_quadra_type66_02_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_avenger", "Vehicle.v_sport2_quadra_type66_avenger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_avenger_player", "Vehicle.v_sport2_quadra_type66_avenger_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_bulleat", "Vehicle.v_sport2_quadra_type66_bulleat"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad", "Vehicle.v_sport2_quadra_type66_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad_ncu", "Vehicle.v_sport2_quadra_type66_nomad_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad_ncu_player", "Vehicle.v_sport2_quadra_type66_nomad_ncu_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad_player", "Vehicle.v_sport2_quadra_type66_nomad_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad_quest", "Vehicle.v_sport2_quadra_type66_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_nomad_wraith", "Vehicle.v_sport2_quadra_type66_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_player", "Vehicle.v_sport2_quadra_type66_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_poor", "Vehicle.v_sport2_quadra_type66_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_quest", "Vehicle.v_sport2_quadra_type66_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_rogue", "Vehicle.v_sport2_quadra_type66_rogue"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_rowley", "Vehicle.v_sport2_quadra_type66_rowley"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_sampson", "Vehicle.v_sport2_quadra_type66_sampson"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_quadra_type66_sport", "Vehicle.v_sport2_quadra_type66_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado", "Vehicle.v_sport2_villefort_alvarado"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_cabrio", "Vehicle.v_sport2_villefort_alvarado_cabrio"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_hearse", "Vehicle.v_sport2_villefort_alvarado_hearse"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_mox", "Vehicle.v_sport2_villefort_alvarado_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_player", "Vehicle.v_sport2_villefort_alvarado_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_poor", "Vehicle.v_sport2_villefort_alvarado_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_premium", "Vehicle.v_sport2_villefort_alvarado_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_quest", "Vehicle.v_sport2_villefort_alvarado_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_valentinos", "Vehicle.v_sport2_villefort_alvarado_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_valentinos_cabrio", "Vehicle.v_sport2_villefort_alvarado_valentinos_cabrio"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_alvarado_valentinos_player", "Vehicle.v_sport2_villefort_alvarado_valentinos_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sport2_villefort_deleon", "Vehicle.v_sport2_villefort_deleon"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi", "Vehicle.v_sportbike1_yaiba_kusanagi"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_animal", "Vehicle.v_sportbike1_yaiba_kusanagi_animal"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_mox", "Vehicle.v_sportbike1_yaiba_kusanagi_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_player", "Vehicle.v_sportbike1_yaiba_kusanagi_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_quest", "Vehicle.v_sportbike1_yaiba_kusanagi_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_test5", "Vehicle.v_sportbike1_yaiba_kusanagi_test5"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_tyger", "Vehicle.v_sportbike1_yaiba_kusanagi_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player", "Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch", "Vehicle.v_sportbike2_arch"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_jackie", "Vehicle.v_sportbike2_arch_jackie"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_jackie_player", "Vehicle.v_sportbike2_arch_jackie_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_jackie_tuned", "Vehicle.v_sportbike2_arch_jackie_tuned"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_jackie_tuned_player", "Vehicle.v_sportbike2_arch_jackie_tuned_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_player", "Vehicle.v_sportbike2_arch_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_quest", "Vehicle.v_sportbike2_arch_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_sport", "Vehicle.v_sportbike2_arch_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_tyger", "Vehicle.v_sportbike2_arch_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike2_arch_tyger_player", "Vehicle.v_sportbike2_arch_tyger_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo", "Vehicle.v_sportbike3_brennan_apollo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_nomad", "Vehicle.v_sportbike3_brennan_apollo_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_nomad_player", "Vehicle.v_sportbike3_brennan_apollo_nomad_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_player", "Vehicle.v_sportbike3_brennan_apollo_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_quest", "Vehicle.v_sportbike3_brennan_apollo_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_scorpion", "Vehicle.v_sportbike3_brennan_apollo_scorpion"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_sport", "Vehicle.v_sportbike3_brennan_apollo_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_sportbike3_brennan_apollo_tyger", "Vehicle.v_sportbike3_brennan_apollo_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_mox", "Vehicle.v_standard25_mahir_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_supron", "Vehicle.v_standard25_mahir_supron"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_supron_player", "Vehicle.v_standard25_mahir_supron_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_supron_poor", "Vehicle.v_standard25_mahir_supron_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_supron_quest", "Vehicle.v_standard25_mahir_supron_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_supron_sport", "Vehicle.v_standard25_mahir_supron_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_mahir_voodoo_boys", "Vehicle.v_standard25_mahir_voodoo_boys"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad", "Vehicle.v_standard25_thorton_colby_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad_disabled_interactions", "Vehicle.v_standard25_thorton_colby_nomad_disabled_interactions"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad_ncu", "Vehicle.v_standard25_thorton_colby_nomad_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad_player", "Vehicle.v_standard25_thorton_colby_nomad_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad_quest", "Vehicle.v_standard25_thorton_colby_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_nomad_wraith", "Vehicle.v_standard25_thorton_colby_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup", "Vehicle.v_standard25_thorton_colby_pickup"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup_02_player", "Vehicle.v_standard25_thorton_colby_pickup_02_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz", "Vehicle.v_standard25_thorton_colby_pickup_kurtz"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup_player", "Vehicle.v_standard25_thorton_colby_pickup_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup_poor", "Vehicle.v_standard25_thorton_colby_pickup_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_colby_pickup_quest", "Vehicle.v_standard25_thorton_colby_pickup_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_merrimac", "Vehicle.v_standard25_thorton_merrimac"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_thorton_merrimac_reed", "Vehicle.v_standard25_thorton_merrimac_reed"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus", "Vehicle.v_standard25_villefort_columbus"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_arasaka", "Vehicle.v_standard25_villefort_columbus_arasaka"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_corpo", "Vehicle.v_standard25_villefort_columbus_corpo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_disabled_interactions", "Vehicle.v_standard25_villefort_columbus_disabled_interactions"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_judy_van", "Vehicle.v_standard25_villefort_columbus_judy_van"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_kangtao", "Vehicle.v_standard25_villefort_columbus_kangtao"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_locked_doors", "Vehicle.v_standard25_villefort_columbus_locked_doors"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_player", "Vehicle.v_standard25_villefort_columbus_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_poor", "Vehicle.v_standard25_villefort_columbus_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_quest", "Vehicle.v_standard25_villefort_columbus_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_sixth_street", "Vehicle.v_standard25_villefort_columbus_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard25_villefort_columbus_tyger", "Vehicle.v_standard25_villefort_columbus_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_bandit", "Vehicle.v_standard2_archer_bandit"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_bandit_player", "Vehicle.v_standard2_archer_bandit_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_bandit_quest", "Vehicle.v_standard2_archer_bandit_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella", "Vehicle.v_standard2_archer_hella"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_combat_cab", "Vehicle.v_standard2_archer_hella_combat_cab"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_ncu", "Vehicle.v_standard2_archer_hella_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_player", "Vehicle.v_standard2_archer_hella_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_police", "Vehicle.v_standard2_archer_hella_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_police_mws", "Vehicle.v_standard2_archer_hella_police_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_police_prevention", "Vehicle.v_standard2_archer_hella_police_prevention"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_police_siren", "Vehicle.v_standard2_archer_hella_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_poor", "Vehicle.v_standard2_archer_hella_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_quest", "Vehicle.v_standard2_archer_hella_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_sixth_street", "Vehicle.v_standard2_archer_hella_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_hella_sixth_street_mws", "Vehicle.v_standard2_archer_hella_sixth_street_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz", "Vehicle.v_standard2_archer_quartz"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_disabled_interactions", "Vehicle.v_standard2_archer_quartz_disabled_interactions"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_gt", "Vehicle.v_standard2_archer_quartz_gt"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_locked_doors", "Vehicle.v_standard2_archer_quartz_locked_doors"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_mox", "Vehicle.v_standard2_archer_quartz_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_nomad", "Vehicle.v_standard2_archer_quartz_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_nomad_disabled_interactions", "Vehicle.v_standard2_archer_quartz_nomad_disabled_interactions"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_nomad_quest", "Vehicle.v_standard2_archer_quartz_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_nomad_wraith", "Vehicle.v_standard2_archer_quartz_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_player", "Vehicle.v_standard2_archer_quartz_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_poor", "Vehicle.v_standard2_archer_quartz_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_quest", "Vehicle.v_standard2_archer_quartz_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_archer_quartz_tyger", "Vehicle.v_standard2_archer_quartz_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax", "Vehicle.v_standard2_chevalier_thrax"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_combat_cab", "Vehicle.v_standard2_chevalier_thrax_combat_cab"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_dex", "Vehicle.v_standard2_chevalier_thrax_dex"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_maelstrom", "Vehicle.v_standard2_chevalier_thrax_maelstrom"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_maelstrom_mws", "Vehicle.v_standard2_chevalier_thrax_maelstrom_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_ncu", "Vehicle.v_standard2_chevalier_thrax_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_player", "Vehicle.v_standard2_chevalier_thrax_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_poor", "Vehicle.v_standard2_chevalier_thrax_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_premium", "Vehicle.v_standard2_chevalier_thrax_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_quest", "Vehicle.v_standard2_chevalier_thrax_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_sixth_street", "Vehicle.v_standard2_chevalier_thrax_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_chevalier_thrax_valentino", "Vehicle.v_standard2_chevalier_thrax_valentino"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai", "Vehicle.v_standard2_makigai_maimai"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai_gt", "Vehicle.v_standard2_makigai_maimai_gt"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai_player", "Vehicle.v_standard2_makigai_maimai_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai_poor", "Vehicle.v_standard2_makigai_maimai_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai_premium", "Vehicle.v_standard2_makigai_maimai_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_makigai_maimai_quest", "Vehicle.v_standard2_makigai_maimai_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_mizutani_hozuki", "Vehicle.v_standard2_mizutani_hozuki"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby", "Vehicle.v_standard2_thorton_colby"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_family", "Vehicle.v_standard2_thorton_colby_family"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_gt", "Vehicle.v_standard2_thorton_colby_gt"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_player", "Vehicle.v_standard2_thorton_colby_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_poor", "Vehicle.v_standard2_thorton_colby_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_quest", "Vehicle.v_standard2_thorton_colby_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_valentinos", "Vehicle.v_standard2_thorton_colby_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_colby_valentinos_mws", "Vehicle.v_standard2_thorton_colby_valentinos_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena", "Vehicle.v_standard2_thorton_galena"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_bobas", "Vehicle.v_standard2_thorton_galena_bobas"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_bobas_player", "Vehicle.v_standard2_thorton_galena_bobas_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_disabled_interactions", "Vehicle.v_standard2_thorton_galena_disabled_interactions"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_gt", "Vehicle.v_standard2_thorton_galena_gt"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_locked_doors", "Vehicle.v_standard2_thorton_galena_locked_doors"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_maelstrom", "Vehicle.v_standard2_thorton_galena_maelstrom"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_ncu", "Vehicle.v_standard2_thorton_galena_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_nomad", "Vehicle.v_standard2_thorton_galena_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_nomad_player", "Vehicle.v_standard2_thorton_galena_nomad_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_nomad_quest", "Vehicle.v_standard2_thorton_galena_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_nomad_scorpion", "Vehicle.v_standard2_thorton_galena_nomad_scorpion"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_nomad_wraith", "Vehicle.v_standard2_thorton_galena_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_player", "Vehicle.v_standard2_thorton_galena_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_poor", "Vehicle.v_standard2_thorton_galena_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_quest", "Vehicle.v_standard2_thorton_galena_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_thorton_galena_voodoo_boys", "Vehicle.v_standard2_thorton_galena_voodoo_boys"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes", "Vehicle.v_standard2_villefort_cortes"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_arasaka", "Vehicle.v_standard2_villefort_cortes_arasaka"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_delamain", "Vehicle.v_standard2_villefort_cortes_delamain"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_delamain_player", "Vehicle.v_standard2_villefort_cortes_delamain_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_kangtao", "Vehicle.v_standard2_villefort_cortes_kangtao"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_player", "Vehicle.v_standard2_villefort_cortes_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police", "Vehicle.v_standard2_villefort_cortes_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police_border_patrol", "Vehicle.v_standard2_villefort_cortes_police_border_patrol"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police_mws", "Vehicle.v_standard2_villefort_cortes_police_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police_prevention", "Vehicle.v_standard2_villefort_cortes_police_prevention"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police_sheriff", "Vehicle.v_standard2_villefort_cortes_police_sheriff"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_police_siren", "Vehicle.v_standard2_villefort_cortes_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_poor", "Vehicle.v_standard2_villefort_cortes_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_premium", "Vehicle.v_standard2_villefort_cortes_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard2_villefort_cortes_quest", "Vehicle.v_standard2_villefort_cortes_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor", "Vehicle.v_standard3_chevalier_emperor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_militech", "Vehicle.v_standard3_chevalier_emperor_militech"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_ncu", "Vehicle.v_standard3_chevalier_emperor_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_player", "Vehicle.v_standard3_chevalier_emperor_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_police", "Vehicle.v_standard3_chevalier_emperor_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_police_mws", "Vehicle.v_standard3_chevalier_emperor_police_mws"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_police_prevention", "Vehicle.v_standard3_chevalier_emperor_police_prevention"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_police_siren", "Vehicle.v_standard3_chevalier_emperor_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_quest", "Vehicle.v_standard3_chevalier_emperor_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_chevalier_emperor_sport", "Vehicle.v_standard3_chevalier_emperor_sport"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw", "Vehicle.v_standard3_thorton_mackinaw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_02_player", "Vehicle.v_standard3_thorton_mackinaw_02_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_country", "Vehicle.v_standard3_thorton_mackinaw_country"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_country_poor", "Vehicle.v_standard3_thorton_mackinaw_country_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_country_premium", "Vehicle.v_standard3_thorton_mackinaw_country_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_ncu_player", "Vehicle.v_standard3_thorton_mackinaw_ncu_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_nomad", "Vehicle.v_standard3_thorton_mackinaw_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_nomad_ncu", "Vehicle.v_standard3_thorton_mackinaw_nomad_ncu"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_nomad_panam", "Vehicle.v_standard3_thorton_mackinaw_nomad_panam"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_nomad_quest", "Vehicle.v_standard3_thorton_mackinaw_nomad_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_player", "Vehicle.v_standard3_thorton_mackinaw_player"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_poor", "Vehicle.v_standard3_thorton_mackinaw_poor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_premium", "Vehicle.v_standard3_thorton_mackinaw_premium"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_quest", "Vehicle.v_standard3_thorton_mackinaw_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_quest_bfr", "Vehicle.v_standard3_thorton_mackinaw_quest_bfr"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_sixth_street", "Vehicle.v_standard3_thorton_mackinaw_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_standard3_thorton_mackinaw_valentinos", "Vehicle.v_standard3_thorton_mackinaw_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_trailer_supron", "Vehicle.v_trailer_supron"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk", "Vehicle.v_utility4_kaukaz_bratsk"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_concrete", "Vehicle.v_utility4_kaukaz_bratsk_concrete"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_container", "Vehicle.v_utility4_kaukaz_bratsk_container"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_dumpster", "Vehicle.v_utility4_kaukaz_bratsk_dumpster"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_extended", "Vehicle.v_utility4_kaukaz_bratsk_extended"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_machine", "Vehicle.v_utility4_kaukaz_bratsk_machine"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_metalstud", "Vehicle.v_utility4_kaukaz_bratsk_metalstud"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_misile", "Vehicle.v_utility4_kaukaz_bratsk_misile"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_bratsk_quest", "Vehicle.v_utility4_kaukaz_bratsk_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya", "Vehicle.v_utility4_kaukaz_zeya"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya_barrels", "Vehicle.v_utility4_kaukaz_zeya_barrels"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya_container", "Vehicle.v_utility4_kaukaz_zeya_container"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya_freight", "Vehicle.v_utility4_kaukaz_zeya_freight"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya_full", "Vehicle.v_utility4_kaukaz_zeya_full"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_kaukaz_zeya_quest", "Vehicle.v_utility4_kaukaz_zeya_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth", "Vehicle.v_utility4_militech_behemoth"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_border_patrol", "Vehicle.v_utility4_militech_behemoth_border_patrol"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_kangtao", "Vehicle.v_utility4_militech_behemoth_kangtao"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_maxtac", "Vehicle.v_utility4_militech_behemoth_maxtac"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_netwatch", "Vehicle.v_utility4_militech_behemoth_netwatch"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_police", "Vehicle.v_utility4_militech_behemoth_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_militech_behemoth_quest", "Vehicle.v_utility4_militech_behemoth_quest"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.v_utility4_thorton_mackinaw_bmf", "Vehicle.v_utility4_thorton_mackinaw_bmf"));
 
-  	// Cars - Hypercars    
-      // Herrera - Outlaw GTS
-    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(	"outlaw gts", "Outlaw GTS", "Vehicle.v_sport1_herrera_outlaw_player"));
-
-      // Rayfield - Aerondight
-    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(	"aerondight \"guinevere\"", "Aerondight \"Guinevere\"", "Vehicle.v_sport1_rayfield_aerondight_player"));
-
-      // Rayfield - Caliburn
-      // v_sport1_rayfield_caliburn_player is the default model
-      // v_sport1_rayfield_caliburn_02_player is the Black model (free in a tunnel in the badlands)
-    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(	"caliburn", "Caliburn", "Vehicle.v_sport1_rayfield_caliburn_player"));
-
-    //																TRANSLATIONS END HERE 
-    // ======================================================================================================================================
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_arch", "Vehicle.cs_savable_arch"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_hella", "Vehicle.cs_savable_archer_hella"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_hella_police_siren", "Vehicle.cs_savable_archer_hella_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_hella_sixth_street", "Vehicle.cs_savable_archer_hella_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_quartz", "Vehicle.cs_savable_archer_quartz"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_quartz_mox", "Vehicle.cs_savable_archer_quartz_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_quartz_mox_inline0", "Vehicle.cs_savable_archer_quartz_mox_inline0"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_archer_quartz_tyger", "Vehicle.cs_savable_archer_quartz_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_brennan_apollo", "Vehicle.cs_savable_brennan_apollo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_emperor", "Vehicle.cs_savable_chevalier_emperor"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_emperor_police_siren", "Vehicle.cs_savable_chevalier_emperor_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_thrax", "Vehicle.cs_savable_chevalier_thrax"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_thrax_maelstrom", "Vehicle.cs_savable_chevalier_thrax_maelstrom"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_thrax_sixth_street", "Vehicle.cs_savable_chevalier_thrax_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_chevalier_thrax_valentino", "Vehicle.cs_savable_chevalier_thrax_valentino"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_herrera_outlaw", "Vehicle.cs_savable_herrera_outlaw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_bratsk", "Vehicle.cs_savable_kaukaz_bratsk"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_bratsk_containers", "Vehicle.cs_savable_kaukaz_bratsk_containers"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_bratsk_metalstud", "Vehicle.cs_savable_kaukaz_bratsk_metalstud"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_zeya", "Vehicle.cs_savable_kaukaz_zeya"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_zeya_container", "Vehicle.cs_savable_kaukaz_zeya_container"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_kaukaz_zeya_full", "Vehicle.cs_savable_kaukaz_zeya_full"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_mahir_mt28_coach", "Vehicle.cs_savable_mahir_mt28_coach"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_mahir_supron", "Vehicle.cs_savable_mahir_supron"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_mahir_voodoo_boys", "Vehicle.cs_savable_mahir_voodoo_boys"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_makigai_maimai", "Vehicle.cs_savable_makigai_maimai"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_militech_behemoth", "Vehicle.cs_savable_militech_behemoth"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_mizutani_shion", "Vehicle.cs_savable_mizutani_shion"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_mizutani_shion_tyger", "Vehicle.cs_savable_mizutani_shion_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_quadra_turbo", "Vehicle.cs_savable_quadra_turbo"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_quadra_turbo_tc", "Vehicle.cs_savable_quadra_turbo_tc"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_quadra_turbo_tyger_claw", "Vehicle.cs_savable_quadra_turbo_tyger_claw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_quadra_type66", "Vehicle.cs_savable_quadra_type66"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_quadra_type66_nomad", "Vehicle.cs_savable_quadra_type66_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_rayfield_caliburn", "Vehicle.cs_savable_rayfield_caliburn"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_colby", "Vehicle.cs_savable_thorton_colby"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_colby_nomad", "Vehicle.cs_savable_thorton_colby_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_colby_valentinos", "Vehicle.cs_savable_thorton_colby_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_galena", "Vehicle.cs_savable_thorton_galena"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_galena_gt", "Vehicle.cs_savable_thorton_galena_gt"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_galena_maelstrom", "Vehicle.cs_savable_thorton_galena_maelstrom"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_galena_nomad", "Vehicle.cs_savable_thorton_galena_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_galena_voodoo_boys", "Vehicle.cs_savable_thorton_galena_voodoo_boys"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_mackinaw", "Vehicle.cs_savable_thorton_mackinaw"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_mackinaw_sixth_street", "Vehicle.cs_savable_thorton_mackinaw_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_thorton_mackinaw_valentinos", "Vehicle.cs_savable_thorton_mackinaw_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_utility4_kaukaz_zeya_freight", "Vehicle.cs_savable_utility4_kaukaz_zeya_freight"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_alvarado", "Vehicle.cs_savable_villefort_alvarado"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_alvarado_mox", "Vehicle.cs_savable_villefort_alvarado_mox"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_alvarado_mox_inline0", "Vehicle.cs_savable_villefort_alvarado_mox_inline0"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_alvarado_valentinos", "Vehicle.cs_savable_villefort_alvarado_valentinos"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_columbus", "Vehicle.cs_savable_villefort_columbus"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_columbus_arasaka", "Vehicle.cs_savable_villefort_columbus_arasaka"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_columbus_kangtao", "Vehicle.cs_savable_villefort_columbus_kangtao"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_columbus_sixth_street", "Vehicle.cs_savable_villefort_columbus_sixth_street"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_columbus_tyger", "Vehicle.cs_savable_villefort_columbus_tyger"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_cortes", "Vehicle.cs_savable_villefort_cortes"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_cortes_kangtao", "Vehicle.cs_savable_villefort_cortes_kangtao"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_cortes_police", "Vehicle.cs_savable_villefort_cortes_police"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_villefort_cortes_police_siren", "Vehicle.cs_savable_villefort_cortes_police_siren"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_yaiba_kusanagi", "Vehicle.cs_savable_yaiba_kusanagi"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_sport2_mizutani_shion_nomad", "Vehicle.cs_v_sport2_mizutani_shion_nomad"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_sport2_mizutani_shion_nomad_wraith", "Vehicle.cs_v_sport2_mizutani_shion_nomad_wraith"));
+    	ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_standard2_thorton_galena_nomad", "Vehicle.cs_v_standard2_thorton_galena_nomad"));
 
   }
 
 } 
+
+/* 
+VehicleObject has a GetRecord() method that returns the TweakDB record for the vehicle, the ID of which will be the TweakDBID of the vehicle, aka the "internal vehicle string"
+
+TweakDBID's are 64-bit hashes that can be written in redscript as a t prefixed string, i.e. t"Vehicle.v_sport1_herrera_outlaw_player"
+
+Awkwardly, the method you're calling takes a string, not a TDBID, so you'll need to convert it with TDBID.ToStringDEBUG(...)
+ */
  

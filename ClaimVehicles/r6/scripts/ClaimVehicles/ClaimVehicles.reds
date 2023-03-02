@@ -35,6 +35,7 @@ public class ClaimedVehicleTracking {
   public let claimedVehiclesList: array<PlayerVehicle>;
 
   public let matchVehicle: PlayerVehicle; 
+  public let matchVehicleRecordID: TweakDBID; 
   public let matchVehicleModel: String; 
   public let matchVehicleString: String;  
   public let matchVehicleUnlocked: Bool;
@@ -84,399 +85,35 @@ public class ClaimedVehicleTracking {
   // Mapping Vehicle plain text model string -> internal vehicle string ID
   //    Also converts variant vehicle model name to model name found in list of potential player vehicles
   //    Ex: Hella EC-D 1360 ->  Vehicle.v_standard2_archer_hella_player
-  public func getVehicleStringFromModel(claimedVehicleModel: String) -> Void {
-
-    this.matchVehicleModel = "";
-    this.matchVehicleString = "";
-    this.matchVehicleUnlocked = false;
-
-    // LogChannel(n"DEBUG", "N.C.L.A.I.M: Test: claimedVehicleModel: '"+claimedVehicleModel+"' - Target: 'Type-66 640 TX'  - StrCmp: '"+StrCmp(claimedVehicleModel, "Type-66 640 TX")+"'"  );
+  public func getVehicleStringFromModel(vehicleRecordID: TweakDBID, claimedVehicleModel: String) -> Void {
+ 
+    this.matchVehicleUnlocked = false; 
 
     if (this.warningsON) {
       LogChannel(n"DEBUG", "N.C.L.A.I.M: Reading Vehicle ID from Model: '"+claimedVehicleModel+"'"  );
-      LogChannel(n"DEBUG", ">>> Looking for: '"+StrLower(claimedVehicleModel)+"'"  );
     }
-  /*
-    TO DO 
-    - map all variants - https://cyberpunk.fandom.com/wiki/Cyberpunk_2077_Vehicles
-    - Test all cars
 
-    - Unsupported
-    - Zeya U420  (Short dump truck)
-    - Behemoth  (literally just called that, its from militech and used primarily by arasaka)
- 
-  */ 
-
-  let vehicleKey = StrLower(claimedVehicleModel);
-  let matchVehicle = this.vehicleDB.lookupVehicleKey(vehicleKey);
-
-  if !(Equals(matchVehicle.key,"undefined")) {
-    this.matchVehicleModel = matchVehicle.vehicleModel;
-    this.matchVehicleString = matchVehicle.vehicleString;
-
-  } else {
-
-    switch vehicleKey {
-
-  // Cars - Economy
-      /*
-        [reserved]  Hella EC-D 1360 -  Vehicle.v_standard2_archer_hella_player - Default Car
-      */
-      // Makigai - Maimai
-      case "maimai p126":
-        this.matchVehicleModel = "Maimai P126";
-        this.matchVehicleString = "Vehicle.v_standard2_makigai_maimai_player";
-        break;
-
-      // Mahir - Supron
-      case "supron fs3":
-        this.matchVehicleModel = "Supron FS3";
-        this.matchVehicleString = "Vehicle.v_standard25_mahir_supron_player";
-        break;
-
-      // Thornton - Colby
-      case "colby c210 camper":
-        this.matchVehicleModel = "Colby C210 Camper";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby";
-        break;
-
-      case "colby cst40":
-        this.matchVehicleModel = "Colby CST40";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_gt";
-        break;
-
-      case "colby c240t":
-        this.matchVehicleModel = "Colby C240T";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_family";
-        break;
-
-      case "colby \"vaquero\"": // Valentino variant
-        this.matchVehicleModel = "Colby  \"Vaquero\"";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_valentinos";
-        break;
-
-      case "colby c125":
-        this.matchVehicleModel = "Colby C125";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_colby_player";
-        break;
-
-      case "colby cx410 butte": // Untested - could be mapped to colby_pickup_02_player
-        // v_standard25_thorton_colby_pickup_player is the green model
-        // v_standard25_thorton_colby_pickup_02_player is the red model
-        this.matchVehicleModel = "Colby CX410 Butte";
-        this.matchVehicleString = "Vehicle.v_standard25_thorton_colby_pickup_02_player";
-        break;
-
-      case "colby \"little mule\"":  
-        this.matchVehicleModel = "Colby \"Little Mule\"";
-        this.matchVehicleString = "Vehicle.v_standard25_thorton_colby_nomad_player";
-        break;
-
-      // Thornton - Galena
-      case "galena g240":
-        this.matchVehicleModel = "Galena G240";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_player";
-        break;
-
-      case "galena \"gecko\"": // No reference to Bobas model in websites... assuming this one maps to Gecko model
-        this.matchVehicleModel = "Galena \"Gecko\"";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_nomad_player";
-        break;
-
-      case "galena ga32t": // Sports model
-        this.matchVehicleModel = "Galena GA32t";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_gt";
-        break;
-
-      case "galena \"rattler\"": // Default Nomad Life Path Vehicle  
-        this.matchVehicleModel = "Galena \"Rattler\"";
-        this.matchVehicleString = "Vehicle.v_standard2_thorton_galena_bobas_player";
-        break;
-
-      // Thornton - Mackinaw MTL1
-      case "mackinaw mtl1":
-        this.matchVehicleModel = "Mackinaw MTL1";
-        this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_player";
-        break;
-
-      case "mackinaw larimore":
-        this.matchVehicleModel = "Mackinaw Larimore";
-        this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_country";
-        break;
-
-      case "mackinaw \"saguaro\"":
-        this.matchVehicleModel = "Mackinaw \"Saguaro\""; // Nomad version
-        this.matchVehicleString = "Vehicle.v_standard3_thorton_mackinaw_nomad";
-        break;
-
-  // Cars - Executive
-      // Archer - Hella - Cab
-      case "hella ec-v i660 voyage":
-        this.matchVehicleModel = "Hella EC-V i660 Voyage";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_hella_combat_cab";
-        break;
-
-      // Archer - Enforcer - Police
-      case "hella ec-h i860 enforcer":
-        this.matchVehicleModel = "Hella EC-H i860 Enforcer";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_hella_police";
-        break;
-
-      // Emperor - Police
-      case "emperor 720 ncpd ironclad":
-        this.matchVehicleModel = "Emperor 720 NCPD Ironclad";
-        this.matchVehicleString = "Vehicle.v_standard3_chevalier_emperor_police";
-        break;
-
-      // Villefort - Cortes - Police
-      case "cortes v6000 ncpd overlord":
-        this.matchVehicleModel = "Cortes V6000 NCPD Overlord";
-        this.matchVehicleString = "Vehicle.v_standard2_villefort_cortes_police";
-        break;
-
-      // Chevalier - Emperor
-      case "emperor 620 ragnar":
-        this.matchVehicleModel = "Emperor 620 Ragnar";
-        this.matchVehicleString = "Vehicle.v_standard3_chevalier_emperor_player";
-        break;
-
-       // Chevalier - Thrax
-      case "thrax 378 decurion":
-        this.matchVehicleModel = "Thrax 378 Decurion";
-        this.matchVehicleString = "Vehicle.v_standard2_chevalier_thrax_sixth_street";
-        break;
-
-      case "thrax 388 jefferson":
-        this.matchVehicleModel = "Thrax 388 Jefferson";
-        this.matchVehicleString = "Vehicle.v_standard2_chevalier_thrax_player";
-        break;
-
-      // Villefort - Alvarado
-      case "alvarado v4f 570 delegate":
-        this.matchVehicleModel = "Alvarado V4F 570 Delegate";
-        this.matchVehicleString = "Vehicle.v_sport2_villefort_alvarado_player";
-        break;
-
-      case "alvarado v4fc 580 \"vato\"": // Beat on the Brat: The Glen Side Job   
-        this.matchVehicleModel = "Alvarado V4FC 580 \"Vato\"";
-        this.matchVehicleString = "Vehicle.v_sport2_villefort_alvarado_valentinos_player";
-        break;
-
-      // Villefort - Columbus
-      case "columbus v340-f freight":
-        this.matchVehicleModel = "Columbus V340-F Freight";
-        this.matchVehicleString = "Vehicle.v_standard25_villefort_columbus_player";
-        break;
-
-      // Villefort - Cortes
-      case "cortes v5000 valor":
-        this.matchVehicleModel = "Cortes V5000 Valor";
-        this.matchVehicleString = "Vehicle.v_standard2_villefort_cortes_player";
-        break;
-
-  // Cars - Heavy Duty
-      /*
-        * [reserved] Mackinaw Beast - Vehicle.v_standard3_thorton_mackinaw_ncu_player - ncu = unique? - The Beast in Me Side Job 
-      */
-      case "zeya u420": 
-        this.matchVehicleModel = "Zeya U420";
-        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_zeya";
-        break;
-
-      case "bratsk u4020": 
-        this.matchVehicleModel = "Bratsk U4020";
-        this.matchVehicleString = "Vehicle.v_utility4_kaukaz_bratsk";
-        break;
-
-      case "behemoth": 
-        this.matchVehicleModel = "Behemoth";
-        this.matchVehicleString = "Vehicle.v_utility4_militech_behemoth";
-        break;
-
-  // Cars - Sport   
-      /*
-        [reserved] Porsche 911 II (930) Turbo - Vehicle.v_sport2_porsche_911turbo_player - Chippin’ In Side Job    
-      */  
-      // Archer - Quartz
-      case "quartz ec-l r275":  
-        this.matchVehicleModel = "Quartz EC-L R275";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz";
-        break;
-
-      case "quartz ec-t2 r660": 
-        this.matchVehicleModel = "Quartz EC-T2 R660";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
-        break;
-
-      case "quartz \"barghest\"":  
-        this.matchVehicleModel = "Quartz \"Barghest\"";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_nomad_wraith";
-        break;
-
-      case "quartz \"sidewinder\"":  
-        this.matchVehicleModel = "Quartz \"Sidewinder\"";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_nomad";
-        break;
-
-      case "quartz \"bandit\"": // Mission Reward (spared Nash)
-        this.matchVehicleModel = "Quartz \"Bandit\"";
-        this.matchVehicleString = "Vehicle.v_standard2_archer_quartz_player";
-        break;
-
-      // Quadra - Turbo-R
-      case "turbo-r 740":
-        this.matchVehicleModel = "Turbo-R 740";
-        this.matchVehicleString = "Vehicle.v_sport1_quadra_turbo_player";
-        break;
-
-      case "turbo-r \"raijin\"": // Assuming this is the Tyger customized version of the 'Turbo-R 740'
-        this.matchVehicleModel = "Turbo-R \"Raijin\"";
-        this.matchVehicleString = "Vehicle.v_sport1_quadra_turbo_tyger_claw";
-        break;
-
-      case "turbo-r v-tech": //   Reward from Sex on Wheels
-        this.matchVehicleModel = "Turbo-R V-Tech";
-        this.matchVehicleString = "Vehicle.v_sport1_quadra_turbo_r_player";
-        break;
-
-      // Quadra - Type-66 
-      case "type-66 \"jen rowley\"":
-        this.matchVehicleModel = "Type-66 \"Jen Rowley\"";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_player";
-        break;
-
-      case "type-66 640 ts":
-        this.matchVehicleModel = "Type-66 640 TS";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_02_player";
-        break;
-
-      case "type-66 avenger":
-        this.matchVehicleModel = "Type-66 Avenger";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_avenger_player";
-        break;
-
-      case "type-66 \"cthulhu\"": // possible reward in The Beast in Me - mapped to avenger model
-        this.matchVehicleModel = "Type-66 \"Cthulhu\"";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_nomad_ncu_player";
-        break;
-
-      case "type-66 \"javelina\"":
-        this.matchVehicleModel = "Type-66 \"Javelina\"";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_nomad_player";
-        break;
-
-      case "type-66 \"reaver\"": // Cannot be acquired - mapped to Cthlhu model instead
-        this.matchVehicleModel = "Type-66 \"Cthulhu\"";
-        this.matchVehicleString = "Vehicle.v_sport2_quadra_type66_nomad_ncu_player";
-        break;
-
-      // Mizutani - Shion
-      case "shion mz1":
-        this.matchVehicleModel = "Shion MZ1";
-        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion";
-        break;
-
-      case "shion mz2":
-        this.matchVehicleModel = "Shion MZ2";
-        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_player";
-        break;
-
-      case "shion \"kyokotsu\"":
-        this.matchVehicleModel = "Shion \"Kyokotsu\"";
-        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_tyger";
-        break;
-
-      case "shion \"coyote\"": // Queen of the Highway Side Job 
-        // v_sport2_mizutani_shion_nomad_player is the default model
-        // v_sport2_mizutani_shion_nomad_02_player is the red model
-        this.matchVehicleModel = "Shion \"Coyote\"";
-        this.matchVehicleString = "Vehicle.v_sport2_mizutani_shion_nomad_player";
-        break;
-
-  // Motorcycles
-      /* 
-        [reserved] Apollo Nomad - Vehicle.v_sportbike3_brennan_apollo_nomad_player - Life During Wartime reward 
-        [reserved] Apollo Scorpion - Life During Wartime reward   
-        [reserved] Nazaré Jackie - Vehicle.v_sportbike2_arch_jackie_player  - Heroes reward 
-        [reserved] Nazaré Jackie - Vehicle.v_sportbike2_arch_jackie_tuned_player  
-      */
-      // [DEBUG] N.C.L.A.I.M: Reading Vehicle ID from Model: 'ARCH NAZARÉ'
-      // Arch - Nazare
-      case "nazaré racer":  
-        this.matchVehicleModel = "Nazaré Racer";
-        this.matchVehicleString = "Vehicle.v_sportbike2_arch_sport";
-        break;
-
-      case "arch nazaré":  
-        this.matchVehicleModel = "ARCH NAZARÉ";
-        this.matchVehicleString = "Vehicle.v_sportbike2_arch_player";
-        break;
-
-      // Arch - Nazare - Nazaré "Itsumade"
-      case "nazaré \"itsumade\"": // The Highwayman reward 
-        this.matchVehicleModel = "Nazaré \"Itsumade\"";
-        this.matchVehicleString = "Vehicle.v_sportbike2_arch_tyger_player";
-        break;
-
-      // Brennan - Apollo
-      case "apollo":
-        this.matchVehicleModel = "Apollo";
-        this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo_player";
-        break;
-
-      case "apollo \"cicada\"":
-        this.matchVehicleModel = "Apollo \"Cicada\"";
-        this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo";
-        break;
-
-      // Brennan - Apollo
-      case "apollo \"scorpion\"":
-        this.matchVehicleModel = "Apollo \"Scorpion\"";
-        this.matchVehicleString = "Vehicle.v_sportbike3_brennan_apollo_nomad_player";
-        break;
-
-      // Yaiba - Kusanagi
-      case "kusanagi ct-3x":
-        this.matchVehicleModel = "Kusanagi CT-3X";
-        this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_player";
-        break;
-
-      case "kusanagi \"misfit\"":
-        this.matchVehicleModel = "Kusanagi \"Mifit\"";
-        this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player";
-        break;
-
-      case "kusanagi \"mizuchi\"":
-        // Looks like some Tyger customized bikes in game still have the "Kusanagi CT-3X" model name instead of "Kusanagi "Misuchi", which means they will trigger the default model instead of the Tyger customized one
-        this.matchVehicleModel = "Kusanagi \"Mizuchi\"";
-        this.matchVehicleString = "Vehicle.v_sportbike1_yaiba_kusanagi_tyger";
-        break;
-
-  // Other      
-      /*
-        [reserved] Cortes Delamain No. 21 - Vehicle.v_standard2_villefort_cortes_delamain_player - Don’t Lose Your Mind taxi reward 
-      */
-      // Judy's van cannot be interacted with - cannot be stolen or entered as a driver
-      // case "columbus \"sea dragon\"":
-      //  this.matchVehicleModel = "Columbus \"Sea Dragon\"";
-      //  this.matchVehicleString = "Vehicle.v_standard25_villefort_columbus_judy_van";
-      //  break;
-
-      };
-    };
+    // Universal vehicle detection
+    this.matchVehicleRecordID = vehicleRecordID;
+    this.matchVehicleModel = claimedVehicleModel;
+    this.matchVehicleString = this.vehicleDB.lookupVehicleString(vehicleRecordID);
+    this.matchVehicleUnlocked = this.isVehicleOwned();
+
+    // TO DO: 
+    //   Find out why vehicle is not saved! -> add exact model to missing cars yaml file
+    //   Find out why vehicle is not summoned - test another call point
 
     if (this.warningsON) {
-      LogChannel(n"DEBUG", "N.C.L.A.I.M: Vehicle Model found: '"+this.matchVehicleModel+"'"  );
       LogChannel(n"DEBUG", "N.C.L.A.I.M: Vehicle ID found: '"+this.matchVehicleString+"'"  );
     }
   }
 
   // Mapping Vehicle plain text model string -> vehicle record in list of potential player owned vehicles
   //    Assumes getVehicleStringFromModel() was already ran to convert variant vehicle model to model from player vehicles
-  public func isVehicleOwned() -> Int32 {
+  public func isVehicleOwned() -> Bool {
     let vehiclesList: array<PlayerVehicle>;
 
-    let matchFound = 0;
+    let matchFound = false;
     let i = 0;
 
     // First look for a match in unlocked vehicles
@@ -485,7 +122,7 @@ public class ClaimedVehicleTracking {
     if (this.warningsON) {
       LogChannel(n"DEBUG", " ");
       LogChannel(n"DEBUG", "----- ");
-      LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning known vehicles for '" +StrLower(this.matchVehicleModel) + "'");
+      LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning known vehicles for '" + this.matchVehicleModel + "'");
     }
 
     // Retrieve RecordID and vehicle type for the matched vehicle model
@@ -494,14 +131,19 @@ public class ClaimedVehicleTracking {
       let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
 
       if (this.warningsON) {
-        LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+StrLower(_this_vehicleModel)+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+        if (vehiclesList[i].isUnlocked) {
+          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+        } else {
+          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel );
+        }
       }
 
-      if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
+      // if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
+      if ( Equals( vehiclesList[i].recordID, this.matchVehicleRecordID  ) ){
         if (this.warningsON) { 
           LogChannel(n"DEBUG", ">>> Found matching vehicle record ID.");
         }
-        matchFound = 1;
+        matchFound = true;
  
         this.matchVehicle.recordID = vehiclesList[i].recordID;
         this.matchVehicle.vehicleType = vehiclesList[i].vehicleType;
@@ -511,43 +153,46 @@ public class ClaimedVehicleTracking {
       i += 1;
     };  
 
-    // If not nfound, scan whole list of known vehicles
-    if (matchFound==0) {
+    // If not nfound, scan whole list of player vehicles
+    if (!matchFound) {
       i = 0;
-
       GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerVehicles(vehiclesList);
-
       if (this.warningsON) {
         LogChannel(n"DEBUG", " ");
-        LogChannel(n"DEBUG", "----- ");
-        LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" +StrLower(this.matchVehicleModel) + "'");
+        LogChannel(n"DEBUG", "----- Fallback");
+        LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" + this.matchVehicleModel + "'");
       }
-
       // Retrieve RecordID and vehicle type for the matched vehicle model
       while i < ArraySize(vehiclesList) { 
         let _this_vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehiclesList[i].recordID);
         let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
-
         if (this.warningsON) {
-          LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+StrLower(_this_vehicleModel)+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+          if (vehiclesList[i].isUnlocked) {
+            LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+          } else {
+            LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel );
+          }
+          
         }
-
-        if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
+        // if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
+        if ( Equals( vehiclesList[i].recordID, this.matchVehicleRecordID  ) ){
           if (this.warningsON) { 
             LogChannel(n"DEBUG", ">>> Found matching vehicle record ID.");
           }
-          matchFound = 1;
    
           this.matchVehicle.recordID = vehiclesList[i].recordID;
           this.matchVehicle.vehicleType = vehiclesList[i].vehicleType;
           this.matchVehicleUnlocked = vehiclesList[i].isUnlocked;
-        }
 
+          if (this.matchVehicleUnlocked) {
+            matchFound = true;
+          }
+        }
         i += 1;
       };  
     }
 
-    if (this.warningsON) && (matchFound == 0){ 
+    if (this.warningsON) && (!matchFound) { 
       LogChannel(n"DEBUG", ">>>  NO matching vehicle record ID.");
     }
 
@@ -625,14 +270,13 @@ public class ClaimedVehicleTracking {
   public func addClaimedVehicle(claimedVehicle: PlayerVehicle) -> Void {
     let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(claimedVehicle.recordID);
     let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
-    let matchFound = 0;
 
     // Checking standard dealership database
-    this.getVehicleStringFromModel(claimedVehicleModel);
-    matchFound = this.isVehicleOwned();
+    this.getVehicleStringFromModel(claimedVehicle.recordID, claimedVehicleModel);  
 
 
-    if (matchFound > 0) { 
+    if (!(StrCmp(this.matchVehicleString,"")==0)) { 
+      // Vehicle is known to database
 
       if (this.matchVehicleUnlocked) {
         if (this.debugON) { 
@@ -642,29 +286,26 @@ public class ClaimedVehicleTracking {
       } else {
 
         if (this.debugON) {
-          LogChannel(n"DEBUG", "N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'. Match found ["+matchFound+"]");        
+          LogChannel(n"DEBUG", "N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'.");        
         }
 
         if (this.warningsON) {
           LogChannel(n"DEBUG", "N.C.L.A.I.M: Vehicle code extracted: '"+this.matchVehicleString+"'"  );   
         }
 
-        if (StrCmp(this.matchVehicleString, "")!=0) {
+        GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, true, false);
 
-          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, true, false);
+        GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, true);  
 
-          GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, true);  
-
-          if (this.warningsON) {     
-            this.player.SetWarningMessage("N.C.L.A.I.M: Match found in Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'");   
-          } 
-        }
+        if (this.warningsON) {     
+          this.player.SetWarningMessage("N.C.L.A.I.M: Match found in Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'");   
+        } 
 
       }
 
     } 
 
-    if (this.warningsON) && (matchFound == 0) {     
+    if (this.warningsON) && (StrCmp(this.matchVehicleString,"") == 0) {     
       //  this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
       LogChannel(n"DEBUG", "N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
     }       
@@ -752,7 +393,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
         let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());
         let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
 
-        playerOwner.m_claimedVehicleTracking.getVehicleStringFromModel(claimedVehicleModel);
+        playerOwner.m_claimedVehicleTracking.getVehicleStringFromModel(vehicle.GetRecordID(), claimedVehicleModel);
 
         // if (playerOwner.m_claimedVehicleTracking.debugON) {  playerOwner.SetWarningMessage("Vehicle state - abandonned: " + ToString(vehicle.m_abandoned) ); }
  
@@ -970,7 +611,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
           matchFound = 1;
    
           // GameInstance.GetVehicleSystem(this.m_Player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(vehicleData.recordID), vehicleData.vehicleType, true); 
-          playerOwner.m_claimedVehicleTracking.getVehicleStringFromModel(_this_vehicleModel);
+          playerOwner.m_claimedVehicleTracking.getVehicleStringFromModel(vehiclesList[i].recordID, _this_vehicleModel);
 
           if (StrCmp(playerOwner.m_claimedVehicleTracking.matchVehicleString, "")!=0) {
 
