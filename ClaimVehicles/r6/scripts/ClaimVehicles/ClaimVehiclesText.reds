@@ -7,8 +7,6 @@ public class ClaimVehiclesText {
 
   public static func MATCH_FOUND() -> String { return "N.C.L.A.I.M: Match found in Criminal Asset Forfeiture database for "; }
 
-  public static func REMOVING() -> String { return "N.C.L.A.I.M: Removing model "; }
-
-  public static func LIGHTER() -> String { return "Warning: encumbrance restored"; }
+  public static func REMOVING() -> String { return "N.C.L.A.I.M: Removing model "; } 
 
 }
