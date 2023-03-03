@@ -300,7 +300,7 @@ public class ClaimedVehicleTracking {
         GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, true);  
 
         if (this.warningsON) {     
-          this.player.SetWarningMessage("N.C.L.A.I.M: Match found in Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'");   
+          this.player.SetWarningMessage( ClaimVehiclesText.MATCH_FOUND() + " '"+claimedVehicleModel+"'");   
         } 
 
       }
@@ -594,7 +594,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
         LogChannel(n"DEBUG", " ");
         LogChannel(n"DEBUG", "----- ");
         LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Removing model '" +StrLower(vehicleModel) + "'");
-        playerOwner.SetWarningMessage("N.C.L.A.I.M: Removing model '"+vehicleModel+"'"); 
+        playerOwner.SetWarningMessage(ClaimVehiclesText.REMOVING() + "'"+vehicleModel+"'"); 
       }
 
       // Retrieve RecordID and vehicle type for the matched vehicle model
