@@ -246,18 +246,19 @@ public class LimitedEncumbranceTracking {
 
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
+        // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
         if StrContains(currentItemFriendlyName,"milbackpack") {
-          clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 100.0 * this.playerAthleticsLevelMod;
           LogChannel(n"DEBUG", "::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
-          clothSlotMod = 25.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
           LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
         }
 
         if StrContains(currentItemFriendlyName,"bandoleer") {
-          clothSlotMod = 10.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 20.0 * this.playerAthleticsLevelMod;
           LogChannel(n"DEBUG", "::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
         }
 
