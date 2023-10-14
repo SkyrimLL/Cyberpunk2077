@@ -22,14 +22,16 @@ For redscript mod developers
     if this.m_sendQuantityChangedEvent {
       this.m_quantityChangedEvent = new PickerChoosenQuantityChangedEvent();
     };
-    
+    this.m_choosenQuantity = 1;
+
     // Patch - Set slider to max items by default if dropping or selling
-    LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
+    // // LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
 
     switch ToString(this.m_actionType) {
+      // Craft?
       // case "Buy":
-      case "Sell":
       case "Drop":
+      case "Sell":
       case "Disassembly":
       case "TransferToStorage":
         this.m_choosenQuantity = this.m_maxValue;
@@ -54,7 +56,7 @@ For redscript mod developers
     inkTextRef.SetText(this.m_quantityTextChoosen, IntToString(this.m_choosenQuantity));
     inkWidgetRef.SetVisible(this.m_priceText, IsDefined(this.m_data.vendor));
     if IsDefined(this.m_data.vendor) {
-      this.m_itemPrice = Equals(this.m_actionType, QuantityPickerActionType.Buy) ? MarketSystem.GetBuyPrice(this.m_data.vendor, itemData.GetID()) : RPGManager.CalculateSellPrice(this.m_data.vendor.GetGame(), this.m_data.vendor, itemData.GetID());
+      this.m_itemPrice = Equals(this.m_actionType, QuantityPickerActionType.Buy) && !this.m_isBuyback ? MarketSystem.GetBuyPrice(this.m_data.vendor, itemData.GetID()) : RPGManager.CalculateSellPrice(this.m_data.vendor.GetGame(), this.m_data.vendor, itemData.GetID());
     };
     this.m_itemWeight = itemData.GetStatValueByType(gamedataStatType.Weight);
     switch this.m_actionType {

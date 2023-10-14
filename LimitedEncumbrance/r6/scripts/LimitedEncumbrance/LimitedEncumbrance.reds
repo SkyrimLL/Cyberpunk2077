@@ -1,6 +1,19 @@
 // LimitedEncumbrance - by DeepBlueFrog
 // Inspired by modNoEncumbrance - by rfuzzo
 
+// 2.0 notes on Carry Capacity upgrades - https://game8.co/games/Cyberpunk-2077/archives/315020
+// List of all perks - https://game8.co/games/Cyberpunk-2077/archives/309686
+
+// - add support for Solo skill
+// - add support for carry capacity shard
+// - remove support for Pack Mule perk
+// done - update code for carry capacity boosters consumables
+// - update code for cyberware
+// done - fix code for backpacks
+
+// Known issues
+// - Max capacity recalculated only when item is picked up or dropped. Find way to update on clothing equipped or unequipped.
+
 /*
 For redscript mod developers
 
@@ -144,7 +157,7 @@ public class LimitedEncumbranceTracking {
     clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Outfit);  
 
     if (this.debugON) {
-      LogChannel(n"DEBUG", "::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
+      // LogChannel(n"DEBUG", "::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
     }
 
     return clothModWeight;
@@ -238,39 +251,49 @@ public class LimitedEncumbranceTracking {
         // currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).EntityName();
         // currentItemFriendlyName = GetLocalizedItemNameByCName(currentItemEntityName);
 
-        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
-        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
-        LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
-        LogChannel(n"DEBUG", "::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
-        // LogChannel(n"DEBUG", "::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
-
+        if (this.debugON) {
+          // // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
+          // // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
+          // LogChannel(n"DEBUG", "::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
+          // LogChannel(n"DEBUG", "::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
+          // // LogChannel(n"DEBUG", "::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
+        }
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
         // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
         if StrContains(currentItemFriendlyName,"milbackpack") {
           clothSlotMod = 100.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+          }
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
           clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
         }
 
         if StrContains(currentItemFriendlyName,"bandoleer") {
           clothSlotMod = 20.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
+
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
+          }
         }
 
         if StrContains(currentItemFriendlyName,"waistbag") {
           clothSlotMod = 5.0 * this.playerAthleticsLevelMod;
-          LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+          }
         }
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
 
       } else {         
-        LogChannel(n"DEBUG", "::: GetClothSlotMods  - Item undefined " );
+        // // LogChannel(n"DEBUG", "::: GetClothSlotMods  - Item undefined " );
       };
 
       return clothSlotBonus;
@@ -294,7 +317,7 @@ public class LimitedEncumbranceTracking {
     while i < ArraySize(slots) {
       slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
         
-      // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - slot name: " + slotName + " - weight: " + slotWeight);
+      // // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - slot name: " + slotName + " - weight: " + slotWeight);
 
       if ( ( StrCmp(slotName, "Chest") == 0 ) || ( StrCmp(slotName, "Torso") == 0 ) || ( StrCmp(slotName, "Legs") == 0 ) || ( StrCmp(slotName, "Feet") == 0 ) || ( StrCmp(slotName, "Head") == 0 ) || ( StrCmp(slotName, "Eyes") == 0 ) || ( StrCmp(slotName, "Outfit") == 0 ) ) {
         equipmentWeight += this.getPlayerSlotItemWeight(this.player, slots[i].GetID());
@@ -317,9 +340,9 @@ public class LimitedEncumbranceTracking {
     // ArrayPush(this.m_equippedItems, playerData.GetItemInEquipSlot(gamedataEquipmentArea.QuickSlot, 0));
 
     // if (ItemID.IsValid(playerData.GetItemInEquipSlot(gamedataEquipmentArea.OuterChest, 0))) { 
-    //   LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - Player is wearing outer torso item"  );
+    //   // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - Player is wearing outer torso item"  );
     // } else {
-    //   LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - Player is NOT wearing outer torso item"  );      
+    //   // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - Player is NOT wearing outer torso item"  );      
     // }
 
     // Find weight of equipped weapons
@@ -346,7 +369,7 @@ public class LimitedEncumbranceTracking {
     }
 
     if (this.debugON) {
-      LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - equipmentWeight: " + equipmentWeight);
+      // LogChannel(n"DEBUG", "::: calculatePlayerEquipmentWeights  - equipmentWeight: " + equipmentWeight);
     }
 
     return equipmentWeight;
@@ -370,7 +393,7 @@ public class LimitedEncumbranceTracking {
     while i < ArraySize(slots) {
       slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
         
-      // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - slot name: " + slotName + " - weight: " + slotWeight);
+      // // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - slot name: " + slotName + " - weight: " + slotWeight);
 
       if ( StrCmp(slotName, "Chest") == 0 ) {
         slotBonus += 2.0;
@@ -418,7 +441,7 @@ public class LimitedEncumbranceTracking {
       }
       
       if (this.debugON) {
-        LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 0 : " + NameToString(cyberwareType));
+        // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 0 : " + NameToString(cyberwareType));
       }
     }
  
@@ -433,7 +456,7 @@ public class LimitedEncumbranceTracking {
       }
 
       if (this.debugON) {
-        LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 1 : " + NameToString(cyberwareType));
+        // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 1 : " + NameToString(cyberwareType));
       }
     }
 
@@ -459,7 +482,7 @@ public class LimitedEncumbranceTracking {
 
 
     if (this.debugON) {
-      LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - TitaniumBones: " + ToString(hasTitaniumBones) + "");
+      // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - TitaniumBones: " + ToString(hasTitaniumBones) + "");
     }
  
     return qualityTitaniumBones;
@@ -472,12 +495,17 @@ public class LimitedEncumbranceTracking {
     let playerClothSlot = this.calculatePlayerClothMod();
     let playerEquipmentBonus = this.calculatePlayerEquipmentBonus();
     let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
-    let playerPackMuleLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_01_Perk_2);
-    let playerTransporterLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Athletics_Area_06_Perk_1);
-    let playerBloodrushLevel = playerDevSystem.GetPerkLevel(this.player, gamedataPerkType.Demolition_Area_03_Perk_1);
+
+    // Like a Feather - Body_Left_Perk_2_4 - 9 - No movement speed penalty with Shotguns, Light Machine Guns and Heavy Machine Guns.
+    // Juggernaut - Body_Central_Perk_3_2 - 15 - When Adrenaline Rush is active: +20% movement speed, +10% damage
+    // Unstoppable Force - Body_Central_Perk_3_4 - 15 - When Adrenaline Rush is active: Gain immunity to movement penalties and non-damaging status effects such as Knockdown, Blinding, etc.
+    let playerLikeaFeatherLevel = playerDevSystem.GetPerkLevel(this.player, gamedataNewPerkType.Body_Left_Perk_2_4);
+    let playerJuggernautLevel = playerDevSystem.GetPerkLevel(this.player, gamedataNewPerkType.Body_Central_Perk_3_2);
+    let playerUnstoppableForceLevel = playerDevSystem.GetPerkLevel(this.player, gamedataNewPerkType.Body_Central_Perk_3_4);
+
     let statsSystem: ref<StatsSystem> = GameInstance.GetStatsSystem(this.player.GetGame());
     let playerAthleticsLevel: Float = statsSystem.GetStatValue(Cast(this.player.GetEntityID()), gamedataStatType.Athletics);
-    let playerPerks = 0.0;
+    let playerPerks = 1.0;
     let playerPerksBonus = 1.0;
     // let ses: ref<StatusEffectSystem>;
     let hasCarryCapacityBoosterEffect: Bool;
@@ -491,16 +519,16 @@ public class LimitedEncumbranceTracking {
     hasCarryCapacityBoosterEffect = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"BaseStatusEffect.CarryCapacityBooster");  
     qualityTitaniumBones = this.GetCyberwareFromSkeletonSlots();
 
-    if (playerPackMuleLevel > 0) {
-      playerPerks += 3.0;
+    if (playerLikeaFeatherLevel > 0) {
+      playerPerks += 1.0;
     }
 
-    if (playerTransporterLevel > 0) {
+    if (playerJuggernautLevel > 0) {
       playerPerks += 2.0;
     }
 
-    if (playerBloodrushLevel > 0) {
-      playerPerks += 1.0;
+    if (playerUnstoppableForceLevel > 0) {
+      playerPerks += 3.0;
     }
 
     if (qualityTitaniumBones > 0.0) {
@@ -520,22 +548,23 @@ public class LimitedEncumbranceTracking {
     } 
 
     if (this.debugON) {
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  ); 
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevel: '"+playerLevel+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPackMuleLevel: " + ToString(playerPackMuleLevel));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerTransporterLevel: " + ToString(playerTransporterLevel));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerBloodrushLevel: " + ToString(playerBloodrushLevel));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerAthleticsLevel: '"+ToString(playerAthleticsLevel)+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - qualityTitaniumBones: " + ToString(qualityTitaniumBones));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: " + ToString(playerPerks));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksBonus: " + ToString(playerPerksBonus));
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerClothSlot: '"+playerClothSlot+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
-      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
+    /*    */
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  ); 
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevel: '"+playerLevel+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPackMuleLevel: " + ToString(playerPackMuleLevel));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerTransporterLevel: " + ToString(playerTransporterLevel));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerBloodrushLevel: " + ToString(playerBloodrushLevel));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerAthleticsLevel: '"+ToString(playerAthleticsLevel)+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - qualityTitaniumBones: " + ToString(qualityTitaniumBones));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: " + ToString(playerPerks));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksBonus: " + ToString(playerPerksBonus));
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerClothSlot: '"+playerClothSlot+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
+      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
 
     }
 
@@ -546,9 +575,9 @@ public class LimitedEncumbranceTracking {
     // this.player.m_curInventoryWeight
 
     if (this.newEncumbranceDisplayON) {
-      return ToString(Cast<Int32>(this.limitedCarryCapacity) - Cast<Int32>(playerWeight)) + " (" + ToString(Cast<Int32>(this.limitedCarryCapacity)) + ")";
+      return IntToString(Cast<Int32>(this.limitedCarryCapacity) - Cast<Int32>(playerWeight)) + " (" + IntToString(Cast<Int32>(this.limitedCarryCapacity)) + ")";
       } else {
-      return ToString(Cast<Int32>(playerWeight)) + " / " + ToString(Cast<Int32>(this.limitedCarryCapacity)); 
+      return IntToString(Cast<Int32>(playerWeight)) + " / " + IntToString(Cast<Int32>(this.limitedCarryCapacity)); 
       }
 
   }
@@ -563,7 +592,7 @@ public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
 // -- PlayerPuppet
 @replaceMethod(PlayerPuppet)
 // Overload method from - https://codeberg.org/adamsmasher/cyberpunk/src/branch/master/cyberpunk/player/player.swift#L1974
-public final func EvaluateEncumbrance() -> Void {
+public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
     let carryCapacity: Float; 
     let hasExhaustedEffect: Bool;
     let hasEncumbranceEffect: Bool;
@@ -615,11 +644,11 @@ public final func EvaluateEncumbrance() -> Void {
           } 
         }
 
-        if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted {
+        if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted && !isLootBroken  {
           if (this.m_limitedEncumbranceTracking.warningsON) { this.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
           ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
         } else {
-          if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted {
+          if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted && !isLootBroken  {
             if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
             ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
           };
@@ -627,9 +656,13 @@ public final func EvaluateEncumbrance() -> Void {
 
 
         if (hasEncumbranceEffect) {
+            if (this.m_limitedEncumbranceTracking.debugON) { 
+              // LogChannel(n"DEBUG", "Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"  ); 
+            }
+
             if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage("Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"); }
 
-            if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect {
+            if this.m_curInventoryWeight <= carryCapacity  {
               if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
               ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
             };
@@ -657,10 +690,10 @@ public final func EvaluateEncumbrance() -> Void {
       if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
         this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
       };
-      if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted {
+      if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted && !isLootBroken  {
         ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
       } else {
-        if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted {
+        if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted && !isLootBroken  {
           ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
         };
       };
@@ -767,11 +800,11 @@ public let m_player: wref<PlayerPuppet>;
     if (this.m_player.m_limitedEncumbranceTracking.modON) {
       this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
 
-      inkTextRef.SetText(this.m_playerWeight, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
+      inkTextRef.SetText(this.m_playerWeightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
     } else {
       // Vanilla code
 
-      inkTextRef.SetText(this.m_playerWeight, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
+      inkTextRef.SetText(this.m_playerWeightValue, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
 
     }
   }

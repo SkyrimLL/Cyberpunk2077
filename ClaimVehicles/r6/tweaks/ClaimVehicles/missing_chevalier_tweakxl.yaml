@@ -1,25 +1,59 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.v_standard2_chevalier_thrax
-  - !append Vehicle.v_standard2_chevalier_thrax_combat_cab
-  - !append Vehicle.v_standard2_chevalier_thrax_dex
-  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom
-  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom_mws
-  - !append Vehicle.v_standard2_chevalier_thrax_ncu
-  - !append Vehicle.v_standard2_chevalier_thrax_poor
-  - !append Vehicle.v_standard2_chevalier_thrax_premium
-  - !append Vehicle.v_standard2_chevalier_thrax_sixth_street
-  - !append Vehicle.v_standard2_chevalier_thrax_valentino
-  - !append Vehicle.v_standard3_chevalier_emperor
-  - !append Vehicle.v_standard3_chevalier_emperor_militech
-  - !append Vehicle.v_standard3_chevalier_emperor_ncu
-  - !append Vehicle.v_standard3_chevalier_emperor_police
-  - !append Vehicle.v_standard3_chevalier_emperor_police_mws
-  - !append Vehicle.v_standard3_chevalier_emperor_police_prevention
-  - !append Vehicle.v_standard3_chevalier_emperor_police_siren
-  - !append Vehicle.v_standard3_chevalier_emperor_sport
   - !append Vehicle.cs_savable_chevalier_emperor
   - !append Vehicle.cs_savable_chevalier_emperor_police_siren
   - !append Vehicle.cs_savable_chevalier_thrax
   - !append Vehicle.cs_savable_chevalier_thrax_maelstrom
   - !append Vehicle.cs_savable_chevalier_thrax_sixth_street
   - !append Vehicle.cs_savable_chevalier_thrax_valentino
+  - !append Vehicle.hackable_chevalier_emperor
+  - !append Vehicle.hackable_chevalier_emperor_police_siren
+  - !append Vehicle.hackable_chevalier_thrax
+  - !append Vehicle.hackable_chevalier_thrax_maelstrom
+  - !append Vehicle.hackable_chevalier_thrax_sixth_street
+  - !append Vehicle.hackable_chevalier_thrax_valentino
+  - !append Vehicle.mws_chevalier_thrax
+  - !append Vehicle.ncpd_suv_chevalier_emperor_heat_4
+  - !append Vehicle.q000_nomad_v_standard2_chevalier_thrax_quest
+  - !append Vehicle.q000_nomad_v_standard3_chevalier_emperor_quest
+  - !append Vehicle.v_standard2_chevalier_thrax
+  - !append Vehicle.v_standard2_chevalier_thrax_combat_cab
+  - !append Vehicle.v_standard2_chevalier_thrax_courier_expanded
+  - !append Vehicle.v_standard2_chevalier_thrax_dex
+  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom
+  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom_courier
+  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom_courier_expanded
+  - !append Vehicle.v_standard2_chevalier_thrax_maelstrom_mws
+  - !append Vehicle.v_standard2_chevalier_thrax_mafia_courier
+  - !append Vehicle.v_standard2_chevalier_thrax_mq304
+  - !append Vehicle.v_standard2_chevalier_thrax_ncu
+  - !append Vehicle.v_standard2_chevalier_thrax_player
+  - !append Vehicle.v_standard2_chevalier_thrax_poor
+  - !append Vehicle.v_standard2_chevalier_thrax_premium
+  - !append Vehicle.v_standard2_chevalier_thrax_quest
+  - !append Vehicle.v_standard2_chevalier_thrax_scavengers
+  - !append Vehicle.v_standard2_chevalier_thrax_scavengers_quest
+  - !append Vehicle.v_standard2_chevalier_thrax_sixth_street
+  - !append Vehicle.v_standard2_chevalier_thrax_sixth_street_courier
+  - !append Vehicle.v_standard2_chevalier_thrax_valentino
+  - !append Vehicle.v_standard2_chevalier_thrax_valentino_courier
+  - !append Vehicle.v_standard3_chevalier_emperor
+  - !append Vehicle.v_standard3_chevalier_emperor_arasaka_courier
+  - !append Vehicle.v_standard3_chevalier_emperor_courier
+  - !append Vehicle.v_standard3_chevalier_emperor_courier_expanded
+  - !append Vehicle.v_standard3_chevalier_emperor_ncu
+  - !append Vehicle.v_standard3_chevalier_emperor_player
+  - !append Vehicle.v_standard3_chevalier_emperor_police
+  - !append Vehicle.v_standard3_chevalier_emperor_police_mws
+  - !append Vehicle.v_standard3_chevalier_emperor_police_prevention
+  - !append Vehicle.v_standard3_chevalier_emperor_police_siren
+  - !append Vehicle.v_standard3_chevalier_emperor_quest
+  - !append Vehicle.v_standard3_chevalier_emperor_sport
+  - !append Vehicle.v_utility4_chevalier_centurion
+  - !append Vehicle.v_utility4_chevalier_centurion_cargo
+  - !append Vehicle.v_utility4_chevalier_centurion_cargo_courier
+  - !append Vehicle.v_utility4_chevalier_centurion_cargo_dogtown
+  - !append Vehicle.v_utility4_chevalier_centurion_flatbed
+  - !append Vehicle.v_utility4_chevalier_centurion_flatbed_poor
+  - !append Vehicle.v_utility4_chevalier_centurion_flatbed_poor_dogtown
+  - !append Vehicle.v_utility4_chevalier_centurion_poor
+  - !append Vehicle.v_utility4_chevalier_centurion_poor_dogtown

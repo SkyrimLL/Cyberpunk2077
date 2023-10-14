@@ -1,2 +1,4 @@
-Vehicle.vehicle_list.list:
-  - !append Vehicle.kab_02_backup_thrax
+Vehicle.vehicle_list.list: 
+  - !append Vehicle.Chevillon
+  - !append Vehicle.chevillon_thrax_offer
+  - !append Vehicle.chevallion_emperor_police_offer

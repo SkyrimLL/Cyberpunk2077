@@ -1,16 +1,47 @@
-Vehicle.vehicle_list.list:
-  - !append Vehicle.v_militech_basilisk
-  - !append Vehicle.v_militech_basilisk_militech
-  - !append Vehicle.v_militech_basilisk_transport
-  - !append Vehicle.v_utility4_militech_behemoth
-  - !append Vehicle.v_utility4_militech_behemoth_border_patrol
-  - !append Vehicle.v_utility4_militech_behemoth_kangtao
-  - !append Vehicle.v_utility4_militech_behemoth_maxtac
-  - !append Vehicle.v_utility4_militech_behemoth_netwatch
-  - !append Vehicle.v_utility4_militech_behemoth_police
+Vehicle.vehicle_list.list: 
+  - !append Vehicle.Militech
+  - !append Vehicle.border_patrol_chevalier_emperor_militech_heat_3
   - !append Vehicle.cs_savable_militech_behemoth
+  - !append Vehicle.cs_savable_militech_behemoth_kurtz
+  - !append Vehicle.cs_savable_v_standard3_militech_hellhound_police
+  - !append Vehicle.cs_savable_v_standard3_militech_hellhound_police_siren
+  - !append Vehicle.hackable_militech_behemoth
+  - !append Vehicle.hackable_militech_hellhound_police_siren
+  - !append Vehicle.ep1_hackable_militech_behemoth_kurtz
+  - !append Vehicle.militech_hellhound_offer
+  - !append Vehicle.q000_nomad_v_utility4_militech_behemoth_quest
+  - !append Vehicle.q114_militech_av
+  - !append Vehicle.q114_militech_gun_wagon
+  - !append Vehicle.q114_militech_gun_wagon_turrets
+  - !append Vehicle.q114_militech_mechdrop_av
+  - !append Vehicle.q114_militech_missile_av
   - !append Vehicle.q114_militech_missile_truck_final
   - !append Vehicle.q114_militech_panzer
   - !append Vehicle.q114_militech_response_bike
   - !append Vehicle.q114_militech_response_car
+  - !append Vehicle.q304_v_utility4_militech_behemoth_quest_scanning
   - !append Vehicle.sq027_militech_suv
+  - !append Vehicle.v_militech_basilisk
+  - !append Vehicle.v_militech_basilisk_militech
+  - !append Vehicle.v_militech_basilisk_transport
+  - !append Vehicle.v_standard3_chevalier_emperor_militech
+  - !append Vehicle.v_standard3_chevalier_emperor_militech_border_prevention
+  - !append Vehicle.v_standard3_chevalier_emperor_militech_courier
+  - !append Vehicle.v_standard3_chevalier_emperor_militech_wasteland_heavy_prevention
+  - !append Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention
+  - !append Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention_2
+  - !append Vehicle.v_standard3_militech_hellhound
+  - !append Vehicle.v_standard3_militech_hellhound_courier
+  - !append Vehicle.v_standard3_militech_hellhound_player
+  - !append Vehicle.v_standard3_militech_hellhound_police
+  - !append Vehicle.v_utility4_militech_behemoth
+  - !append Vehicle.v_utility4_militech_behemoth_border_patrol
+  - !append Vehicle.v_utility4_militech_behemoth_kangtao
+  - !append Vehicle.v_utility4_militech_behemoth_kurtz
+  - !append Vehicle.v_utility4_militech_behemoth_maxtac
+  - !append Vehicle.v_utility4_militech_behemoth_netwatch
+  - !append Vehicle.v_utility4_militech_behemoth_police
+  - !append Vehicle.v_utility4_militech_behemoth_quest
+  - !append Vehicle.wasteland_chevalier_emperor_militech_heat_1
+  - !append Vehicle.wasteland_chevalier_emperor_militech_heat_2
+  - !append Vehicle.wasteland_chevalier_emperor_militech_heat_3

@@ -1,25 +1,75 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.v_sport1_quadra_turbo
-  - !append Vehicle.v_sport1_quadra_turbo_poor
-  - !append Vehicle.v_sport1_quadra_turbo_r
-  - !append Vehicle.v_sport1_quadra_turbo_tyger_claw
-  - !append Vehicle.v_sport2_quadra_type66
-  - !append Vehicle.v_sport2_quadra_type66_avenger
-  - !append Vehicle.v_sport2_quadra_type66_bulleat
-  - !append Vehicle.v_sport2_quadra_type66_nomad
-  - !append Vehicle.v_sport2_quadra_type66_nomad_ncu
-  - !append Vehicle.v_sport2_quadra_type66_nomad_wraith
-  - !append Vehicle.v_sport2_quadra_type66_poor
-  - !append Vehicle.v_sport2_quadra_type66_rogue
-  - !append Vehicle.v_sport2_quadra_type66_rowley
-  - !append Vehicle.v_sport2_quadra_type66_sampson
-  - !append Vehicle.v_sport2_quadra_type66_sport
+  - !append Vehicle.Quadra
+  - !append Vehicle.quadra_sport_r_7_02_offer
+  - !append Vehicle.quadra_sport_r_7_offer
+  - !append Vehicle.quadra_turbo_r_offer
+  - !append Vehicle.quadra_type_1_offer
+  - !append Vehicle.quadra_type_66_avenger_offer
+  - !append Vehicle.quadra_type_66_nc_deathrace_offer
+  - !append Vehicle.quadra_type_66_nomad_03_offer
+  - !append Vehicle.quadra_type_66_offer
+  - !append Vehicle.sq025_quadra
   - !append Vehicle.cs_savable_quadra_turbo
   - !append Vehicle.cs_savable_quadra_turbo_tc
   - !append Vehicle.cs_savable_quadra_turbo_tyger_claw
   - !append Vehicle.cs_savable_quadra_type66
   - !append Vehicle.cs_savable_quadra_type66_nomad
+  - !append Vehicle.ep1_cs_savable_quadra_sport_r7
+  - !append Vehicle.ep1_hackable_quadra_sport_r7
+  - !append Vehicle.hackable_quadra_turbo
+  - !append Vehicle.hackable_quadra_turbo_tc
+  - !append Vehicle.hackable_quadra_turbo_tyger_claw
+  - !append Vehicle.hackable_quadra_type66_nomad 
+  - !append Vehicle.hackablequadra_type66 
   - !append Vehicle.ma_pac_cvi_08_quadra
+  - !append Vehicle.q000_nomad_v_sport1_quadra_turbo_quest
+  - !append Vehicle.q000_nomad_v_sport2_quadra_type66_nomad_quest
+  - !append Vehicle.q000_nomad_v_sport2_quadra_type66_quest
   - !append Vehicle.q001_quadra_turbo
   - !append Vehicle.q114_quadra_type66_nomad
-  - !append Vehicle.sq025_quadra
+  - !append Vehicle.v_sport1_quadra_sport_r7
+  - !append Vehicle.v_sport1_quadra_sport_r7_courier
+  - !append Vehicle.v_sport1_quadra_sport_r7_gt
+  - !append Vehicle.v_sport1_quadra_sport_r7_mrhands
+  - !append Vehicle.v_sport1_quadra_sport_r7_netrunner
+  - !append Vehicle.v_sport1_quadra_sport_r7_netrunner_01
+  - !append Vehicle.v_sport1_quadra_sport_r7_netrunner_02
+  - !append Vehicle.v_sport1_quadra_sport_r7_player
+  - !append Vehicle.v_sport1_quadra_sport_r7_player_02
+  - !append Vehicle.v_sport1_quadra_sport_r7_poor
+  - !append Vehicle.v_sport1_quadra_sport_r7_premium
+  - !append Vehicle.v_sport1_quadra_sport_r7_rocket
+  - !append Vehicle.v_sport1_quadra_sport_r7_web
+  - !append Vehicle.v_sport1_quadra_turbo
+  - !append Vehicle.v_sport1_quadra_turbo_courier
+  - !append Vehicle.v_sport1_quadra_turbo_courier_expanded
+  - !append Vehicle.v_sport1_quadra_turbo_player
+  - !append Vehicle.v_sport1_quadra_turbo_poor
+  - !append Vehicle.v_sport1_quadra_turbo_quest
+  - !append Vehicle.v_sport1_quadra_turbo_r
+  - !append Vehicle.v_sport1_quadra_turbo_r_player
+  - !append Vehicle.v_sport1_quadra_turbo_tyger_claw
+  - !append Vehicle.v_sport1_quadra_turbo_tyger_claw_courier
+  - !append Vehicle.v_sport2_quadra_type66
+  - !append Vehicle.v_sport2_quadra_type66_02_player
+  - !append Vehicle.v_sport2_quadra_type66_avenger
+  - !append Vehicle.v_sport2_quadra_type66_avenger_player
+  - !append Vehicle.v_sport2_quadra_type66_bulleat
+  - !append Vehicle.v_sport2_quadra_type66_corier_client_car
+  - !append Vehicle.v_sport2_quadra_type66_courier_expanded
+  - !append Vehicle.v_sport2_quadra_type66_nomad
+  - !append Vehicle.v_sport2_quadra_type66_nomad_courier
+  - !append Vehicle.v_sport2_quadra_type66_nomad_kb
+  - !append Vehicle.v_sport2_quadra_type66_nomad_ncu_player
+  - !append Vehicle.v_sport2_quadra_type66_nomad_player
+  - !append Vehicle.v_sport2_quadra_type66_nomad_player_03
+  - !append Vehicle.v_sport2_quadra_type66_nomad_quest
+  - !append Vehicle.v_sport2_quadra_type66_nomad_tribute
+  - !append Vehicle.v_sport2_quadra_type66_nomad_wraith
+  - !append Vehicle.v_sport2_quadra_type66_player
+  - !append Vehicle.v_sport2_quadra_type66_poor
+  - !append Vehicle.v_sport2_quadra_type66_quest
+  - !append Vehicle.v_sport2_quadra_type66_rogue
+  - !append Vehicle.v_sport2_quadra_type66_rowley
+  - !append Vehicle.v_sport2_quadra_type66_sampson
+  - !append Vehicle.v_sport2_quadra_type66_sport

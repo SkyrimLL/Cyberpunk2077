@@ -1,22 +1,63 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.v_kaukaz_z71_aras
-  - !append Vehicle.v_utility4_kaukaz_bratsk
-  - !append Vehicle.v_utility4_kaukaz_bratsk_concrete
-  - !append Vehicle.v_utility4_kaukaz_bratsk_container
-  - !append Vehicle.v_utility4_kaukaz_bratsk_dumpster
-  - !append Vehicle.v_utility4_kaukaz_bratsk_extended
-  - !append Vehicle.v_utility4_kaukaz_bratsk_machine
-  - !append Vehicle.v_utility4_kaukaz_bratsk_metalstud
-  - !append Vehicle.v_utility4_kaukaz_bratsk_misile
-  - !append Vehicle.v_utility4_kaukaz_zeya
-  - !append Vehicle.v_utility4_kaukaz_zeya_barrels
-  - !append Vehicle.v_utility4_kaukaz_zeya_container
-  - !append Vehicle.v_utility4_kaukaz_zeya_freight
-  - !append Vehicle.v_utility4_kaukaz_zeya_full
+  - !append Vehicle.Kaukaz
+  - !append Vehicle.ep1_hackable_kaukaz_zeya_kurtz
   - !append Vehicle.cs_savable_kaukaz_bratsk
   - !append Vehicle.cs_savable_kaukaz_bratsk_containers
   - !append Vehicle.cs_savable_kaukaz_bratsk_metalstud
   - !append Vehicle.cs_savable_kaukaz_zeya
   - !append Vehicle.cs_savable_kaukaz_zeya_container
   - !append Vehicle.cs_savable_kaukaz_zeya_full
+  - !append Vehicle.cs_savable_kaukaz_zeya_kurtz
   - !append Vehicle.cs_savable_utility4_kaukaz_zeya_freight
+  - !append Vehicle.cs_savable_v_utility4_kaukaz_bratsk_container_dogtown_ow
+  - !append Vehicle.hackable_kaukaz_bratsk
+  - !append Vehicle.hackable_kaukaz_bratsk_containers
+  - !append Vehicle.hackable_kaukaz_bratsk_metalstud
+  - !append Vehicle.hackable_kaukaz_zeya
+  - !append Vehicle.hackable_kaukaz_zeya_container
+  - !append Vehicle.hackable_kaukaz_zeya_full
+  - !append Vehicle.hackable_utility4_kaukaz_zeya_freight
+  - !append Vehicle.q000_nomad_v_utility4_kaukaz_bratsk_quest
+  - !append Vehicle.q000_nomad_v_utility4_kaukaz_zeya_quest
+  - !append Vehicle.q304_v_utility4_kaukaz_bratsk_concrete_scanning
+  - !append Vehicle.v_kaukaz_z71_aras
+  - !append Vehicle.v_utility4_kaukaz_bratsk
+  - !append Vehicle.v_utility4_kaukaz_bratsk_concrete
+  - !append Vehicle.v_utility4_kaukaz_bratsk_concrete_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_concrete_non_interation
+  - !append Vehicle.v_utility4_kaukaz_bratsk_container
+  - !append Vehicle.v_utility4_kaukaz_bratsk_container_dogtown
+  - !append Vehicle.v_utility4_kaukaz_bratsk_container_dogtown_ow
+  - !append Vehicle.v_utility4_kaukaz_bratsk_container_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_corp_bud_01
+  - !append Vehicle.v_utility4_kaukaz_bratsk_corp_bud_02
+  - !append Vehicle.v_utility4_kaukaz_bratsk_corp_bud_03
+  - !append Vehicle.v_utility4_kaukaz_bratsk_dogtown
+  - !append Vehicle.v_utility4_kaukaz_bratsk_dumpster
+  - !append Vehicle.v_utility4_kaukaz_bratsk_dumpster_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_extended
+  - !append Vehicle.v_utility4_kaukaz_bratsk_extended_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_machine
+  - !append Vehicle.v_utility4_kaukaz_bratsk_machine_dogtown
+  - !append Vehicle.v_utility4_kaukaz_bratsk_machine_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_metalstud
+  - !append Vehicle.v_utility4_kaukaz_bratsk_metalstud_dogtown
+  - !append Vehicle.v_utility4_kaukaz_bratsk_metalstud_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_bratsk_misile
+  - !append Vehicle.v_utility4_kaukaz_bratsk_quest
+  - !append Vehicle.v_utility4_kaukaz_zeya
+  - !append Vehicle.v_utility4_kaukaz_zeya_barrels
+  - !append Vehicle.v_utility4_kaukaz_zeya_barrels_dogtown
+  - !append Vehicle.v_utility4_kaukaz_zeya_barrels_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_zeya_container
+  - !append Vehicle.v_utility4_kaukaz_zeya_container_dogtown
+  - !append Vehicle.v_utility4_kaukaz_zeya_container_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_zeya_freight
+  - !append Vehicle.v_utility4_kaukaz_zeya_freight_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_zeya_full
+  - !append Vehicle.v_utility4_kaukaz_zeya_full_courier
+  - !append Vehicle.v_utility4_kaukaz_zeya_full_courier_expanded
+  - !append Vehicle.v_utility4_kaukaz_zeya_full_dogtown
+  - !append Vehicle.v_utility4_kaukaz_zeya_full_locked_doors
+  - !append Vehicle.v_utility4_kaukaz_zeya_kurtz
+  - !append Vehicle.v_utility4_kaukaz_zeya_quest

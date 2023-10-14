@@ -1,10 +1,27 @@
 Vehicle.vehicle_list.list:
+  - !append Vehicle.Brennan
+  - !append Vehicle.brennan_apollo_offer 
+  - !append Vehicle.cs_savable_brennan_apollo
+  - !append Vehicle.hackable_brennan_apollo
+  - !append Vehicle.kurtz_brennan_apollo_bike
+  - !append Vehicle.mq301_scav_delivery_bike_brennan_apollo
+  - !append Vehicle.mws_brennan_apollo
+  - !append Vehicle.mws_kurtz_brennan_apollo
+  - !append Vehicle.ncpd_brennan_apollo_bike
+  - !append Vehicle.q114_brennan_apollo_nomad
+  - !append Vehicle.q304_v_sportbike3_brennan_apollo_quest_scanning
+  - !append Vehicle.v_brennan_apollo_bike_intro_chase
   - !append Vehicle.v_sportbike3_brennan_apollo
+  - !append Vehicle.v_sportbike3_brennan_apollo_basic_01_prevention
+  - !append Vehicle.v_sportbike3_brennan_apollo_courier
+  - !append Vehicle.v_sportbike3_brennan_apollo_courier_expanded
+  - !append Vehicle.v_sportbike3_brennan_apollo_kurtz
   - !append Vehicle.v_sportbike3_brennan_apollo_nomad
+  - !append Vehicle.v_sportbike3_brennan_apollo_nomad_player
+  - !append Vehicle.v_sportbike3_brennan_apollo_player
+  - !append Vehicle.v_sportbike3_brennan_apollo_police
+  - !append Vehicle.v_sportbike3_brennan_apollo_quest
   - !append Vehicle.v_sportbike3_brennan_apollo_scorpion
   - !append Vehicle.v_sportbike3_brennan_apollo_sport
   - !append Vehicle.v_sportbike3_brennan_apollo_tyger
-  - !append Vehicle.cs_savable_brennan_apollo
-  - !append Vehicle.q114_brennan_apollo_nomad
-  - !append Vehicle.mq001_scorpion_vehicle
-  - !append Vehicle.q104_scorpion_bike
+  - !append Vehicle.v_sportbike3_brennan_apollo_tyger_courier_expanded

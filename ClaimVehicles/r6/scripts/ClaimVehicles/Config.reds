@@ -22,30 +22,30 @@ public class ClaimVehiclesConfig {
 
   @runtimeProperty("ModSettings.mod", "NCLAIMS")
   @runtimeProperty("ModSettings.category", "Vehicle Claim System")
-  @runtimeProperty("ModSettings.displayName", "Workshop Perk success chance")
-  @runtimeProperty("ModSettings.description", "Percent chance the Workshop perk will work. Chance of is multiplied by level of this perk (open vehicles only).")
+  @runtimeProperty("ModSettings.displayName", "Low Perk success chance")
+  @runtimeProperty("ModSettings.description", "Percent chance the low level perk will work (Gearhead, Carhacker, Road warrior). Chance of is multiplied by level of this perk (open vehicles only).")
   @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
-  let chanceWorkshopHack: Int32 = 20;
+  let chanceLowPerkHack: Int32 = 20;
 
   @runtimeProperty("ModSettings.mod", "NCLAIMS")
   @runtimeProperty("ModSettings.category", "Vehicle Claim System")
-  @runtimeProperty("ModSettings.displayName", "Field Technician Perk success chance")
-  @runtimeProperty("ModSettings.description", "Percent chance the Field Technician perk will work. Chance of is multiplied by level of this perk (open vehicles only).")
+  @runtimeProperty("ModSettings.displayName", "Mid Perk level success chance")
+  @runtimeProperty("ModSettings.description", "Percent chance the mid level perk will work (driver update, System overwhelm, Sleight of hand). Chance of is multiplied by level of this perk (open vehicles only).")
   @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
-  let chanceFieldTechnicianHack: Int32 = 50;
+  let chanceMidPerkHack: Int32 = 50;
 
   @runtimeProperty("ModSettings.mod", "NCLAIMS")
   @runtimeProperty("ModSettings.category", "Vehicle Claim System")
-  @runtimeProperty("ModSettings.displayName", "Hacker Overlord Perk success chance")
-  @runtimeProperty("ModSettings.description", "Percent chance the Hacker Overlord perk will work. Chance of is multiplied by level of this perk (open vehicles only).")
+  @runtimeProperty("ModSettings.displayName", "High Perk level success chance")
+  @runtimeProperty("ModSettings.description", "Percent chance the high level perk will work (Edgerunner, Smart synergy, Style over substance). Chance of is multiplied by level of this perk (open vehicles only).")
   @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
-  let chanceHackerOverlordHack: Int32 = 100;
+  let chanceHighPerkHack: Int32 = 100;
 
   @runtimeProperty("ModSettings.mod", "NCLAIMS")
   @runtimeProperty("ModSettings.category", "Notifications")

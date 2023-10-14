@@ -1,7 +1,32 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.v_standard2_makigai_maimai
-  - !append Vehicle.v_standard2_makigai_maimai_gt
-  - !append Vehicle.v_standard2_makigai_maimai_poor
-  - !append Vehicle.v_standard2_makigai_maimai_premium
   - !append Vehicle.cs_savable_makigai_maimai
+  - !append Vehicle.Maimai
+  - !append Vehicle.Makigai
+  - !append Vehicle.makigai_maimai_offer
+  - !append Vehicle.makigai_tanishi_offer
   - !append Vehicle.e319_makigai_maimai
+  - !append Vehicle.ep1_cs_savable_makigai_tanishi
+  - !append Vehicle.ep1_hackable_makigai_tanishi
+  - !append Vehicle.hackable_makigai_maimai
+  - !append Vehicle.mws_makigai_maimai
+  - !append Vehicle.q000_nomad_v_standard2_makigai_maimai_quest
+  - !append Vehicle.q304_v_standard2_makigai_maimai_scanning
+  - !append Vehicle.v_standard2_makigai_maimai
+  - !append Vehicle.v_standard2_makigai_maimai_courier
+  - !append Vehicle.v_standard2_makigai_maimai_courier_expanded
+  - !append Vehicle.v_standard2_makigai_maimai_gt
+  - !append Vehicle.v_standard2_makigai_maimai_player
+  - !append Vehicle.v_standard2_makigai_maimai_poor
+  - !append Vehicle.v_standard2_makigai_maimai_poor_dogtown
+  - !append Vehicle.v_standard2_makigai_maimai_premium
+  - !append Vehicle.v_standard2_makigai_maimai_quest
+  - !append ehicle.v_standard3_makigai_tanishi
+  - !append Vehicle.v_standard3_makigai_tanishi_cargo_courier
+  - !append Vehicle.v_standard3_makigai_tanishi_courier
+  - !append Vehicle.v_standard3_makigai_tanishi_hfs
+  - !append Vehicle.v_standard3_makigai_tanishi_kuma
+  - !append Vehicle.v_standard3_makigai_tanishi_player
+  - !append Vehicle.v_standard3_makigai_tanishi_player_mr_hands
+  - !append Vehicle.v_standard3_makigai_tanishi_poor
+  - !append Vehicle.v_standard3_makigai_tanishi_poor_dogtown
+  - !append Vehicle.v_standard3_makigai_tanishi_premium

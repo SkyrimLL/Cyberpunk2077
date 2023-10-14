@@ -1,31 +1,79 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.v_standard2_archer_bandit
-  - !append Vehicle.v_standard2_archer_hella
-  - !append Vehicle.v_standard2_archer_hella_combat_cab
-  - !append Vehicle.v_standard2_archer_hella_ncu
-  - !append Vehicle.v_standard2_archer_hella_police
-  - !append Vehicle.v_standard2_archer_hella_police_mws
-  - !append Vehicle.v_standard2_archer_hella_police_prevention
-  - !append Vehicle.v_standard2_archer_hella_police_siren
-  - !append Vehicle.v_standard2_archer_hella_poor
-  - !append Vehicle.v_standard2_archer_hella_sixth_street
-  - !append Vehicle.v_standard2_archer_hella_sixth_street_mws
-  - !append Vehicle.v_standard2_archer_quartz
-  - !append Vehicle.v_standard2_archer_quartz_gt
-  - !append Vehicle.v_standard2_archer_quartz_locked_doors
-  - !append Vehicle.v_standard2_archer_quartz_mox
-  - !append Vehicle.v_standard2_archer_quartz_nomad
-  - !append Vehicle.v_standard2_archer_quartz_nomad_wraith
-  - !append Vehicle.v_standard2_archer_quartz_poor
-  - !append Vehicle.v_standard2_archer_quartz_tyger
+  - !append Vehicle.Archer
+  - !append Vehicle.archer_quartz_bandit_offer
+  - !append Vehicle.archer_quartz_nomad_02_offer
+  - !append Vehicle.archer_quartz_nomad_offer
+  - !append Vehicle.archer_quartz_offer
+  - !append Vehicle.aldecado_archer_quartz_heat_3
   - !append Vehicle.cs_savable_archer_hella
+  - !append Vehicle.cs_savable_archer_hella_kurtz
   - !append Vehicle.cs_savable_archer_hella_police_siren
   - !append Vehicle.cs_savable_archer_hella_sixth_street
   - !append Vehicle.cs_savable_archer_quartz
   - !append Vehicle.cs_savable_archer_quartz_mox
-  - !append Vehicle.cs_savable_archer_quartz_mox_inline0
+  - !append Vehicle.cs_savable_archer_quartz_nomad_quest
   - !append Vehicle.cs_savable_archer_quartz_tyger
+  - !append Vehicle.ep1_hackable_archer_hella_kurtz
+  - !append Vehicle.hackable_archer_hella
+  - !append Vehicle.hackable_archer_hella_police_siren
+  - !append Vehicle.hackable_archer_hella_sixth_street
+  - !append Vehicle.hackable_archer_quartz
+  - !append Vehicle.hackable_archer_quartz_mox
+  - !append Vehicle.hackable_archer_quartz_nomad_quest
+  - !append Vehicle.hackable_archer_quartz_tyger
   - !append Vehicle.ma_pac_cvi_08_archer
+  - !append Vehicle.ncpd_archer_hella_heat_2
+  - !append Vehicle.ncpd_archer_hella_heat_3
+  - !append Vehicle.q000_nomad_v_standard2_archer_hella_quest
+  - !append Vehicle.q000_nomad_v_standard2_archer_quartz_nomad_quest
+  - !append Vehicle.q000_nomad_v_standard2_archer_quartz_quest
   - !append Vehicle.q001_archer_hella
   - !append Vehicle.q114_archer_quartz_nomad
+  - !append Vehicle.q304_v_standard2_archer_hella_scanning
   - !append Vehicle.sq004_raffen_shiv_car_archer
+  - !append Vehicle.v_standard2_archer_bandit
+  - !append Vehicle.v_standard2_archer_bandit_player
+  - !append Vehicle.v_standard2_archer_bandit_quest
+  - !append Vehicle.v_standard2_archer_hella
+  - !append Vehicle.v_standard2_archer_hella_combat_cab
+  - !append Vehicle.v_standard2_archer_hella_courier_expanded
+  - !append Vehicle.v_standard2_archer_hella_getto
+  - !append Vehicle.v_standard2_archer_hella_kurtz
+  - !append Vehicle.v_standard2_archer_hella_ncu
+  - !append Vehicle.v_standard2_archer_hella_player
+  - !append Vehicle.v_standard2_archer_hella_police
+  - !append Vehicle.v_standard2_archer_hella_police_mws
+  - !append Vehicle.v_standard2_archer_hella_police_prevention
+  - !append Vehicle.v_standard2_archer_hella_police_prevention_2
+  - !append Vehicle.v_standard2_archer_hella_police_siren
+  - !append Vehicle.v_standard2_archer_hella_police_sts_ep1_10
+  - !append Vehicle.v_standard2_archer_hella_poor
+  - !append Vehicle.v_standard2_archer_hella_poor_dogtown
+  - !append Vehicle.v_standard2_archer_hella_quest
+  - !append Vehicle.v_standard2_archer_hella_scavenger_courier_expanded
+  - !append Vehicle.v_standard2_archer_hella_scavengers
+  - !append Vehicle.v_standard2_archer_hella_scavengers_courier
+  - !append Vehicle.v_standard2_archer_hella_sixth_street
+  - !append Vehicle.v_standard2_archer_hella_sixth_street_courier
+  - !append Vehicle.v_standard2_archer_hella_sixth_street_courier_expanded
+  - !append Vehicle.v_standard2_archer_hella_sixth_street_mws
+  - !append Vehicle.v_standard2_archer_quartz
+  - !append Vehicle.v_standard2_archer_quartz_courier
+  - !append Vehicle.v_standard2_archer_quartz_gt
+  - !append Vehicle.v_standard2_archer_quartz_locked_doors
+  - !append Vehicle.v_standard2_archer_quartz_mox
+  - !append Vehicle.v_standard2_archer_quartz_nomad
+  - !append Vehicle.v_standard2_archer_quartz_nomad_courier
+  - !append Vehicle.v_standard2_archer_quartz_nomad_player
+  - !append Vehicle.v_standard2_archer_quartz_nomad_player_02
+  - !append Vehicle.v_standard2_archer_quartz_nomad_prevention
+  - !append Vehicle.v_standard2_archer_quartz_nomad_quest
+  - !append Vehicle.v_standard2_archer_quartz_nomad_wraith
+  - !append Vehicle.v_standard2_archer_quartz_player
+  - !append Vehicle.v_standard2_archer_quartz_poor
+  - !append Vehicle.v_standard2_archer_quartz_quest
+  - !append Vehicle.v_standard2_archer_quartz_tyger
+  - !append Vehicle.v_standard2_archer_quartz_tyger_courier
+  - !append Vehicle.v_standard2_archer_quartz_tyger_courier_expanded
+  - !append Vehicle.v_archer_hella_dodger_car
+  - !append Vehicle.v_sts_ep1_01_archer_hella_scavengers

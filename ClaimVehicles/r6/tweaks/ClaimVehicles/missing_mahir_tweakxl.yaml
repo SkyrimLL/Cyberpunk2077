@@ -1,10 +1,36 @@
 Vehicle.vehicle_list.list:
+  - !append Vehicle.Mahir
+  - !append Vehicle.mahir_poor_open_trunk_open_right_door
+  - !append Vehicle.mahir_supron_offer
+  - !append Vehicle.MahirSupronKurtzDataPackage
+  - !append Vehicle.cs_savable_mahir_mt28_coach
+  - !append Vehicle.cs_savable_mahir_supron
+  - !append Vehicle.cs_savable_mahir_supron_kurtz
+  - !append Vehicle.cs_savable_mahir_supron_rave_ow
+  - !append Vehicle.cs_savable_mahir_voodoo_boys
+  - !append Vehicle.hackable_mahir_mt28_coach
+  - !append Vehicle.hackable_mahir_supron
+  - !append Vehicle.hackable_mahir_voodoo_boys
+  - !append Vehicle.ep1_hackable_mahir_supron_kurtz
+  - !append Vehicle.kurtz_mahir_supron_heat_3
+  - !append Vehicle.kurtz_mahir_supron_heat_3_cd
+  - !append Vehicle.mws_mahir_supron_kurtz
+  - !append Vehicle.mws_mahir_voodoo_boys
+  - !append Vehicle.q000_nomad_v_standard25_mahir_supron_quest
   - !append Vehicle.v_mahir_mt28_coach
   - !append Vehicle.v_standard25_mahir_mox
   - !append Vehicle.v_standard25_mahir_supron
+  - !append Vehicle.v_standard25_mahir_supron_courier
+  - !append Vehicle.v_standard25_mahir_supron_courier_expanded
+  - !append Vehicle.v_standard25_mahir_supron_player
   - !append Vehicle.v_standard25_mahir_supron_poor
+  - !append Vehicle.v_standard25_mahir_supron_poor_dogtown
+  - !append Vehicle.v_standard25_mahir_supron_quest
   - !append Vehicle.v_standard25_mahir_supron_sport
   - !append Vehicle.v_standard25_mahir_voodoo_boys
-  - !append Vehicle.cs_savable_mahir_mt28_coach
-  - !append Vehicle.cs_savable_mahir_supron
-  - !append Vehicle.cs_savable_mahir_voodoo_boys
+  - !append Vehicle.v_standard25_mahir_voodoo_boys_courier_expanded
+  - !append Vehicle.v_standard3_mahir_supron_kurtz
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_basic_mq304
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_overlander
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_player
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_prevention
