@@ -25,7 +25,7 @@ For redscript mod developers
     this.m_choosenQuantity = 1;
 
     // Patch - Set slider to max items by default if dropping or selling
-    // // LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
+    LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
 
     switch ToString(this.m_actionType) {
       // Craft?

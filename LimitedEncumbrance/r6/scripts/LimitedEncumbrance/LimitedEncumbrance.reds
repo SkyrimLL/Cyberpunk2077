@@ -50,8 +50,8 @@ public class LimitedEncumbranceTracking {
 
   public let carryCapacityBase: Float; 
   public let carryCapacityBackpack: Float; 
-  public let playerLevelMod: Float;
-  public let playerAthleticsLevelMod: Float;
+  public let playerLevelMod: Float; 
+  public let carryCapacityAlertTheshold: Int32;
   public let playerPerkMod: Float;
   public let encumbranceEquipmentBonus: Float;
   public let carryCapacityCapMod: Float;
@@ -60,11 +60,11 @@ public class LimitedEncumbranceTracking {
 
 
   public func init(player: wref<PlayerPuppet>) -> Void {
-    this.player = player;
-    this.reset();
+    this.reset(player);
   }
 
-  private func reset() -> Void {
+  private func reset(player: wref<PlayerPuppet>) -> Void {
+    this.player = player;
 
     this.refreshConfig();
 
@@ -111,11 +111,11 @@ public class LimitedEncumbranceTracking {
   public func invalidateCurrentState() -> Void {
     this.carryCapacityBase = Cast<Float>(this.config.carryCapacityBase);
     this.carryCapacityBackpack= Cast<Float>(this.config.carryCapacityBackpack);
-    this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0; 
-    this.playerAthleticsLevelMod = Cast<Float>(this.config.playerAthleticsLevelMod) / 100.0; 
+    this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0;  
     this.playerPerkMod = Cast<Float>(this.config.playerPerkMod) / 100.0;  
     this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod);  
     this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
+    this.carryCapacityAlertTheshold = this.config.carryCapacityAlertTheshold; 
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;
@@ -262,21 +262,21 @@ public class LimitedEncumbranceTracking {
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
         // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
         if StrContains(currentItemFriendlyName,"milbackpack") {
-          clothSlotMod = 100.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 100.0 ;
           if (this.debugON) {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
-          clothSlotMod = 50.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 50.0 ;
           if (this.debugON) {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"bandoleer") {
-          clothSlotMod = 20.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 20.0 ;
 
           if (this.debugON) {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
@@ -284,7 +284,7 @@ public class LimitedEncumbranceTracking {
         }
 
         if StrContains(currentItemFriendlyName,"waistbag") {
-          clothSlotMod = 5.0 * this.playerAthleticsLevelMod;
+          clothSlotMod = 5.0  ;
           if (this.debugON) {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
           }
@@ -410,14 +410,14 @@ public class LimitedEncumbranceTracking {
     return slotBonus;
   }
 
-  public func GetCyberwareFromSkeletonSlots() -> Float {
+  public func GetCyberwareFromSkeletonSlots(cyberwareString: String) -> Float {
     let result: array<ref<Item_Record>>;
     let record: ref<Item_Record>;
     let equipSlots: array<SEquipSlot>;
     let i: Int32;
     let cyberwareType: CName;
-    let hasTitaniumBones: Bool;
-    let qualityTitaniumBones: Float;
+    let hasCyberwareBuffs: Bool;
+    let qualityCyberwareBuffs: Float;
     let equipmentSystem: ref<EquipmentSystem>;
     let playerData: ref<EquipmentSystemPlayerData>;
     let currentItem: ItemID;
@@ -426,66 +426,56 @@ public class LimitedEncumbranceTracking {
 
     equipmentSystem = EquipmentSystem.GetInstance(this.player);
     playerData = equipmentSystem.GetPlayerData(this.player);
-    hasTitaniumBones = false;
-    qualityTitaniumBones = 0.0;
+    hasCyberwareBuffs = false;
+    qualityCyberwareBuffs = 0.0;
 
-    // Detecting Titanium Bones CW - TitaniumInfusedBones
-    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.MusculoskeletalSystemCW, 0);
-    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
-    if IsDefined(itemData) {
-      cyberwareType = TweakDBInterface.GetCName(ItemID.GetTDBID(itemData.GetID()) + t".cyberwareType", n"type");
-      cyberwareQuality = RPGManager.GetItemDataQuality(itemData);
+    i = 0;
+    while i < 2 {
+      currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.MusculoskeletalSystemCW, i);
+      itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
+      if IsDefined(itemData) {
+        cyberwareType = TweakDBInterface.GetCName(ItemID.GetTDBID(itemData.GetID()) + t".cyberwareType", n"type");
+        cyberwareQuality = RPGManager.GetItemDataQuality(itemData);
 
-      if ( StrCmp(NameToString(cyberwareType), "TitaniumInfusedBones") == 0 ) {
-        hasTitaniumBones = true;
+        if ( StrCmp(NameToString(cyberwareType), cyberwareString) == 0 ) {
+          hasCyberwareBuffs = true;
+        }
+        
+        if (this.debugON) {
+          // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW "+ ToString(i) +" : " + NameToString(cyberwareType));
+        }
       }
-      
-      if (this.debugON) {
-        // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 0 : " + NameToString(cyberwareType));
-      }
-    }
- 
-    currentItem = equipmentSystem.GetItemInEquipSlot(this.player, gamedataEquipmentArea.MusculoskeletalSystemCW, 1);
-    itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
-    if IsDefined(itemData) {
-      cyberwareType = TweakDBInterface.GetCName(ItemID.GetTDBID(itemData.GetID()) + t".cyberwareType", n"type");
-      cyberwareQuality = RPGManager.GetItemDataQuality(itemData);
+      i += 1;
+    };
 
-      if ( StrCmp(NameToString(cyberwareType), "TitaniumInfusedBones") == 0 ) {
-        hasTitaniumBones = true;
-      }
+    if (hasCyberwareBuffs) { 
+      // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - " + cyberwareString + " Quality : " + ToString(cyberwareQuality));
 
-      if (this.debugON) {
-        // LogChannel(n"DEBUG", "::: GetCyberwareFromSkeletonSlots  - MusculoskeletalSystemCW 1 : " + NameToString(cyberwareType));
-      }
-    }
-
-    if (hasTitaniumBones) { 
       switch (cyberwareQuality) {
         case gamedataQuality.Common:
-          qualityTitaniumBones = 1.0;
+          qualityCyberwareBuffs = 1.0;
           break;
         case gamedataQuality.Uncommon:
-          qualityTitaniumBones = 1.5;
+          qualityCyberwareBuffs = 1.5;
           break;
         case gamedataQuality.Rare:
-          qualityTitaniumBones = 2.0;
+          qualityCyberwareBuffs = 2.0;
           break;
         case gamedataQuality.Epic:
-          qualityTitaniumBones = 3.0;
+          qualityCyberwareBuffs = 3.0;
           break;
         case gamedataQuality.Legendary:
-          qualityTitaniumBones = 5.0;
+          qualityCyberwareBuffs = 5.0;
           break;
       };      
     }
 
 
     if (this.debugON) {
-      // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - TitaniumBones: " + ToString(hasTitaniumBones) + "");
+      // LogChannel(n"DEBUG", "::: calculatePlayerInventoryWeights  - " + cyberwareString + " : " + ToString(hasCyberwareBuffs) + "");
     }
  
-    return qualityTitaniumBones;
+    return qualityCyberwareBuffs;
   }
 
 
@@ -504,11 +494,12 @@ public class LimitedEncumbranceTracking {
     let playerUnstoppableForceLevel = playerDevSystem.GetPerkLevel(this.player, gamedataNewPerkType.Body_Central_Perk_3_4);
 
     let statsSystem: ref<StatsSystem> = GameInstance.GetStatsSystem(this.player.GetGame());
-    let playerAthleticsLevel: Float = statsSystem.GetStatValue(Cast(this.player.GetEntityID()), gamedataStatType.Athletics);
+ 
     let playerPerks = 1.0;
     let playerPerksBonus = 1.0;
     // let ses: ref<StatusEffectSystem>;
     let hasCarryCapacityBoosterEffect: Bool;
+    let qualityAgileJoints: Float;
     let qualityTitaniumBones: Float;
 
     // Reduce base carry capacity
@@ -517,7 +508,9 @@ public class LimitedEncumbranceTracking {
 
     // ses = GameInstance.GetStatusEffectSystem(this.player.GetGame()); 
     hasCarryCapacityBoosterEffect = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"BaseStatusEffect.CarryCapacityBooster");  
-    qualityTitaniumBones = this.GetCyberwareFromSkeletonSlots();
+    qualityAgileJoints = this.GetCyberwareFromSkeletonSlots("AgileJoints");
+    qualityTitaniumBones = this.GetCyberwareFromSkeletonSlots("TitaniumInfusedBones");
+    // TO DO: Check also for Scarab cyberware
 
     if (playerLikeaFeatherLevel > 0) {
       playerPerks += 1.0;
@@ -531,6 +524,11 @@ public class LimitedEncumbranceTracking {
       playerPerks += 3.0;
     }
 
+    if (qualityAgileJoints > 0.0) {
+      playerPerks += 1.0;
+      // playerPerksBonus += qualityAgileJoints;
+    }
+
     if (qualityTitaniumBones > 0.0) {
       playerPerks += 1.0;
       playerPerksBonus += qualityTitaniumBones;
@@ -541,30 +539,40 @@ public class LimitedEncumbranceTracking {
       playerPerksBonus += 2.0;
     }
 
-    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus + playerClothSlot ) * playerPerks * playerPerksBonus * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + (playerAthleticsLevel * this.playerAthleticsLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
-
-    if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
-      this.limitedCarryCapacity = this.carryCapacityCapMod;
-    } 
+    this.limitedCarryCapacity = this.carryCapacityBase + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus + playerClothSlot ) * (playerPerks + playerPerksBonus ) * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
 
     if (this.debugON) {
-    /*    */
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityBase: '"+this.carryCapacityBase+"'"  ); 
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevel: '"+playerLevel+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLevelMod: '"+this.playerLevelMod+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPackMuleLevel: " + ToString(playerPackMuleLevel));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerTransporterLevel: " + ToString(playerTransporterLevel));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerBloodrushLevel: " + ToString(playerBloodrushLevel));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerAthleticsLevel: '"+ToString(playerAthleticsLevel)+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - qualityTitaniumBones: " + ToString(qualityTitaniumBones));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerks: " + ToString(playerPerks));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerPerksBonus: " + ToString(playerPerksBonus));
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerClothSlot: '"+playerClothSlot+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
-      // LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
+    /*    
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect)); 
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerLikeaFeatherLevel: " + ToString(playerLikeaFeatherLevel));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerJuggernautLevel: " + ToString(playerJuggernautLevel));
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance - playerUnstoppableForceLevel: " + ToString(playerUnstoppableForceLevel));
+
+      LogChannel(n"DEBUG", "::: calculateLimitedEncumbrance"  ); 
+      LogChannel(n"DEBUG", ":::       carryCapacityBase: '"+this.carryCapacityBase+"'"  ); 
+      LogChannel(n"DEBUG", ":::     + carryCapacityBackpack: " + this.carryCapacityBackpack); 
+      LogChannel(n"DEBUG", ":::     + ( ( playerEquipmentBonus: " + playerEquipmentBonus); 
+      LogChannel(n"DEBUG", ":::           + playerClothSlot: '"+playerClothSlot+"'"  );
+      LogChannel(n"DEBUG", ":::         ) * ( playerPerks: " + ToString(playerPerks));
+      LogChannel(n"DEBUG", ":::               + playerPerksBonus: " + ToString(playerPerksBonus));
+      LogChannel(n"DEBUG", ":::             ) ");
+      LogChannel(n"DEBUG", ":::           * playerPerkMod: " + ToString(this.playerPerkMod));
+      LogChannel(n"DEBUG", ":::         ) ");
+      LogChannel(n"DEBUG", ":::       ) ");
+      LogChannel(n"DEBUG", ":::     + ( playerLevel: '"+playerLevel+"'"  );
+      LogChannel(n"DEBUG", ":::           * playerLevelMod: '"+this.playerLevelMod+"'"  );
+      LogChannel(n"DEBUG", ":::       ) ");
+      LogChannel(n"DEBUG", ":::     + ( playerEquipmentWeight: '"+playerEquipmentWeight+"'"  );
+      LogChannel(n"DEBUG", ":::         * encumbranceEquipmentBonus: '"+this.encumbranceEquipmentBonus+"'"  );
+      LogChannel(n"DEBUG", ":::       ) ");
+      LogChannel(n"DEBUG", ":::     = limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
+    */
+
+      if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
+        this.limitedCarryCapacity = this.carryCapacityCapMod;
+      } 
+
+      // LogChannel(n"DEBUG", ":::     <= carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
 
     }
 
@@ -594,6 +602,7 @@ public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
 // Overload method from - https://codeberg.org/adamsmasher/cyberpunk/src/branch/master/cyberpunk/player/player.swift#L1974
 public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
     let carryCapacity: Float; 
+    let carryCapacityDelta: Int32; 
     let hasExhaustedEffect: Bool;
     let hasEncumbranceEffect: Bool;
     let isApplyingRestricted: Bool;
@@ -606,7 +615,7 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
       this.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
       this.m_limitedEncumbranceTracking.init(this);
     } else {
-      this.m_limitedEncumbranceTracking.reset();
+      this.m_limitedEncumbranceTracking.reset(this);
     };
 
     if (this.m_limitedEncumbranceTracking.modON) {
@@ -636,9 +645,12 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
           // this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
 
         } else { 
-          if (this.m_curInventoryWeight >= this.m_limitedEncumbranceTracking.carryCapacityBase) {
+          // if (this.m_curInventoryWeight >= this.m_limitedEncumbranceTracking.carryCapacityBase) {
+          carryCapacityDelta = Cast<Int32>(carryCapacity) - Cast<Int32>(this.m_curInventoryWeight);
+
+          if (carryCapacityDelta <= this.m_limitedEncumbranceTracking.carryCapacityAlertTheshold) {
             if (this.m_limitedEncumbranceTracking.warningsON) { 
-              let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(Cast<Int32>(carryCapacity) - Cast<Int32>(this.m_curInventoryWeight)));
+              let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(carryCapacityDelta));
     
               this.SetWarningMessage(message); }
           } 
@@ -720,7 +732,7 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
       this.m_player.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
       this.m_player.m_limitedEncumbranceTracking.init(this.m_player);
     } else {
-      this.m_player.m_limitedEncumbranceTracking.reset();
+      this.m_player.m_limitedEncumbranceTracking.reset(this.m_player);
     };    
 
     this.m_subMenuCtrl.HandlePlayerMaxWeightUpdated(carryCapacity, this.m_player.m_curInventoryWeight);

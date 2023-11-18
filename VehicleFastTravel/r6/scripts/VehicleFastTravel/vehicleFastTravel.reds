@@ -25,11 +25,12 @@ public class VehicleFastTravelTracking {
   public let warningsON: Bool;   
 
   public func init(player: wref<PlayerPuppet>) -> Void {
-    this.player = player;
-    this.reset();
+    this.reset(player);
   }
 
-  private func reset() -> Void {
+  private func reset(player: wref<PlayerPuppet>) -> Void {
+    this.player = player;
+
     // ------------------ Edit these values to configure the mod
     // Toggle warnings when exceeding your carry capacity without powerlevel bonus
     this.warningsON = true;
@@ -148,12 +149,13 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
 
     // set up tracker if it doesn't exist
     if !IsDefined(this.m_vehicleFasTravelTracking) {
-      let m_player: wref<PlayerPuppet>;
+      let m_player: wref<PlayerPuppet> = GetPlayer(playerPuppet.GetGame());
       this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
       this.m_vehicleFasTravelTracking.init(m_player);
     } else {
       // Reset if already exists (in case of changed default values)
-      this.m_vehicleFasTravelTracking.reset();
+      let m_player: wref<PlayerPuppet> = GetPlayer(playerPuppet.GetGame()) ;
+      this.m_vehicleFasTravelTracking.reset(m_player);
     };
   }
 
@@ -169,11 +171,16 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
         let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
-        if ((!isVictorHUDInstalled) && (!isPhantomLiberyStandalone)) || (this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) {
-            this.SpawnVehiclesManagerPopup();
-        } else {
+        // LogChannel(n"DEBUG", ">>> vehicleFasTravel : enableVehicleMenuKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON  );
+        // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
+        // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
+
+        if ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) {
+            // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
             this.SpawnVehicleRadioPopup();
             // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
+        } else {
+            this.SpawnVehiclesManagerPopup();
         }
         
         break;
@@ -244,18 +251,21 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
             this.m_vehicleFasTravelTracking.init(this);
             // LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking not found - initializing"  );
           } else {
-            // Reset if already exists (in case of changed default values)
-            this.m_vehicleFasTravelTracking.reset();
+            // Reset if already exists (in case of changed default values) 
+            this.m_vehicleFasTravelTracking.reset(this);
             // LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking found - resetting"  );
           };
  
           let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
           let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
-          // LogChannel(n"DEBUG", ">>> isVictorHUDInstalled: " + isVictorHUDInstalled  );
-          // LogChannel(n"DEBUG", ">>> isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
+          // LogChannel(n"DEBUG", ">>> enableVehicleRecallKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON  );
+          // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
+          // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
 
-          if ( (!isVictorHUDInstalled) && (!isVictorHUDInstalled))|| (this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
+          if  ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
+            // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
+          } else {
             if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
               this.ProcessCallVehicleAction(ListenerAction.GetType(action));
             };
