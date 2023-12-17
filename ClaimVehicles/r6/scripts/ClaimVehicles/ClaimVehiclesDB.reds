@@ -23,7 +23,7 @@ public class ClaimVehicleDB {
 
     for thisVehicle in this.vehiclesDB { 
       if (Equals(thisVehicle.vehicleRecordID, _id)) {
-    	// LogChannel(n"DEBUG",">>> ClaimVehicleDB: entry found!"); 
+    	  // LogChannel(n"DEBUG",">>> ClaimVehicleDB: entry found!"); 
 
         return thisVehicle.vehicleString;
       }  

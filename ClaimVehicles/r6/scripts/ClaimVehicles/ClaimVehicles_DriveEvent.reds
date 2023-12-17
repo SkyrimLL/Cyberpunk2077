@@ -88,7 +88,8 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
         if ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (playerCarhackerLevel>0) {
             let isVehicleHackable: Bool = false;
             let chanceHack: Int32 = RandRange(1,100);
-            let playerOnStealTrigger: Int32 = Cast<Int32>(100.0 - playerOwner.m_claimedVehicleTracking.chanceOnSteal);
+            let chanceOnSteal: Int32 = Cast<Int32>(playerOwner.m_claimedVehicleTracking.chanceOnSteal);
+            let chanceOnExit: Int32 = Cast<Int32>(playerOwner.m_claimedVehicleTracking.chanceOnExit);
             let chanceLowPerkHack: Int32 = Cast<Int32>(playerOwner.m_claimedVehicleTracking.chanceLowPerkHack);
             let chanceMidPerkHack: Int32 = Cast<Int32>(playerOwner.m_claimedVehicleTracking.chanceMidPerkHack);
             let chanceHighPerkHack: Int32 = Cast<Int32>(playerOwner.m_claimedVehicleTracking.chanceHighPerkHack);
@@ -137,11 +138,12 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
               numPlayerPerks += 1;
             }
 
-            if (numPlayerPerks>0) {
-              playerOnPerkTrigger = 100 - Min( ( (playerOnPerkTrigger + (numPlayerPerks * 5)) / numPlayerPerks), 100);
+            if (numPlayerPerks>0) || (chanceOnExit>0) {
+              playerOnPerkTrigger = 100 - Min( ( (playerOnPerkTrigger + (numPlayerPerks * 5)) / numPlayerPerks), 100) - chanceOnExit;
 
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - numPlayerPerks: '"+ToString(numPlayerPerks)+"'"  );
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - playerOnPerkTrigger: '"+ToString(playerOnPerkTrigger)+"'"  );
+              // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceOnExit: '"+ToString(chanceOnExit)+"'"  );
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHack: '"+ToString(chanceHack)+"'"  );
 
               if (chanceHack > playerOnPerkTrigger) {
@@ -157,6 +159,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
             if (playerOwner.m_claimedVehicleTracking.debugON) {
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHack: '"+ToString(chanceHack)+"'"  );
+              // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceOnExit: '"+ToString(chanceOnExit)+"'"  );
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceLowPerkHack: '"+ToString(chanceLowPerkHack)+"'"  );
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceMidPerkHack: '"+ToString(chanceMidPerkHack)+"'"  );
               // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHighPerkHack: '"+ToString(chanceHighPerkHack)+"'"  );

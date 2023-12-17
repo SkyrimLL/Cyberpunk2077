@@ -28,6 +28,7 @@ public class ClaimedVehicleTracking {
   public let warningsON: Bool;  
 
   public let chanceOnSteal: Float;
+  public let chanceOnExit: Float;
   public let chanceLowPerkHack: Float;
   public let chanceMidPerkHack: Float;
   public let chanceHighPerkHack: Float;
@@ -75,6 +76,7 @@ public class ClaimedVehicleTracking {
 
   public func invalidateCurrentState() -> Void { 
     this.chanceOnSteal = Cast<Float>(this.config.chanceOnSteal); 
+    this.chanceOnExit = Cast<Float>(this.config.chanceOnExit); 
     this.chanceLowPerkHack = Cast<Float>(this.config.chanceLowPerkHack); 
     this.chanceMidPerkHack = Cast<Float>(this.config.chanceMidPerkHack); 
     this.chanceHighPerkHack = Cast<Float>(this.config.chanceHighPerkHack);   

@@ -22,6 +22,15 @@ public class ClaimVehiclesConfig {
 
 @runtimeProperty("ModSettings.mod", "NCLAIMS")
 @runtimeProperty("ModSettings.category", "Vehicle Claim System")
+@runtimeProperty("ModSettings.displayName", "Chance of success on Exit")
+@runtimeProperty("ModSettings.description", "Percent chance exiting a vehicle will succeed in stealing it (open vehicles or bikes only).")
+@runtimeProperty("ModSettings.step", "5")
+@runtimeProperty("ModSettings.min", "0")
+@runtimeProperty("ModSettings.max", "100")
+  let chanceOnExit: Int32 = 0;
+
+@runtimeProperty("ModSettings.mod", "NCLAIMS")
+@runtimeProperty("ModSettings.category", "Vehicle Claim System")
 @runtimeProperty("ModSettings.displayName", "Low Perk success chance")
 @runtimeProperty("ModSettings.description", "Percent chance the low level perk will work (Gearhead, Carhacker, Road warrior). Chance of is multiplied by level of this perk (open vehicles only).")
 @runtimeProperty("ModSettings.step", "5")

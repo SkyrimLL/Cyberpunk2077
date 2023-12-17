@@ -1,66 +1,37 @@
 
-// Note: Yes.. this should go in the VehicleComponent file.
-// I put it here for now.. it may go in the right file if I can't find a solution to the broken menu key.
+// Note: Using this file to test experimental features
 
-// public class VehicleComponent extends ScriptableDeviceComponent {
-@replaceMethod(VehicleComponent)
 
-  protected cb func OnRemoteControlEvent(evt: ref<VehicleRemoteControlEvent>) -> Bool {
-    let playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
-    // set up tracker if it doesn't exist
-    if !IsDefined(playerPuppet.m_claimedVehicleTracking) {
-      playerPuppet.m_claimedVehicleTracking = new ClaimedVehicleTracking();
-      playerPuppet.m_claimedVehicleTracking.init(playerPuppet);
-    } else {
-      // Reset if already exists (in case of changed default values)
-      playerPuppet.m_claimedVehicleTracking.reset(playerPuppet);
+// public native class DynamicSpawnSystem extends IDynamicSpawnSystem {
+@replaceMethod(DynamicSpawnSystem)
+
+  protected final func SpawnCallback(spawnedObject: ref<GameObject>) -> Void {
+    let aiCommandEvent: ref<AICommandEvent>;
+    let aiVehicleChaseCommand: ref<AIVehicleChaseCommand>;
+    let wheeledObject: ref<WheeledObject>;
+    let player: ref<GameObject> = GameInstance.GetPlayerSystem(GetGameInstance()).GetLocalPlayerMainGameObject();
+    if !IsDefined(spawnedObject) {
+      return;
     };
-
-    if (playerPuppet.m_claimedVehicleTracking.modON) {
-      playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
-    }
-
-    let vehicleQuestEvent: ref<VehicleQuestChangeDoorStateEvent> = new VehicleQuestChangeDoorStateEvent();
-    let maxDelayToUnseatPassengers: Float = 5.00;
-    if evt.shouldModifyInteractionState {
-      if evt.remoteControl {
-        vehicleQuestEvent.newState = EQuestVehicleDoorState.DisableAllInteractions;
-      } else {
-        vehicleQuestEvent.newState = EQuestVehicleDoorState.ResetInteractions;
+    if spawnedObject.IsPuppet() {
+      this.ChangeAttitude(spawnedObject, player, EAIAttitude.AIA_Hostile);
+    } else {
+      if spawnedObject.IsVehicle() {
+        aiVehicleChaseCommand = new AIVehicleChaseCommand();
+        aiVehicleChaseCommand.target = player;
+        aiVehicleChaseCommand.distanceMin = TweakDBInterface.GetFloat(t"DynamicSpawnSystem.dynamic_vehicles_chase_setup.distanceMin", 3.00);
+        aiVehicleChaseCommand.distanceMax = TweakDBInterface.GetFloat(t"DynamicSpawnSystem.dynamic_vehicles_chase_setup.distanceMax", 5.00);
+        aiVehicleChaseCommand.forcedStartSpeed = 10.00;
+        aiVehicleChaseCommand.ignoreChaseVehiclesLimit = true;
+        aiVehicleChaseCommand.boostDrivingStats = true;
+        aiCommandEvent = new AICommandEvent();
+        aiCommandEvent.command = aiVehicleChaseCommand;
+        wheeledObject = spawnedObject as WheeledObject;
+        wheeledObject.SetPoliceStrategyDestination(player.GetWorldPosition());
+        wheeledObject.QueueEvent(aiCommandEvent);
+        wheeledObject.GetAIComponent().SetInitCmd(aiVehicleChaseCommand);
       };
-      GameInstance.GetPersistencySystem(this.GetVehicle().GetGame()).QueuePSEvent(this.GetPS().GetID(), this.GetPS().GetClassName(), vehicleQuestEvent);
     };
-    if evt.shouldUnseatPassengers {
-      this.GetVehicle().TriggerExitBehavior(maxDelayToUnseatPassengers);
-    };
-    if !evt.remoteControl {
-      this.GetPS().EndStimsOnVehicleQuickhack();
-    };
-    this.PushVehicleNPCDataToAllPassengers(this.GetVehicle().GetGame(), this.GetVehicle().GetEntityID());
-  }
-
-@replaceMethod(VehicleComponent)
-
-  protected cb func OnForceBrakesQuickhackEvent(evt: ref<VehicleForceBrakesQuickhackEvent>) -> Bool {
-    let playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
-    // set up tracker if it doesn't exist
-    if !IsDefined(playerPuppet.m_claimedVehicleTracking) {
-      playerPuppet.m_claimedVehicleTracking = new ClaimedVehicleTracking();
-      playerPuppet.m_claimedVehicleTracking.init(playerPuppet);
-    } else {
-      // Reset if already exists (in case of changed default values)
-      playerPuppet.m_claimedVehicleTracking.reset(playerPuppet);
-    };
-
-    // TO DO: Add method to remove a vehicle from Manager List
-    if (playerPuppet.m_claimedVehicleTracking.modON) {
-      playerPuppet.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
-    }
-
-    if evt.active {
-      this.SetDelayDisableCarAlarm(evt.alarmDuration);
-    };
-    this.PushVehicleNPCDataToAllPassengers(this.GetVehicle().GetGame(), this.GetVehicle().GetEntityID());
   }
 
 /*
