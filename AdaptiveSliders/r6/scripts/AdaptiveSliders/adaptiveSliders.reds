@@ -25,15 +25,16 @@ For redscript mod developers
     this.m_choosenQuantity = 1;
 
     // Patch - Set slider to max items by default if dropping or selling
-    LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
+    // LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
 
-    switch ToString(this.m_actionType) {
-      // Craft?
-      // case "Buy":
-      case "Drop":
-      case "Sell":
-      case "Disassembly":
-      case "TransferToStorage":
+    switch this.m_actionType {
+      // case QuantityPickerActionType.TransferToPlayer: // Pick up?
+      // case QuantityPickerActionType.Buy:
+      case QuantityPickerActionType.Drop:
+      case QuantityPickerActionType.Sell:
+      case QuantityPickerActionType.Disassembly:
+      case QuantityPickerActionType.Craft:
+      case QuantityPickerActionType.TransferToStorage:
         this.m_choosenQuantity = this.m_maxValue;
         break;
       default:
