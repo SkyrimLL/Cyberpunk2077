@@ -1,0 +1,1585 @@
+package LootTables
+using RTDB, Prereqs
+
+MediumClass_Loot : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 3;
+	lootItems = 
+	[
+		{
+			dropChance = 0.0001;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MCL_body : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MCL_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MCM_chemicals : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.HealingItemsTable", "LootTables.BoostersTable", "LootTables.MedicalJunkItemsTable"
+	];
+}
+
+MCM_freezer : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MCM_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MCM_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MCM_locker : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MCM_ripperdoc : MIM_freezer
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MCM_safe : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8;
+			dropCountMin = 700;
+			dropCountMax = 1000;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MCM_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+	queries = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.1;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.1;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.1;
+			query = "Query.RareWeaponModsQuery";
+		}
+	];
+}
+
+MCM_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.SniperRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.AssaultRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.ShotgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KatanaQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandHammerQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonMeleeWeaponRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseHandgunRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseRifleRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseSMGRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.ShortScopes_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+MCS_ammo : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"Ammo.AmmoLootTable"
+	];
+}
+
+MCS_consumables : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MCS_crate : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MCS_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MCS_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MCS_first_aid : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MCS_freezer : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.HealingItemsTable"
+	];
+}
+
+MCS_gadgets : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable", "LootTables.GrenadeItemsRecipesTable", "LootTables.GrenadePlusRarityItemsTable"
+	];
+}
+
+MCS_suitcase : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MCS_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MCS_valuable : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8;
+			dropCountMin = 400;
+			dropCountMax = 800;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MCS_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.HandgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.RevolverQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.SubmachinegunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KnifeQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.OneHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseRevolverRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseSniperRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareMeleeWeaponRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseShotgunRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.ShortScopes_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+MRL_body : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MRL_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MRM_chemicals : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MRM_freezer : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MRM_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MRM_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.StylishClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.RockerClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.CasualClothing_EP1";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StylishClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StreetwearClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.RockerClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.CasualClothing";
+		}
+	];
+}
+
+MRM_locker : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.StylishClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.RockerClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.CasualClothing_EP1";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StylishClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StreetwearClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.RockerClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.CasualClothing";
+		}
+	];
+}
+
+MRM_ripperdoc : MIM_freezer
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 1;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MRM_safe : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8f;
+			dropCountMin = 700;
+			dropCountMax = 1000;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MRM_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MRM_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.SniperRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.AssaultRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.ShotgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KatanaQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandHammerQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseShotgunRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseSMGRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseHandgunRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseSniperRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.AllScopes_LootTable"
+	];
+}
+
+MRS_ammo : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"Ammo.AmmoLootTable"
+	];
+}
+
+MRS_suitcase : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.StylishClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.RockerClothing_EP1";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StylishClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StreetwearClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.RockerClothing";
+		}
+	];
+}
+
+MRS_consumables : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MRS_crate : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MRS_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MRS_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.StylishClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.RockerClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.CasualClothing_EP1";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StylishClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.StreetwearClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.RockerClothing";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.CasualClothing";
+		}
+	];
+}
+
+MRS_first_aid : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MRS_gadgets : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable", "LootTables.GrenadeItemsRecipesTable", "LootTables.GrenadePlusRarityItemsTable"
+	];
+}
+
+MRS_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MRS_valuable : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8f;
+			dropCountMin = 300;
+			dropCountMax = 600;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MRS_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.HandgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.RevolverQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.SubmachinegunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KnifeQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.OneHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseRifleRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseHandgunRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseRevolverRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseShotgunRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.AllScopes_LootTable"
+	];
+}
+
+MIL_body : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MIL_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MIM_chemicals : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MIM_freezer : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.BoostersTable", "LootTables.HealingItemsTable", "LootTables.MedicalJunkItemsTable"
+	];
+}
+
+MIM_decorative : MediumClass_Loot
+{
+}
+
+MIM_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MIM_locker : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MIM_ripperdoc : MIM_freezer
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MIM_safe : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8f;
+			dropCountMin = 700;
+			dropCountMax = 1000;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MIM_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MIM_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.SniperRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.AssaultRifleQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.ShotgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KatanaQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.TwoHandHammerQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonMeleeWeaponRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseRevolverRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseRifleRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseSMGRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.AllScopes_LootTable"
+	];
+}
+
+MIS_ammo : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"Ammo.AmmoLootTable"
+	];
+}
+
+MIS_suitcase : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MIS_consumables : MediumClass_Loot
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MIS_crate : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MIS_decorative : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityFood";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityDrink";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.MediumQualityAlcohol";
+		}
+	];
+}
+
+MIS_equipment : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 100;
+			query = "Query.CorpoClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.FormalClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.IndustrialClothing_EP1";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.CorpoClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.FormalClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		}
+	];
+}
+
+MIS_first_aid : MediumClass_Loot
+{
+	maxItemsToLoot = 1;
+	lootTableInclusions = 
+	[
+		"LootTables.FirstAidKits"
+	];
+}
+
+MIS_gadgets : MediumClass_Loot
+{
+	maxItemsToLoot = 1;
+	lootTableInclusions = 
+	[
+		"LootTables.TechJunkieItemsTable", "LootTables.GrenadeItemsRecipesTable", "LootTables.GrenadePlusRarityItemsTable"
+	];
+}
+
+MIS_toolbox : MediumClass_Loot
+{
+	lootTableInclusions = 
+	[
+		"LootTables.CraftingMaterialsTable"
+	];
+}
+
+MIS_valuable : MediumClass_Loot
+{
+	lootItems = 
+	[
+		{
+			dropChance = 0.8f;
+			dropCountMin = 300;
+			dropCountMax = 600;
+			itemID = "Items.money";
+		}
+	];
+}
+
+MIS_weapon : MediumClass_Loot
+{
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.HandgunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.RevolverQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.SubmachinegunQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.KnifeQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.OneHandBluntQuery";
+			fk< StatModifier >[] statModifiers = 
+			[
+				"Quality.MaximumRareQuality"
+			];
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelCommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.CommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelUncommonWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.UncommonWeaponModsQuery";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareWeaponModsPrereq";
+			dropChance = 0.02;
+			query = "Query.RareWeaponModsQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseShotgunRecipeQuery";
+		}, 
+		{
+			dropChance = 0.01;
+			query = "Query.UncommonBaseRifleRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareMeleeWeaponRecipeQuery";
+		}, 
+		{
+			dropChance = 0.005;
+			query = "Query.RareBaseHandgunRecipeQuery";
+		}
+	];
+	lootItems = [];
+	lootTableInclusions = 
+	[
+		"LootTables.Silencers_LootTable", "LootTables.AllScopes_LootTable"
+	];
+}
+
