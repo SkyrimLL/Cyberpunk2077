@@ -1,8 +1,6 @@
 Vehicle.vehicle_list.list:
   - !append Vehicle.Mahir
-  - !append Vehicle.mahir_poor_open_trunk_open_right_door
   - !append Vehicle.mahir_supron_offer
-  - !append Vehicle.MahirSupronKurtzDataPackage
   - !append Vehicle.cs_savable_mahir_mt28_coach
   - !append Vehicle.cs_savable_mahir_supron
   - !append Vehicle.cs_savable_mahir_supron_kurtz

@@ -1,6 +1,7 @@
 Vehicle.vehicle_list.list:
   - !append Vehicle.Brennan
   - !append Vehicle.brennan_apollo_offer 
+  - !append Vehicle.brennan_apollo_02_offer 
   - !append Vehicle.cs_savable_brennan_apollo
   - !append Vehicle.hackable_brennan_apollo
   - !append Vehicle.kurtz_brennan_apollo_bike
@@ -19,6 +20,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sportbike3_brennan_apollo_nomad
   - !append Vehicle.v_sportbike3_brennan_apollo_nomad_player
   - !append Vehicle.v_sportbike3_brennan_apollo_player
+  - !append Vehicle.v_sportbike3_brennan_apollo_player_02
   - !append Vehicle.v_sportbike3_brennan_apollo_police
   - !append Vehicle.v_sportbike3_brennan_apollo_quest
   - !append Vehicle.v_sportbike3_brennan_apollo_scorpion

@@ -51,6 +51,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.mq026_maelstrom_car
   - !append Vehicle.mq026_mib_van
   - !append Vehicle.mq038_contact_car
+  - !append Vehicle.mws_cct_dtn_02_arasaka_car
+  - !append Vehicle.mq056_discount_courier_car
   - !append Vehicle.mq301_kurt_delivery_car
   - !append Vehicle.mq301_kurt_protection_car
   - !append Vehicle.mq301_paco_transport_car
@@ -61,7 +63,13 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.mq303_lina_bike
   - !append Vehicle.mq304_core_transport
   - !append Vehicle.mws_se5_02_car
+  - !append Vehicle.mws_se5_06_netwatch_car
+  - !append Vehicle.mws_se5_06_netwatch_truck
+  - !append Vehicle.mws_se5_06_netwatch_van
+  - !append Vehicle.mws_se5_08_netwatch_car
   - !append Vehicle.mws_voodoo_galena
+  - !append Vehicle.mws_wbr_06_tyger_car_1
+  - !append Vehicle.mws_wbr_06_tyger_car_2
   - !append Vehicle.ncpd_hellhound_heat_5
   - !append Vehicle.Never
   - !append Vehicle.nid_02_objective_van
@@ -124,8 +132,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q111_sobchak_car
   - !append Vehicle.q112_arasaka_suv
   - !append Vehicle.q112_phoenix
-  - !append Vehicle.q112_truck
-  - !append Vehicle.q114_fake_4wheel_truck
+  - !append Vehicle.q112_truck 
   - !append Vehicle.q114_mood_scene_car_001
   - !append Vehicle.q114_mood_scene_car_002
   - !append Vehicle.q114_mood_scene_car_racer
@@ -151,6 +158,9 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q301_wtc_kurt_supron 
   - !append Vehicle.q302_militia_car
   - !append Vehicle.q302_militia_car_reed_ambush
+  - !append Vehicle.q302_protest_6th_columbus
+  - !append Vehicle.q302_protest_6th_hella
+  - !append Vehicle.q302_protest_kurtz_supron
   - !append Vehicle.q303_escape_bike
   - !append Vehicle.q303_limo
   - !append Vehicle.q304_ambush_truck
@@ -216,8 +226,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.sq024_dominic_truck
   - !append Vehicle.sq024_gps_system
   - !append Vehicle.sq024_police_vehicle_1
-  - !append Vehicle.sq024_police_vehicle_2
-  - !append Vehicle.sq025_sportscar_crash
+  - !append Vehicle.sq024_police_vehicle_2 
   - !append Vehicle.sq027_car_cassidy
   - !append Vehicle.sq027_car_teddy
   - !append Vehicle.sq027_nomad_jammer
@@ -263,6 +272,9 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sport2_porsche_911turbo
   - !append Vehicle.v_sport2_porsche_911turbo_player
   - !append Vehicle.v_sport2_porsche_911turbo_quest
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_offer
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_player
   - !append Vehicle.v_trailer_supron
   - !append Vehicle.v_villefort_columbus_courier_intro_chase  
   - !append Vehicle.vm_001_motorcycle

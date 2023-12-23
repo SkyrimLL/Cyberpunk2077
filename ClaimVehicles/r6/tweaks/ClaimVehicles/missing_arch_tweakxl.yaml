@@ -2,6 +2,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.Arch
   - !append Vehicle.cs_savable_arch
   - !append Vehicle.arch_nemesis_offer
+  - !append Vehicle.arch_nemesis_02_offer
+  - !append Vehicle.arch_nemesis_03_offer
   - !append Vehicle.hackable_arch
   - !append Vehicle.ma_pac_cvi_08_bike_arch
   - !append Vehicle.v_sportbike2_arch
@@ -12,6 +14,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sportbike2_arch_jackie_tuned_player
   - !append Vehicle.v_sportbike2_arch_linas_player
   - !append Vehicle.v_sportbike2_arch_player
+  - !append Vehicle.v_sportbike2_arch_player_02
+  - !append Vehicle.v_sportbike2_arch_player_03
   - !append Vehicle.v_sportbike2_arch_quest
   - !append Vehicle.v_sportbike2_arch_sport
   - !append Vehicle.v_sportbike2_arch_tyger

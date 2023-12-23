@@ -11,8 +11,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.militech_hellhound_offer
   - !append Vehicle.q000_nomad_v_utility4_militech_behemoth_quest
   - !append Vehicle.q114_militech_av
-  - !append Vehicle.q114_militech_gun_wagon
-  - !append Vehicle.q114_militech_gun_wagon_turrets
+  - !append Vehicle.q114_militech_gun_wagon 
   - !append Vehicle.q114_militech_mechdrop_av
   - !append Vehicle.q114_militech_missile_av
   - !append Vehicle.q114_militech_missile_truck_final

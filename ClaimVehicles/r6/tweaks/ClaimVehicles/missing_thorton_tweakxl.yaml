@@ -51,6 +51,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.mws_standard25_thorton_kurtz
   - !append Vehicle.mws_thorton_mackinaw_country_poor
   - !append Vehicle.ncpd_suv_thorton_merrimac_maxtac
+  - !append Vehicle.ncpd_thorton_merrimac_police_heat_4
   - !append Vehicle.q000_nomad_v_standard25_thorton_colby_nomad_quest
   - !append Vehicle.q000_nomad_v_standard25_thorton_colby_pickup_quest
   - !append Vehicle.q000_nomad_v_standard2_thorton_colby_quest

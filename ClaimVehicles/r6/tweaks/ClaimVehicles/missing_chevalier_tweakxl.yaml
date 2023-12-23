@@ -29,6 +29,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_chevalier_thrax_player
   - !append Vehicle.v_standard2_chevalier_thrax_poor
   - !append Vehicle.v_standard2_chevalier_thrax_premium
+  - !append Vehicle.v_standard2_chevalier_thrax_premium_quest
   - !append Vehicle.v_standard2_chevalier_thrax_quest
   - !append Vehicle.v_standard2_chevalier_thrax_scavengers
   - !append Vehicle.v_standard2_chevalier_thrax_scavengers_quest
