@@ -143,8 +143,7 @@ public class ClaimVehicleDB {
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_savable_yaiba_kusanagi","Vehicle.cs_savable_yaiba_kusanagi"));
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_sport2_mizutani_shion_nomad","Vehicle.cs_v_sport2_mizutani_shion_nomad"));
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_sport2_mizutani_shion_nomad_wraith","Vehicle.cs_v_sport2_mizutani_shion_nomad_wraith"));
-      ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_standard2_thorton_galena_nomad","Vehicle.cs_v_standard2_thorton_galena_nomad"));
-      ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cvi_02_ps_objective_van","Vehicle.cvi_02_ps_objective_van"));
+      ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.cs_v_standard2_thorton_galena_nomad","Vehicle.cs_v_standard2_thorton_galena_nomad")); 
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.de_pac_wwd_04_galena","Vehicle.de_pac_wwd_04_galena"));
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.Delamain","Vehicle.Delamain"));
       ArrayPush(this.vehiclesDB, VehicleProperties.CreateItem(t"Vehicle.Deleon","Vehicle.Deleon"));

@@ -9,8 +9,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.Bratsk
   - !append Vehicle.Colby
   - !append Vehicle.Columbus
-  - !append Vehicle.Cortes 
-  - !append Vehicle.cvi_02_ps_objective_van
+  - !append Vehicle.Cortes  
   - !append Vehicle.de_pac_wwd_04_galena
   - !append Vehicle.Deleon  
   - !append Vehicle.e319_galena_always_visible
