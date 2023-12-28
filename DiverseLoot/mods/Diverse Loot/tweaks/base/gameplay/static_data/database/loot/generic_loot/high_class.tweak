@@ -119,11 +119,7 @@ HCM_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -131,11 +127,7 @@ HCM_equipment : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -150,11 +142,7 @@ HCM_locker : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -162,11 +150,7 @@ HCM_locker : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -311,11 +295,7 @@ HCS_suitcase : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -323,11 +303,7 @@ HCS_suitcase : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -379,11 +355,7 @@ HCS_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -391,11 +363,7 @@ HCS_equipment : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -626,11 +594,7 @@ HRM_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.StreetwearClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RockerClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 100;
 			query = "Query.RichClothing_EP1";
@@ -642,11 +606,7 @@ HRM_equipment : HighClass_Loot
 		{
 			dropChance = 0.22;
 			query = "Query.StreetwearClothing";
-		}, 
-		{
-			dropChance = 0.22;
-			query = "Query.RockerClothing";
-		}, 
+		},  
 		{
 			dropChance = 0.22;
 			query = "Query.RichClothing";
@@ -816,11 +776,7 @@ HRS_suitcase : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.StreetwearClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RockerClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 100;
 			query = "Query.RichClothing_EP1";
@@ -832,11 +788,7 @@ HRS_suitcase : HighClass_Loot
 		{
 			dropChance = 0.22;
 			query = "Query.StreetwearClothing";
-		}, 
-		{
-			dropChance = 0.22;
-			query = "Query.RockerClothing";
-		}, 
+		},  
 		{
 			dropChance = 0.22;
 			query = "Query.RichClothing";
@@ -899,11 +851,7 @@ HRS_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.StreetwearClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RockerClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 100;
 			query = "Query.RichClothing_EP1";
@@ -915,11 +863,7 @@ HRS_equipment : HighClass_Loot
 		{
 			dropChance = 0.22;
 			query = "Query.StreetwearClothing";
-		}, 
-		{
-			dropChance = 0.22;
-			query = "Query.RockerClothing";
-		}, 
+		},  
 		{
 			dropChance = 0.22;
 			query = "Query.RichClothing";
@@ -1143,11 +1087,7 @@ HIM_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -1155,11 +1095,7 @@ HIM_equipment : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -1176,21 +1112,13 @@ HIM_locker : HighClass_Loot
 			query = "Query.FormalClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
-		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
 		}, 
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -1333,11 +1261,7 @@ HIS_suitcase : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -1345,11 +1269,7 @@ HIS_suitcase : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 
@@ -1382,11 +1302,7 @@ HIS_equipment : HighClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.FormalClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.IndustrialClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.05;
 			query = "Query.CorpoClothing";
@@ -1394,11 +1310,7 @@ HIS_equipment : HighClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.05;
-			query = "Query.IndustrialClothing";
-		}
+		} 
 	];
 }
 

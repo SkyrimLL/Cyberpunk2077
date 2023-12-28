@@ -109,26 +109,26 @@ LCM_decorative : LowClass_Loot
 LCM_equipment : LowClass_Loot
 {
 	queries = 
-	[
-		{
-			dropChance = 100;
-			query = "Query.CorpoClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.FormalClothing_EP1";
-		}, 
+	[ 
 		{
 			dropChance = 100;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 0.05;
-			query = "Query.CorpoClothing";
+			dropChance = 100;
+			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 0.05;
-			query = "Query.FormalClothing";
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.SimpleClothing";
+		}, 
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
 		}, 
 		{
 			dropChance = 0.05;
@@ -140,26 +140,26 @@ LCM_equipment : LowClass_Loot
 LCM_locker : LowClass_Loot
 {
 	queries = 
-	[
-		{
-			dropChance = 100;
-			query = "Query.CorpoClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.FormalClothing_EP1";
-		}, 
+	[ 
 		{
 			dropChance = 100;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 0.05;
-			query = "Query.CorpoClothing";
+			dropChance = 100;
+			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 0.05;
-			query = "Query.FormalClothing";
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.SimpleClothing";
+		}, 
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
 		}, 
 		{
 			dropChance = 0.05;
@@ -293,23 +293,31 @@ LCS_ammo : LowClass_Loot
 LCS_suitcase : LowClass_Loot
 {
 	queries = 
-	[
-		{
-			dropChance = 100;
-			query = "Query.CorpoClothing_EP1";
-		}, 
+	[ 
 		{
 			dropChance = 100;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 0.2;
-			query = "Query.CorpoClothing";
+			dropChance = 100;
+			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 0.2;
-			query = "Query.IndustrialClothing";
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.SimpleClothing";
 		}, 
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
+		}, 
+		{
+			dropChance = 0.05;
+			query = "Query.IndustrialClothing";
+		},
 		{
 			dropChance = 0.2;
 			query = "Query.LowQualityAlcohol";
@@ -365,29 +373,29 @@ LCS_decorative : LowClass_Loot
 LCS_equipment : LowClass_Loot
 {
 	queries = 
-	[
-		{
-			dropChance = 100;
-			query = "Query.CorpoClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.FormalClothing_EP1";
-		}, 
+	[ 
 		{
 			dropChance = 100;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 0.05;
-			query = "Query.CorpoClothing";
+			dropChance = 100;
+			query = "Query.SimpleClothing_EP1";
+		}, 
+		{
+			dropChance = 100;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.SimpleClothing";
+		}, 
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
 		}, 
 		{
 			dropChance = 0.05;
-			query = "Query.FormalClothing";
-		}, 
-		{
-			dropChance = 0.2;
 			query = "Query.IndustrialClothing";
 		}
 	];
@@ -625,11 +633,7 @@ LRM_equipment : LowClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.BikerClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RichClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.4;
 			query = "Query.SimpleClothing";
@@ -641,11 +645,7 @@ LRM_equipment : LowClass_Loot
 		{
 			dropChance = 0.4;
 			query = "Query.BikerClothing";
-		}, 
-		{
-			dropChance = 0.4;
-			query = "Query.RichClothing";
-		}
+		} 
 	];
 }
 
@@ -664,11 +664,7 @@ LRM_locker : LowClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.BikerClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RichClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.4;
 			query = "Query.SimpleClothing";
@@ -680,11 +676,7 @@ LRM_locker : LowClass_Loot
 		{
 			dropChance = 0.4;
 			query = "Query.BikerClothing";
-		}, 
-		{
-			dropChance = 0.4;
-			query = "Query.RichClothing";
-		}
+		} 
 	];
 }
 
@@ -827,10 +819,6 @@ LRS_suitcase : LowClass_Loot
 			query = "Query.BikerClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
-			query = "Query.RichClothing_EP1";
-		}, 
-		{
 			dropChance = 0.4;
 			query = "Query.SimpleClothing";
 		}, 
@@ -841,11 +829,7 @@ LRS_suitcase : LowClass_Loot
 		{
 			dropChance = 0.4;
 			query = "Query.BikerClothing";
-		}, 
-		{
-			dropChance = 0.4;
-			query = "Query.RichClothing";
-		}
+		} 
 	];
 }
 
@@ -901,11 +885,7 @@ LRS_equipment : LowClass_Loot
 		{
 			dropChance = 100;
 			query = "Query.BikerClothing_EP1";
-		}, 
-		{
-			dropChance = 100;
-			query = "Query.RichClothing_EP1";
-		}, 
+		},  
 		{
 			dropChance = 0.4;
 			query = "Query.SimpleClothing";
@@ -917,11 +897,7 @@ LRS_equipment : LowClass_Loot
 		{
 			dropChance = 0.4;
 			query = "Query.BikerClothing";
-		}, 
-		{
-			dropChance = 0.4;
-			query = "Query.RichClothing";
-		}
+		} 
 	];
 }
 
