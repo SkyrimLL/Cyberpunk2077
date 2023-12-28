@@ -109,11 +109,11 @@ MCM_equipment : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -132,11 +132,11 @@ MCM_locker : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -340,11 +340,11 @@ MCS_equipment : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -408,11 +408,11 @@ MCS_suitcase : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -627,15 +627,15 @@ MRM_equipment : MediumClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RockerClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		},  
 		{
@@ -658,15 +658,15 @@ MRM_locker : MediumClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RockerClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		},  
 		{
@@ -819,11 +819,11 @@ MRS_suitcase : MediumClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RockerClothing_EP1";
 		},  
 		{
@@ -879,15 +879,15 @@ MRS_equipment : MediumClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RockerClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		},  
 		{
@@ -1111,11 +1111,11 @@ MIM_equipment : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -1134,11 +1134,11 @@ MIM_locker : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -1287,11 +1287,11 @@ MIS_suitcase : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
@@ -1347,11 +1347,11 @@ MIS_equipment : MediumClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{

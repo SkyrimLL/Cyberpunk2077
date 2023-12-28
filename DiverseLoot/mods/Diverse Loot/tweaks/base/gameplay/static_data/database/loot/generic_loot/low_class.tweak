@@ -111,15 +111,15 @@ LCM_equipment : LowClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
@@ -142,15 +142,15 @@ LCM_locker : LowClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
@@ -295,15 +295,15 @@ LCS_suitcase : LowClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
@@ -375,15 +375,15 @@ LCS_equipment : LowClass_Loot
 	queries = 
 	[ 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
@@ -623,15 +623,15 @@ LRM_equipment : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.BikerClothing_EP1";
 		},  
 		{
@@ -654,15 +654,15 @@ LRM_locker : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.BikerClothing_EP1";
 		},  
 		{
@@ -807,15 +807,15 @@ LRS_suitcase : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.BikerClothing_EP1";
 		}, 
 		{
@@ -875,15 +875,15 @@ LRS_equipment : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.BikerClothing_EP1";
 		},  
 		{
@@ -1100,19 +1100,19 @@ LIM_equipment : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.PunkClothing_EP1";
 		}, 
 		{
@@ -1139,19 +1139,19 @@ LIM_locker : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.PunkClothing_EP1";
 		}, 
 		{
@@ -1368,19 +1368,19 @@ LIS_equipment : LowClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.SimpleClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.IndustrialClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CasualClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.PunkClothing_EP1";
 		}, 
 		{

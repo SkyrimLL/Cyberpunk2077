@@ -113,11 +113,11 @@ HCM_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -136,11 +136,11 @@ HCM_locker : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -289,11 +289,11 @@ HCS_suitcase : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -349,11 +349,11 @@ HCS_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -588,15 +588,15 @@ HRM_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StylishClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RichClothing_EP1";
 		}, 
 		{
@@ -770,15 +770,15 @@ HRS_suitcase : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StylishClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RichClothing_EP1";
 		}, 
 		{
@@ -845,15 +845,15 @@ HRS_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StylishClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.StreetwearClothing_EP1";
 		},  
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.RichClothing_EP1";
 		}, 
 		{
@@ -1081,11 +1081,11 @@ HIM_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -1104,11 +1104,11 @@ HIM_locker : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		}, 
 		{
@@ -1255,11 +1255,11 @@ HIS_suitcase : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
@@ -1296,11 +1296,11 @@ HIS_equipment : HighClass_Loot
 	queries = 
 	[
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.CorpoClothing_EP1";
 		}, 
 		{
-			dropChance = 100;
+			dropChance = 0.4;
 			query = "Query.FormalClothing_EP1";
 		},  
 		{
