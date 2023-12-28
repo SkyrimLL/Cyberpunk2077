@@ -20,47 +20,47 @@
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4933",
-              "femaleVariant": "Recycled Hardware Kits"
+              "femaleVariant": "Recycled Hardware Kit"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4934",
-              "femaleVariant": "Composite Weaved Cartridges"
+              "femaleVariant": "Composite Weaved Batteries"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4935",
-              "femaleVariant": "3D Printed Cards"
+              "femaleVariant": "Universal Microcomputer Units"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4936",
-              "femaleVariant": "Bio-Synthetic Tubes"
+              "femaleVariant": "Multipurpose Electromagnetic Actuators"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4937",
-              "femaleVariant": "Nanite-Laced Cores"
+              "femaleVariant": "Bioengineered Neurosynaptic Processor"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "34881",
-              "femaleVariant": "Superconducting Boards"
+              "femaleVariant": "Super Conducting Interface"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "54086",
-              "femaleVariant": "Photonic Weave"
+              "femaleVariant": "Photonic Memchip"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "34882",
-              "femaleVariant": "Bio-Generative modules"
+              "femaleVariant": "Quantum Transcriptor"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "54087",
-              "femaleVariant": "Quantum Dot Clusters"
+              "femaleVariant": "Gold Plated Diagnet Expansion Chip"
             }
           ]
         }
