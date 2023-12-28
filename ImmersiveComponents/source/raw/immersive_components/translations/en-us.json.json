@@ -1,0 +1,71 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.11.0-nightly.2023-10-08",
+    "WKitJsonVersion": "0.0.8",
+    "GameVersion": 2000,
+    "ExportedDateTime": "2023-12-27T20:07:27.9727642Z",
+    "DataType": "CR2W" 
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "JsonResource",
+      "cookingPlatform": "PLATFORM_PC",
+      "root": {
+        "HandleId": "0",
+        "Data": {
+          "$type": "localizationPersistenceOnScreenEntries",
+          "entries": [
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "4933",
+              "femaleVariant": "Recycled hardware kits"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "4934",
+              "femaleVariant": "Composite weaved cartridges"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "4935",
+              "femaleVariant": "3D printed cards"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "4936",
+              "femaleVariant": "Bio-synthetic tubes"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "4937",
+              "femaleVariant": "Nanite laced cores"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "34881",
+              "femaleVariant": "Super conducting boards"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "54086",
+              "femaleVariant": "Photonic weave"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "34882",
+              "femaleVariant": "Bio-generative modules"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "primaryKey": "54087",
+              "femaleVariant": "Quantum dot clusters"
+            }
+          ]
+        }
+      }
+    },
+    "EmbeddedFiles": []
+  }
+}  
