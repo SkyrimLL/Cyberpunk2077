@@ -20,47 +20,47 @@
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4933",
-              "femaleVariant": "Recycled hardware kits"
+              "femaleVariant": "Recycled Hardware Kits"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4934",
-              "femaleVariant": "Composite weaved cartridges"
+              "femaleVariant": "Composite Weaved Cartridges"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4935",
-              "femaleVariant": "3D printed cards"
+              "femaleVariant": "3D Printed Cards"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4936",
-              "femaleVariant": "Bio-synthetic tubes"
+              "femaleVariant": "Bio-Synthetic Tubes"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "4937",
-              "femaleVariant": "Nanite laced cores"
+              "femaleVariant": "Nanite-Laced Cores"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "34881",
-              "femaleVariant": "Super conducting boards"
+              "femaleVariant": "Superconducting Boards"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "54086",
-              "femaleVariant": "Photonic weave"
+              "femaleVariant": "Photonic Weave"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "34882",
-              "femaleVariant": "Bio-generative modules"
+              "femaleVariant": "Bio-Generative modules"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
               "primaryKey": "54087",
-              "femaleVariant": "Quantum dot clusters"
+              "femaleVariant": "Quantum Dot Clusters"
             }
           ]
         }
