@@ -2,10 +2,26 @@
 @addField(DataTerm)
 public let iVehicleMenuOpen: Bool = false;
 
+@addField(DataTerm)
+public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
+
 @replaceMethod(DataTerm)
 
   private final func RequestFastTravelMenu() -> Void {
-    if Equals(this.GetFastravelDeviceType(), EFastTravelDeviceType.SubwayGate) {
+    let player: ref<GameObject> = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerMainGameObject();
+
+    // set up tracker if it doesn't exist
+    if !IsDefined(this.m_vehicleFasTravelTracking) {
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame());
+      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+      this.m_vehicleFasTravelTracking.init(m_player);
+    } else {
+      // Reset if already exists (in case of changed default values)
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame()) ;
+      this.m_vehicleFasTravelTracking.reset(m_player);
+    };
+
+    if Equals(this.GetFastravelDeviceType(), EFastTravelDeviceType.SubwayGate) || (!this.m_vehicleFasTravelTracking.modON) {
       this.UpdateFastTravelPointRecord();
       GameInstance.GetUISystem(this.GetGame()).RequestFastTravelMenu();
     } else {
@@ -21,13 +37,24 @@ public let iVehicleMenuOpen: Bool = false;
 
     let player: ref<GameObject> = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerMainGameObject();
 
+    // set up tracker if it doesn't exist
+    if !IsDefined(this.m_vehicleFasTravelTracking) {
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame());
+      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+      this.m_vehicleFasTravelTracking.init(m_player);
+    } else {
+      // Reset if already exists (in case of changed default values)
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame()) ;
+      this.m_vehicleFasTravelTracking.reset(m_player);
+    };
+
     // trying with events system 
-    if (this.iVehicleMenuOpen) {
+    if (this.m_vehicleFasTravelTracking.iVehicleMenuOpen) {
         // necessary to prevent vehicle menu to open again when player confirms a vehicle (with same hotkey as key to open menu)
-        this.iVehicleMenuOpen = false;
+        this.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;
 
       } else {
-        this.iVehicleMenuOpen = true;
+        this.m_vehicleFasTravelTracking.iVehicleMenuOpen = true;
 
         let evt: ref<TriggeredVehicleManagerEvent> = new TriggeredVehicleManagerEvent();
         evt.dPadItemDirection = EDPadSlot.VehicleWheel;
@@ -43,8 +70,22 @@ public let iVehicleMenuOpen: Bool = false;
   protected cb func OnAreaEnter(evt: ref<AreaEnteredEvent>) -> Bool {
 
     let activator: ref<GameObject>;
+    let player: ref<GameObject> = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerMainGameObject();
+
+    // set up tracker if it doesn't exist
+    if !IsDefined(this.m_vehicleFasTravelTracking) {
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame());
+      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+      this.m_vehicleFasTravelTracking.init(m_player);
+    } else {
+      // Reset if already exists (in case of changed default values)
+      let m_player: wref<PlayerPuppet> = GetPlayer(player.GetGame()) ;
+      this.m_vehicleFasTravelTracking.reset(m_player);
+    };
+
     if Equals(evt.componentName, n"fastTravelArea") {
-      /*      
+      if (!this.m_vehicleFasTravelTracking.modON) {
+
           if NotEquals(this.GetDevicePS().GetFastravelTriggerType(), EFastTravelTriggerType.Auto) {
             return false;
           };
@@ -59,7 +100,7 @@ public let iVehicleMenuOpen: Bool = false;
             this.RequestFastTravelMenu();
             this.TeleportToExitNode(activator);
           };
-      */
+      }  
 
       return false;        
  

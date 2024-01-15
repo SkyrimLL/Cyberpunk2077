@@ -18,11 +18,23 @@ public class TriggeredVehicleManagerEvent extends Event
 
 public class VehicleFastTravelTracking {
   public let player: wref<PlayerPuppet>;
+  public let iVehicleMenuOpen: Bool;
+  public let config: ref<VehiclesFastTravelConfig>;
+
+  public let modON: Bool; 
+  public let malwareON: Bool; 
+ 
+  public let chanceMalwareLow: Float;
+  public let chanceMalwareMedium: Float;
+  public let chanceMalwareHigh: Float;
+
   public let enableVehicleRecallKeyON: Bool;
   public let enableVehicleMenuKeyON: Bool;
 
   public let debugON: Bool;
   public let warningsON: Bool;   
+
+
 
   public func init(player: wref<PlayerPuppet>) -> Void {
     this.reset(player);
@@ -31,22 +43,43 @@ public class VehicleFastTravelTracking {
   private func reset(player: wref<PlayerPuppet>) -> Void {
     this.player = player;
 
+    this.refreshConfig();
+
     // ------------------ Edit these values to configure the mod
     // Toggle warnings when exceeding your carry capacity without powerlevel bonus
-    this.warningsON = true;
+    // this.warningsON = true;
 
     // ------------------ End of Mod Options
 
     // For developers only 
-    this.debugON = true;
+    // this.debugON = true;
 
     // To enable call vehicle key for emergencies
-    this.enableVehicleRecallKeyON = false;
+    // this.enableVehicleRecallKeyON = false;
 
     // To enable vehicle menu key for emergencies (Hold)
-    this.enableVehicleMenuKeyON = false;
+    // this.enableVehicleMenuKeyON = false;
 
   }
+
+  public func refreshConfig() -> Void {
+    this.config = new VehiclesFastTravelConfig(); 
+    this.invalidateCurrentState();
+  }
+
+  public func invalidateCurrentState() -> Void {  
+    this.malwareON = this.config.malwareON;
+    this.chanceMalwareLow = Cast<Float>(this.config.chanceMalwareLow); 
+    this.chanceMalwareMedium = Cast<Float>(this.config.chanceMalwareMedium); 
+    this.chanceMalwareHigh = Cast<Float>(this.config.chanceMalwareHigh);   
+ 
+    this.enableVehicleRecallKeyON = this.config.enableVehicleRecallKeyON;
+    this.enableVehicleMenuKeyON = this.config.enableVehicleMenuKeyON;
+
+    this.warningsON = this.config.warningsON;
+    this.debugON = this.config.debugON;
+    this.modON = this.config.modON;  
+  } 
 }
 
 public class TriggeredVehicleManagerEvent extends Event {

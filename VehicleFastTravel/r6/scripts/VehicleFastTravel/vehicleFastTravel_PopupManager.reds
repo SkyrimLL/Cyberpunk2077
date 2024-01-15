@@ -38,22 +38,26 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
         let m_player: wref<PlayerPuppet> = this.m_vehicleFasTravelTracking.player;
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
         let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"ep1_standalone") >= 1;
+        this.m_vehicleFasTravelTracking.refreshConfig();
 
-        // LogChannel(n"DEBUG", ">>> vehicleFasTravel : enableVehicleMenuKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON  );
-        // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
-        // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
+        if (!this.m_vehicleFasTravelTracking.modON) {
+          this.SpawnVehiclesManagerPopup();
 
-        if ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) {
-            // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
-            this.SpawnVehicleRadioPopup();
-            // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
         } else {
-            if (!this.MalwareAttack()) {
+          // LogChannel(n"DEBUG", ">>> vehicleFasTravel : enableVehicleMenuKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON  );
+          // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
+          // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
+
+          if ( ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) ) {
+              // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
+              this.SpawnVehicleRadioPopup();
+              // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
+          } else {
               this.SpawnVehiclesManagerPopup();
-            }
-            
+              
+          }          
         }
-        
+
         break;
       case EDPadSlot.VehicleInsideWheel:
         this.SpawnVehicleRadioPopup();
@@ -69,9 +73,13 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
 
   protected cb func OnTriggeredVehicleManagerEvent(evt: ref<TriggeredVehicleManagerEvent>) -> Bool {
     // Event is triggered by custom code on Data Terminals used for Fast Travel
+    this.m_vehicleFasTravelTracking.refreshConfig();
 
     if (!this.MalwareAttack()) {
       this.SpawnVehiclesManagerPopup();
+    } else {
+      // Reset 'data term open' flag to allow activation again
+      this.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      
     }
   }
 
@@ -86,43 +94,135 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
     let player: wref<PlayerPuppet>; 
     let ownerPuppet: wref<ScriptedPuppet>;
 
-    // Disabled for now
-    return false;
+    let chanceHack: Int32 = RandRange(1,100);
+    let randomMalwareType: Int32 = RandRange(1,100);
+    let malwareType: TweakDBID = t"TrackedVirus"; 
+    let chanceMalwareLow: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareLow);
+    let chanceMalwareMedium: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareMedium);
+    let chanceMalwareHigh: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareHigh);
+
+    // Master switch for malware system
+    if (!this.m_vehicleFasTravelTracking.malwareON) { 
+      return false;
+    }
+
+    // Reset 'data term open' flag to allow activation again
+    this.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;
 
     // player = GameInstance.FindEntityByID(ownerPuppet.GetGame(), playerID) as PlayerPuppet;
     player = this.m_vehicleFasTravelTracking.player;
 
-    evt = new HackTargetEvent();
-    evt.targetID = player.GetEntityID();
-    evt.netrunnerID = player.GetEntityID();
-    evt.objectRecord = TweakDBInterface.GetObjectActionRecord(t"AIQuickHack.HackOverheat_Hard");
-    evt.settings.showDirectionalIndicator = false;
-    evt.settings.isRevealPositionAction = false;
-    evt.settings.HUDData.bottomText = "Firmware downloading";
-    evt.settings.HUDData.failedText = "Firmware update - FAILED";
-    evt.settings.HUDData.completedText = "Firmware update - SUCCESS";
-    evt.settings.HUDData.type = SimpleMessageType.Reveal;
+    if (RandRange(1,100) < chanceMalwareLow) {
+      if (randomMalwareType < 100) {
+        malwareType = t"AIQuickHack.HackBlind";
+      }      
+      if (randomMalwareType < 80) {
+        malwareType = t"AIQuickHack.HackBurning";
+      }      
+      if (randomMalwareType < 70) {
+        malwareType = t"AIQuickHack.HackCyberware";
+      }      
+      if (randomMalwareType < 60) {
+        malwareType = t"AIQuickHack.HackLocomotion";
+      }      
+      if (randomMalwareType < 50) {
+        malwareType = t"AIQuickHack.HackOverheat";
+      }      
+      if (randomMalwareType < 40) {
+        malwareType = t"AIQuickHack.HackOverload";
+      }      
+      if (randomMalwareType < 30) {
+        malwareType = t"AIQuickHack.HackWeaponJam";
+      }      
+      if (randomMalwareType < 20) {
+        malwareType = t"AIQuickHack.HackWeaponMalfunction";
+      }      
+    }
 
-    if IsDefined(evt.objectRecord) {
-      player.QueueEvent(evt);
-      hackingMinigameBB = GameInstance.GetBlackboardSystem(player.GetGame()).Get(GetAllBlackboardDefs().HackingMinigame);
-      hackingMinigameBB.SetVector4(GetAllBlackboardDefs().HackingMinigame.LastPlayerHackPosition, player.GetWorldPosition());
-      return true;
-    };
+    if (RandRange(1,100) < chanceMalwareMedium) {
+      if (randomMalwareType < 100) {
+        malwareType = t"AIQuickHack.HackBlind_Hard";
+      }     
+      if (randomMalwareType < 80) {
+        malwareType = t"AIQuickHack.HackCyberware_Hard";
+      }      
+      if (randomMalwareType < 60) {
+        malwareType = t"AIQuickHack.HackOverheat_Hard";
+      }      
+      if (randomMalwareType < 40) {
+        malwareType = t"AIQuickHack.HackOverload_Hard";
+      }     
+      if (randomMalwareType < 20) {
+        malwareType = t"AIQuickHack.HackWeaponMalfunction_Hard";
+      }      
+    }
+
+    if (RandRange(1,100) < chanceMalwareHigh) {
+      if (randomMalwareType < 100) {
+        malwareType = t"AIQuickHack.HackBlind_VeryHard";
+      }      
+      if (randomMalwareType < 80) {
+        malwareType = t"AIQuickHack.HackCyberware_VeryHard";
+      }      
+      if (randomMalwareType < 60) {
+        malwareType = t"AIQuickHack.HackOverheat_VeryHard";
+      }      
+      if (randomMalwareType < 40) {
+        malwareType = t"AIQuickHack.HackOverload_VeryHard";
+      }      
+      if (randomMalwareType < 20) {
+        malwareType = t"AIQuickHack.HackWeaponMalfunction_VeryHard";
+      }      
+    }
+ 
+    if !(malwareType == t"TrackedVirus") {
+      // LogChannel(n"DEBUG",">>>>>> MalwareAttack: malwareType :" + TDBID.ToStringDEBUG(malwareType));
+
+      evt = new HackTargetEvent();
+      evt.targetID = player.GetEntityID();
+      evt.netrunnerID = player.GetEntityID();
+      evt.objectRecord = TweakDBInterface.GetObjectActionRecord(malwareType);
+      evt.settings.showDirectionalIndicator = false;
+      evt.settings.isRevealPositionAction = false;
+      evt.settings.HUDData.bottomText = "Firmware downloading";
+      evt.settings.HUDData.failedText = "Firmware update - FAILED";
+      evt.settings.HUDData.completedText = "Firmware update - SUCCESS";
+      evt.settings.HUDData.type = SimpleMessageType.Reveal;
+
+      if IsDefined(evt.objectRecord) {
+
+        player.QueueEvent(evt);
+        hackingMinigameBB = GameInstance.GetBlackboardSystem(player.GetGame()).Get(GetAllBlackboardDefs().HackingMinigame);
+        hackingMinigameBB.SetVector4(GetAllBlackboardDefs().HackingMinigame.LastPlayerHackPosition, player.GetWorldPosition());
+        return true;
+      };      
+    }
+
     return false;
   }
 
 /*
 
-overheatT1 = t"AIQuickHackStatusEffect.HackOverheat";
-overheatT2 = t"AIQuickHackStatusEffect.HackOverheatTier2";
-overheatT3 = t"AIQuickHackStatusEffect.HackOverheatTier3";
-hackMalfunctiontT1 = t"AIQuickHackStatusEffect.HackWeaponMalfunction";
-hackMalfunctionT2 = t"AIQuickHackStatusEffect.HackWeaponMalfunctionTier2";
-hackMalfunctionT3 = t"AIQuickHackStatusEffect.HackWeaponMalfunctionTier3";
-hackLocomotionT1 = t"AIQuickHackStatusEffect.HackLocomotion";
-hackLocomotionT2 = t"AIQuickHackStatusEffect.HackLocomotionTier2";
-hackLocomotionT3 = t"AIQuickHackStatusEffect.HackLocomotionTier3";
+HackBlind
+HackBlind_Hard
+HackBlind_VeryHard
+HackBurning
+HackCyberware
+HackCyberware_Hard
+HackCyberware_VeryHard
+HackLocomotion
+HackOverheat
+HackOverheat_Hard
+HackOverheat_VeryHard
+HackOverload
+HackOverload_Hard
+HackOverload_VeryHard
+HackWeaponJam
+HackWeaponJam_VeryHard
+HackWeaponMalfunction
+HackWeaponMalfunction_Hard
+HackWeaponMalfunction_VeryHard
+TrackedVirus
 
 
   private final func SpawnVehiclesManagerPopup() -> Void {

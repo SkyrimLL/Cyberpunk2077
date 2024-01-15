@@ -44,20 +44,28 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
             // LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking found - resetting"  );
           };
  
-          let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
-          let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"ep1_standalone") >= 1;
-
-          // LogChannel(n"DEBUG", ">>> enableVehicleRecallKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON  );
-          // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
-          // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
-
-          if  ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
-            // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
-          } else {
+          if (!this.m_vehicleFasTravelTracking.modON) {
             if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
               this.ProcessCallVehicleAction(ListenerAction.GetType(action));
             };
-          }; 
+            
+          } else {
+            let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
+            let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"ep1_standalone") >= 1;
+
+            // LogChannel(n"DEBUG", ">>> enableVehicleRecallKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON  );
+            // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
+            // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
+
+            if  ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
+              // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
+            } else {
+              if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
+                this.ProcessCallVehicleAction(ListenerAction.GetType(action));
+              };
+            };             
+          }
+
       } else {
         if Equals(ListenerAction.GetName(action), n"SceneFastForward") {
           if this.m_customFastForwardPossible {
