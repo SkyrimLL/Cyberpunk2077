@@ -1,3 +1,8 @@
 localization:
   onscreens:
     en-us: immersive_components\translations\en-us.json
+    it-it: immersive_components\translations\it-it.json
+    de-de: immersive_components\translations\de-de.json
+    pt-br: immersive_components\translations\pt-br.json
+    cz-cz: immersive_components\translations\cz-cz.json
+    ru-ru: immersive_components\translations\ru-ru.json
