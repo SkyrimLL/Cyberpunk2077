@@ -18,3 +18,4 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sport1_rayfield_caliburn_player
   - !append Vehicle.v_sport1_rayfield_caliburn_quest
   - !append Vehicle.v_013_rayfield_aerodnight
+  - !append Vehicle.cs_savable_rayfield_caliburn_disabled_interactions

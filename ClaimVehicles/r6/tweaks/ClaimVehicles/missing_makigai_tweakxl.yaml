@@ -20,7 +20,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_makigai_maimai_poor_dogtown
   - !append Vehicle.v_standard2_makigai_maimai_premium
   - !append Vehicle.v_standard2_makigai_maimai_quest
-  - !append ehicle.v_standard3_makigai_tanishi
+  - !append Vehicle.v_standard3_makigai_tanishi
   - !append Vehicle.v_standard3_makigai_tanishi_cargo_courier
   - !append Vehicle.v_standard3_makigai_tanishi_courier
   - !append Vehicle.v_standard3_makigai_tanishi_hfs

@@ -9,4 +9,6 @@ public class ClaimVehiclesText {
 
   public static func REMOVING() -> String { return "N.C.L.A.I.M: Removing model "; } 
 
+  public static func CRIME() -> String { return "N.C.L.A.I.M: Unlawful Claim attempt detected. This crime has been reported. "; } 
+
 }

@@ -1,52 +1,34 @@
 
-@addField(PlayerPuppet)
-public let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
+@addField(PlayerPuppetPS)
+public persistent let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
 
 // -- PlayerPuppet
-@addMethod(PlayerPuppet)
+@addMethod(PlayerPuppetPS)
 // Overload method from - https://codeberg.org/adamsmasher/cyberpunk/src/branch/master/cyberpunk/player/player.swift#L1974
-  private final func InitClaimVehicleSystem() -> Void {
+  private final func InitClaimVehicleSystem(playerPuppet: ref<GameObject>) -> Void {
     // set up tracker if it doesn't exist
     if !IsDefined(this.m_claimedVehicleTracking) {
+      // LogChannel(n"DEBUG", "::::: INIT NEW CLAIM TRACKING OBJECT ");
       this.m_claimedVehicleTracking = new ClaimedVehicleTracking();
-      this.m_claimedVehicleTracking.init(this);
+      this.m_claimedVehicleTracking.init(playerPuppet as PlayerPuppet);
+
     } else {
       // Reset if already exists (in case of changed default values)
-      this.m_claimedVehicleTracking.reset(this);
+      // LogChannel(n"DEBUG", "::::: RESET EXISTING CLAIM TRACKING OBJECT ");
+      this.m_claimedVehicleTracking.reset(playerPuppet as PlayerPuppet);
     };
   }
 
-// public class VehiclesManagerDataHelper extends IScriptable {
-@replaceMethod(VehiclesManagerDataHelper)
+@wrapMethod(PlayerPuppet)
+  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
 
-  public final static func GetVehicles(player: ref<GameObject>) -> array<ref<IScriptable>> {
-    let owner: ref<PlayerPuppet> = player as PlayerPuppet;
-    let currentData: ref<VehicleListItemData>;
-    let i: Int32;
-    let result: array<ref<IScriptable>>;
-    let vehicle: PlayerVehicle;
-    let vehicleRecord: ref<Vehicle_Record>;
-    let vehiclesList: array<PlayerVehicle>;
-    let claimedVehiclesList: array<PlayerVehicle>;
- 
-    // Original list of player owned vehicles
-    // GameInstance.GetVehicleSystem(player.GetGame()).GetPlayerVehicles(vehiclesList);
-    GameInstance.GetVehicleSystem(player.GetGame()).GetPlayerUnlockedVehicles(vehiclesList);
-    i = 0;
-    while i < ArraySize(vehiclesList) {
-      vehicle = vehiclesList[i];
-      if (TDBID.IsValid(vehicle.recordID)){
-        vehicleRecord = TweakDBInterface.GetVehicleRecord(vehicle.recordID);
-        currentData = new VehicleListItemData();
-        currentData.m_displayName = vehicleRecord.DisplayName();
-        currentData.m_icon = vehicleRecord.Icon();
-        currentData.m_data = vehicle;
-        ArrayPush(result, currentData);
-      };
-      i += 1;
-    };
+    _playerPuppetPS.InitClaimVehicleSystem(playerPuppet);
 
-      
+    if (!_playerPuppetPS.m_claimedVehicleTracking.refreshPlayerGarageOnLoad) {
+      _playerPuppetPS.m_claimedVehicleTracking.refreshClaimedVehiclesOnLoad();
+      _playerPuppetPS.m_claimedVehicleTracking.refreshPlayerGarageOnLoad = true;
+    }
 
-    return result;
-  }
+    wrappedMethod(playerPuppet);
+}

@@ -34,6 +34,20 @@
     };
   }
 
+@wrapMethod(VehiclesManagerPopupGameController)
+
+  protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool {
+
+    let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(playerPuppet.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
+
+    _playerPuppetPS.m_claimedVehicleTracking.refreshConfig(); 
+
+    _playerPuppetPS.m_claimedVehicleTracking.refreshGarage();
+
+    wrappedMethod(playerPuppet);
+}
+
 /*
 @addMethod(VehiclesManagerPopupGameController)
 
