@@ -48,7 +48,10 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
             this.SpawnVehicleRadioPopup();
             // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
         } else {
-            this.SpawnVehiclesManagerPopup();
+            if (!this.MalwareAttack()) {
+              this.SpawnVehiclesManagerPopup();
+            }
+            
         }
         
         break;
@@ -67,11 +70,61 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
   protected cb func OnTriggeredVehicleManagerEvent(evt: ref<TriggeredVehicleManagerEvent>) -> Bool {
     // Event is triggered by custom code on Data Terminals used for Fast Travel
 
-    this.SpawnVehiclesManagerPopup();
+    if (!this.MalwareAttack()) {
+      this.SpawnVehiclesManagerPopup();
+    }
+  }
 
+
+@addMethod(PopupsManager)
+
+  // https://www.youtube.com/watch?v=wxwdft_O45w&ab_channel=GameTrusTv
+
+  public func MalwareAttack() -> Bool {
+    let evt: ref<HackTargetEvent>;
+    let hackingMinigameBB: ref<IBlackboard>; 
+    let player: wref<PlayerPuppet>; 
+    let ownerPuppet: wref<ScriptedPuppet>;
+
+    // Disabled for now
+    return false;
+
+    // player = GameInstance.FindEntityByID(ownerPuppet.GetGame(), playerID) as PlayerPuppet;
+    player = this.m_vehicleFasTravelTracking.player;
+
+    evt = new HackTargetEvent();
+    evt.targetID = player.GetEntityID();
+    evt.netrunnerID = player.GetEntityID();
+    evt.objectRecord = TweakDBInterface.GetObjectActionRecord(t"AIQuickHack.HackOverheat_Hard");
+    evt.settings.showDirectionalIndicator = false;
+    evt.settings.isRevealPositionAction = false;
+    evt.settings.HUDData.bottomText = "Firmware downloading";
+    evt.settings.HUDData.failedText = "Firmware update - FAILED";
+    evt.settings.HUDData.completedText = "Firmware update - SUCCESS";
+    evt.settings.HUDData.type = SimpleMessageType.Reveal;
+
+    if IsDefined(evt.objectRecord) {
+      player.QueueEvent(evt);
+      hackingMinigameBB = GameInstance.GetBlackboardSystem(player.GetGame()).Get(GetAllBlackboardDefs().HackingMinigame);
+      hackingMinigameBB.SetVector4(GetAllBlackboardDefs().HackingMinigame.LastPlayerHackPosition, player.GetWorldPosition());
+      return true;
+    };
+    return false;
   }
 
 /*
+
+overheatT1 = t"AIQuickHackStatusEffect.HackOverheat";
+overheatT2 = t"AIQuickHackStatusEffect.HackOverheatTier2";
+overheatT3 = t"AIQuickHackStatusEffect.HackOverheatTier3";
+hackMalfunctiontT1 = t"AIQuickHackStatusEffect.HackWeaponMalfunction";
+hackMalfunctionT2 = t"AIQuickHackStatusEffect.HackWeaponMalfunctionTier2";
+hackMalfunctionT3 = t"AIQuickHackStatusEffect.HackWeaponMalfunctionTier3";
+hackLocomotionT1 = t"AIQuickHackStatusEffect.HackLocomotion";
+hackLocomotionT2 = t"AIQuickHackStatusEffect.HackLocomotionTier2";
+hackLocomotionT3 = t"AIQuickHackStatusEffect.HackLocomotionTier3";
+
+
   private final func SpawnVehiclesManagerPopup() -> Void {
     let data: ref<inkGameNotificationData> = new inkGameNotificationData();
     data.notificationName = n"base\\gameplay\\gui\\widgets\\vehicle_control\\vehicles_manager.inkwidget";
