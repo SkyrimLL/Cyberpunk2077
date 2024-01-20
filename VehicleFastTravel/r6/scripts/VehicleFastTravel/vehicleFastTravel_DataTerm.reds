@@ -84,6 +84,9 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
     };
 
     if Equals(evt.componentName, n"fastTravelArea") {
+      // Catch data terminal entity ID for correct malware source attribution
+      this.m_vehicleFasTravelTracking.terminalEntityID = this.GetEntityID();
+
       if (!this.m_vehicleFasTravelTracking.modON) {
 
           if NotEquals(this.GetDevicePS().GetFastravelTriggerType(), EFastTravelTriggerType.Auto) {

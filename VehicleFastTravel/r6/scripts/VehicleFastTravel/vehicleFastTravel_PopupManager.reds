@@ -180,13 +180,13 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
 
       evt = new HackTargetEvent();
       evt.targetID = player.GetEntityID();
-      evt.netrunnerID = player.GetEntityID();
+      evt.netrunnerID = player.GetEntityID(); // this.m_vehicleFasTravelTracking.terminalEntityID;
       evt.objectRecord = TweakDBInterface.GetObjectActionRecord(malwareType);
       evt.settings.showDirectionalIndicator = false;
       evt.settings.isRevealPositionAction = false;
-      evt.settings.HUDData.bottomText = "Firmware downloading";
-      evt.settings.HUDData.failedText = "Firmware update - FAILED";
-      evt.settings.HUDData.completedText = "Firmware update - SUCCESS";
+      evt.settings.HUDData.bottomText = "LocKey#92249";
+      evt.settings.HUDData.failedText = "LocKey#92985";
+      evt.settings.HUDData.completedText = "LocKey#92985";
       evt.settings.HUDData.type = SimpleMessageType.Reveal;
 
       if IsDefined(evt.objectRecord) {

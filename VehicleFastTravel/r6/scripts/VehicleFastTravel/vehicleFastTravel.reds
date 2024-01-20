@@ -19,6 +19,8 @@ public class TriggeredVehicleManagerEvent extends Event
 public class VehicleFastTravelTracking {
   public let player: wref<PlayerPuppet>;
   public let iVehicleMenuOpen: Bool;
+  public let terminalEntityID: EntityID;
+
   public let config: ref<VehiclesFastTravelConfig>;
 
   public let modON: Bool; 
