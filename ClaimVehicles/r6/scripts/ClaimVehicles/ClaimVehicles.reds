@@ -400,6 +400,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         this.addClaimedVehicle(thisPlayerVehicle);
 
         // Commented out for 2.0.2 testing
+        // Added back to enable Stash on vehicles
         this.tryPersistVehicle(vehicle);
 
       } else {
@@ -457,6 +458,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let vehiclesList: array<PlayerVehicle>;
     let _this_vehicleString: String;
     let i = 0;
+    let matchFound: Bool = false;
 
     m_vehicleSystem.GetPlayerUnlockedVehicles(vehiclesList); 
 
@@ -502,6 +504,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
             if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID == this.lastVehicleRecordID) {
                 GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
                 this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
+                matchFound = true;
 
               } else {
                 GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
@@ -509,7 +512,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
               }
 
             i += 1;
-          };              
+          };  
+
+          // Fallback on random pick if last vehicle is not found
+          if (!matchFound) {
+            this.enableRandomVehicle();
+          }            
         }
      
         break;
@@ -524,23 +532,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
         this.clearGarage();
         
-        i = 0;
-        let randomNum: Int32 = RandRange(0,ArraySize(this.vehicleDB.vehiclesUnlockStateDB)-1);
+        this.enableRandomVehicle();
 
-        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-          _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
-          // Disable all vehicles except the last one claimed
-          if (i == randomNum) {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
-              this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
-
-            } else {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
-              this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
-            }
-
-          i += 1;
-        };      
         break;
       // Delamain mode - enable only Delamain models 
       case vehicleSummonMode.Delamain:
@@ -556,7 +549,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         i = 0;
         while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
           _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
-          // Disable all vehicles except the last one claimed
+          // Disable all vehicles except Delamains
           if (StrContains(_this_vehicleString, "delamain")) {
               GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
@@ -583,10 +576,11 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
         while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
           _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
-          // Disable all vehicles except the last one claimed
+          // Disable all vehicles except favorites
           if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleFavorite) {
               GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
+              matchFound = true;
 
             } else {
               GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
@@ -595,6 +589,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
           i += 1;
         }; 
+
+        // Fallback on random pick if there is no favorite
+        if (!matchFound) {
+          this.enableRandomVehicle();
+        }   
+
         break;
       // Last mode - enable all known vehicles from claim history
       case vehicleSummonMode.All:
@@ -617,7 +617,32 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
     };       
   }
- 
+
+  // Pick a random vehicle from history and enables it
+  public func enableRandomVehicle() -> Void { 
+    let _this_vehicleString: String;
+    let i = 0;
+
+    i = 0;
+    let randomNum: Int32 = RandRange(0,ArraySize(this.vehicleDB.vehiclesUnlockStateDB)-1);
+
+    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
+      _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
+      // Disable all vehicles except a random one
+      if (i == randomNum) {
+          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+          this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
+
+        } else {
+          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
+          this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
+        }
+
+      i += 1;
+    }; 
+
+  }
+
   // Add vehicle record to saved garage to register new claimed vehicles
   public func addVehicleToSavedGarage(_id: TweakDBID) -> Void { 
     let m_vehicleSystem: ref<VehicleSystem>  = GameInstance.GetVehicleSystem(this.player.GetGame());
@@ -714,6 +739,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
     if (!(StrCmp(this.matchVehicleString,"")==0)) { 
       // Vehicle is known to database
+      this.lastVehicleRecordID = this.matchVehicleRecordID;
 
       if (this.matchVehicleUnlocked) {
         if (this.debugON) { 
@@ -740,7 +766,6 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           this.addVehicleToSavedGarage(this.matchVehicleRecordID);
         }
 
-        this.lastVehicleRecordID = this.matchVehicleRecordID;
 
         this.tryReportCrime(true);
  
@@ -749,6 +774,9 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         } 
 
       }
+
+      this.refreshGarage();
+
 
     } 
 
@@ -799,6 +827,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
 
       }
+
+      this.refreshGarage();
 
     } 
 

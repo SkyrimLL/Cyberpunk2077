@@ -140,13 +140,13 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
               numPlayerPerks += 1;
             }
 
+            // LogChannel(n"DEBUG", "::: addClaimedVehicle - numPlayerPerks: '"+ToString(numPlayerPerks)+"'"  );
+            // LogChannel(n"DEBUG", "::: addClaimedVehicle - playerOnPerkTrigger: '"+ToString(playerOnPerkTrigger)+"'"  );
+            // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceOnExit: '"+ToString(chanceOnExit)+"'"  );
+            // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHack: '"+ToString(chanceHack)+"'"  );
+
             if (numPlayerPerks>0) || (chanceOnExit>0) {
               playerOnPerkTrigger = 100 - Min( ( (playerOnPerkTrigger + (numPlayerPerks * 5)) / numPlayerPerks), 100) - chanceOnExit;
-
-              // LogChannel(n"DEBUG", "::: addClaimedVehicle - numPlayerPerks: '"+ToString(numPlayerPerks)+"'"  );
-              // LogChannel(n"DEBUG", "::: addClaimedVehicle - playerOnPerkTrigger: '"+ToString(playerOnPerkTrigger)+"'"  );
-              // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceOnExit: '"+ToString(chanceOnExit)+"'"  );
-              // LogChannel(n"DEBUG", "::: addClaimedVehicle - chanceHack: '"+ToString(chanceHack)+"'"  );
 
               if (chanceHack > playerOnPerkTrigger) {
                 isVehicleHackable = true;
@@ -183,8 +183,6 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
  
             }
-
-            _playerPuppetPS.m_claimedVehicleTracking.refreshGarage();
 
             // Commented out for 2.0.2 testing
             // _playerPuppetPS.m_claimedVehicleTracking.tryPersistVehicle(vehicle);
