@@ -29,6 +29,10 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   public let debugON: Bool;
   public let warningsON: Bool;  
 
+  public let scannerModeON: Bool;
+  public let remoteControlQuickhackON: Bool; 
+  public let forceBrakesQuickhackON: Bool; 
+
   public let chanceOnSteal: Float;
   public let chanceOnExit: Float;
   public let chanceLowPerkHack: Float;
@@ -103,6 +107,9 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     this.chanceCrimeReportFail = Cast<Float>(this.config.chanceCrimeReportFail);   
     this.chanceCrimeReportSuccess = Cast<Float>(this.config.chanceCrimeReportSuccess);   
     this.summonMode = this.config.summonMode;  
+    this.remoteControlQuickhackON = this.config.remoteControlQuickhackON;   
+    this.forceBrakesQuickhackON = this.config.forceBrakesQuickhackON;   
+    this.scannerModeON = this.config.scannerModeON;  
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  

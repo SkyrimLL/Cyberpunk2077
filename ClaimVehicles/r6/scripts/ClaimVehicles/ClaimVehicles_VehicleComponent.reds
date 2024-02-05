@@ -41,10 +41,13 @@
       isVehicleHackable = true;
     }  
 
-    if (isVehicleHackable) && (_playerPuppetPS.m_claimedVehicleTracking.modON) { 
-      _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);
-    } else {
-      _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+    if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.scannerModeON)) ) {
+
+      if (isVehicleHackable) { 
+        _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);
+      } else {
+        _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+      }
     }
   }
 
@@ -67,10 +70,14 @@
     };
     */
 
-    if (_playerPuppetPS.m_claimedVehicleTracking.modON) && (chanceHack  > playerOnStealTrigger) {
-      _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
-    } else {
-      _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+    if (_playerPuppetPS.m_claimedVehicleTracking.modON) {
+      if (_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) {
+        if (chanceHack  > playerOnStealTrigger) {
+          _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
+        } else {
+          _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+        }
+      }
     }
 
     let vehicleQuestEvent: ref<VehicleQuestChangeDoorStateEvent> = new VehicleQuestChangeDoorStateEvent();
@@ -109,8 +116,10 @@
     */
 
     // TO DO: Add method to remove a vehicle from Manager List
-    if (_playerPuppetPS.m_claimedVehicleTracking.modON) {
-      _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
+    if (_playerPuppetPS.m_claimedVehicleTracking.modON)  {
+      if (_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) {
+        _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
+      }
     }
 
     if evt.active {
@@ -118,3 +127,4 @@
     };
     this.PushVehicleNPCDataToAllPassengers(this.GetVehicle().GetGame(), this.GetVehicle().GetEntityID());
   }
+ 

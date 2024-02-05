@@ -21,8 +21,11 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
     _playerPuppetPS = _playerPuppet.GetPS();
 
     if IsDefined(_playerPuppetPS) {
+
+      // LogChannel(n"DEBUG", ":: tryClaimVehicle - Player crouching: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.player.m_inCrouch));
+      // LogChannel(n"DEBUG", ":: tryClaimVehicle - Scanner active: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive));
       
-      if (_playerPuppetPS.m_claimedVehicleTracking.modON) {
+      if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.scannerModeON)) ) {
 
         vehicle = scriptInterface.owner as VehicleObject;
 

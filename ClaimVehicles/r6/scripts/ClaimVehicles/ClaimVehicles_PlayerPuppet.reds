@@ -2,9 +2,7 @@
 @addField(PlayerPuppetPS)
 public persistent let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
 
-// -- PlayerPuppet
 @addMethod(PlayerPuppetPS)
-// Overload method from - https://codeberg.org/adamsmasher/cyberpunk/src/branch/master/cyberpunk/player/player.swift#L1974
   private final func InitClaimVehicleSystem(playerPuppet: ref<GameObject>) -> Void {
     // set up tracker if it doesn't exist
     if !IsDefined(this.m_claimedVehicleTracking) {
@@ -19,6 +17,7 @@ public persistent let m_claimedVehicleTracking: ref<ClaimedVehicleTracking>;
     };
   }
 
+// Bridge between PlayerPuppet and PlayerPuppetPS - Set up Player Puppet Persistent State when game loads (player is attached)
 @wrapMethod(PlayerPuppet)
   private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
