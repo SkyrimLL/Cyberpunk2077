@@ -36,7 +36,7 @@ For redscript mod developers
 public class LimitedEncumbranceTracking
 */
 
-public class LimitedEncumbranceTracking {
+public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>;
 
   public let config: ref<LimitedEncumbranceConfig>;
@@ -261,6 +261,30 @@ public class LimitedEncumbranceTracking {
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
         // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
+
+
+        // ----
+        // Generic backpack and bag detection 
+        // Lara Croft Unified Outfit (Archive XL - FemV) - https://www.nexusmods.com/cyberpunk2077/mods/12452
+
+        if StrContains(currentItemFriendlyName,"backpack") {
+          clothSlotMod = 30.0 ;
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"bag") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+          }
+        }
+                
+        // ----
+        // spawn0 - TRUE BAGS AND BACKPACKS - https://www.nexusmods.com/cyberpunk2077/mods/6616
+        // Kabuki Bags and Backpacks - TweakXL ArchiveXL addon - https://www.nexusmods.com/cyberpunk2077/mods/11658?tab=description
+
         if StrContains(currentItemFriendlyName,"milbackpack") {
           clothSlotMod = 100.0 ;
           if (this.debugON) {
@@ -269,7 +293,7 @@ public class LimitedEncumbranceTracking {
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
-          clothSlotMod = 50.0 ;
+          clothSlotMod = 30.0 ;
           if (this.debugON) {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
           }
@@ -289,6 +313,17 @@ public class LimitedEncumbranceTracking {
             // LogChannel(n"DEBUG", "::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
           }
         }
+
+        // ----
+        // OneSlowZZ Tactical Backpack - https://www.nexusmods.com/cyberpunk2077/mods/12031?tab=description
+
+        if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
+          clothSlotMod = 40.0 ;
+          if (this.debugON) {
+            // LogChannel(n"DEBUG", "::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
+        }
+
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
 
@@ -591,232 +626,4 @@ public class LimitedEncumbranceTracking {
   }
 }
 
-@addField(GameObject)
-public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
-
-@addField(PlayerPuppet)
-public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
-
-// -- PlayerPuppet
-@replaceMethod(PlayerPuppet)
-// Overload method from - https://codeberg.org/adamsmasher/cyberpunk/src/branch/master/cyberpunk/player/player.swift#L1974
-public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
-    let carryCapacity: Float; 
-    let carryCapacityDelta: Int32; 
-    let hasExhaustedEffect: Bool;
-    let hasEncumbranceEffect: Bool;
-    let isApplyingRestricted: Bool;
-    let exhaustedEffectID: TweakDBID;
-    let overweightEffectID: TweakDBID;
-    let ses: ref<StatusEffectSystem>;
-
-    // set up tracker if it doesn't exist
-    if !IsDefined(this.m_limitedEncumbranceTracking) {
-      this.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
-      this.m_limitedEncumbranceTracking.init(this);
-    } else {
-      this.m_limitedEncumbranceTracking.reset(this);
-    };
-
-    if (this.m_limitedEncumbranceTracking.modON) {
-      if this.m_curInventoryWeight < 0.00 {
-        this.m_curInventoryWeight = 0.00;
-      };
-
-      if (this.m_curInventoryWeight!=this.m_limitedEncumbranceTracking.lastInventoryWeight) {
-        this.m_limitedEncumbranceTracking.lastInventoryWeight = this.m_curInventoryWeight;
-
-        // Only calculate effect if inventory weight actually changed
-
-        ses = GameInstance.GetStatusEffectSystem(this.GetGame());
-        exhaustedEffectID = t"BaseStatusEffect.PlayerExhausted";
-        overweightEffectID = t"BaseStatusEffect.Encumbered";
-        hasExhaustedEffect = ses.HasStatusEffect(this.GetEntityID(), exhaustedEffectID);
-        hasEncumbranceEffect = ses.HasStatusEffect(this.GetEntityID(), overweightEffectID);
-        isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this, n"NoEncumbrance");
-
-        // carryCapacity = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast<StatsObjectID>(this.GetEntityID()), gamedataStatType.CarryCapacity);
-
-        this.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
-
-        carryCapacity = this.m_limitedEncumbranceTracking.limitedCarryCapacity;
-
-        if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
-          // this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
-
-        } else { 
-          // if (this.m_curInventoryWeight >= this.m_limitedEncumbranceTracking.carryCapacityBase) {
-          carryCapacityDelta = Cast<Int32>(carryCapacity) - Cast<Int32>(this.m_curInventoryWeight);
-
-          if (carryCapacityDelta <= this.m_limitedEncumbranceTracking.carryCapacityAlertTheshold) {
-            if (this.m_limitedEncumbranceTracking.warningsON) { 
-              let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(carryCapacityDelta));
-    
-              this.SetWarningMessage(message); }
-          } 
-        }
-
-        if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted && !isLootBroken  {
-          if (this.m_limitedEncumbranceTracking.warningsON) { this.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
-          ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
-        } else {
-          if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted && !isLootBroken  {
-            if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
-            ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
-          };
-        };
-
-
-        if (hasEncumbranceEffect) {
-            if (this.m_limitedEncumbranceTracking.debugON) { 
-              // LogChannel(n"DEBUG", "Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"  ); 
-            }
-
-            if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage("Current weight:" + FloatToString(this.m_curInventoryWeight) + " - " + "Carry capacity:" + FloatToString(carryCapacity) + " - " + "hasEncumbranceEffect ON"); }
-
-            if this.m_curInventoryWeight <= carryCapacity  {
-              if (this.m_limitedEncumbranceTracking.debugON) { this.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
-              ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
-            };
-        } else {
-            // if (debugON) { this.SetWarningMessage("hasEncumbranceEffect OFF"); }
-        }
-
-        // Why isn't this working to display the adjusted carry Capacity?
-        // GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetInt(GetAllBlackboardDefs().UI_PlayerStats.weightMax, Cast<Int32>(carryCapacity), true);
-
-        // This works to display new inventory weight
-        GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.m_curInventoryWeight, true);
-      }
-    } else {
-      // Vanilla code
-
-      if this.m_curInventoryWeight < 0.00 {
-        this.m_curInventoryWeight = 0.00;
-      };
-      ses = GameInstance.GetStatusEffectSystem(this.GetGame());
-      overweightEffectID = t"BaseStatusEffect.Encumbered";
-      hasEncumbranceEffect = ses.HasStatusEffect(this.GetEntityID(), overweightEffectID);
-      isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this, n"NoEncumbrance");
-      carryCapacity = GameInstance.GetStatsSystem(this.GetGame()).GetStatValue(Cast<StatsObjectID>(this.GetEntityID()), gamedataStatType.CarryCapacity);
-      if this.m_curInventoryWeight > carryCapacity && !isApplyingRestricted {
-        this.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
-      };
-      if this.m_curInventoryWeight > carryCapacity && !hasEncumbranceEffect && !isApplyingRestricted && !isLootBroken  {
-        ses.ApplyStatusEffect(this.GetEntityID(), overweightEffectID);
-      } else {
-        if this.m_curInventoryWeight <= carryCapacity && hasEncumbranceEffect || hasEncumbranceEffect && isApplyingRestricted && !isLootBroken  {
-          ses.RemoveStatusEffect(this.GetEntityID(), overweightEffectID);
-        };
-      };
-      GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.m_curInventoryWeight, true);
-
-    }
-
-  }
-
-
-
-// in public class MenuHubGameController extends gameuiMenuGameController 
-
-@replaceMethod(MenuHubGameController)
-
-  protected cb func OnPlayerMaxWeightUpdated(value: Int32) -> Bool {
-    let gameInstance: GameInstance = this.m_player.GetGame();
-    let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-
-    this.m_subMenuCtrl.m_player = this.m_player;
-
-    // set up tracker if it doesn't exist
-    if !IsDefined(this.m_player.m_limitedEncumbranceTracking) {
-      this.m_player.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
-      this.m_player.m_limitedEncumbranceTracking.init(this.m_player);
-    } else {
-      this.m_player.m_limitedEncumbranceTracking.reset(this.m_player);
-    };    
-
-    this.m_subMenuCtrl.HandlePlayerMaxWeightUpdated(carryCapacity, this.m_player.m_curInventoryWeight);
-    if RoundF(this.m_player.m_curInventoryWeight) >= carryCapacity {
-      this.PlayLibraryAnimation(n"overburden");
-    };
-  
-  }
-
-@replaceMethod(MenuHubGameController)
-
-  public final func HandlePlayerWeightUpdated(opt dropQueueWeight: Float) -> Void {
-    let gameInstance: GameInstance = this.m_player.GetGame();
-    let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-
-    this.m_subMenuCtrl.m_player = this.m_player;
-
-    // set up tracker if it doesn't exist
-    if !IsDefined(this.m_player.m_limitedEncumbranceTracking) {
-      this.m_player.m_limitedEncumbranceTracking = new LimitedEncumbranceTracking();
-      this.m_player.m_limitedEncumbranceTracking.init(this.m_player);
-    };     
-
-    this.m_subMenuCtrl.HandlePlayerWeightUpdated(this.m_player.m_curInventoryWeight - dropQueueWeight, carryCapacity);
-
-  }
-
-
-// in public class SubMenuPanelLogicController extends PlayerStatsUIHolder 
-@addField(SubMenuPanelLogicController)
-public let m_player: wref<PlayerPuppet>;
-
-@replaceMethod(SubMenuPanelLogicController)
-
-  public final func HandlePlayerWeightUpdated(value: Float, maxWeight: Int32) -> Void {
-       
-    if (this.m_player.m_limitedEncumbranceTracking.modON) {
-      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
-
-      inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(value));
-
-    } else {
-      // Vanilla code
-
-      inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(value)) + "/" + ToString(maxWeight));
-    }
-      
-    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
-    GameObject.PlaySoundEvent(this.m_player, n"ui_menu_item_consumable_generic");
  
-  }
-
-@replaceMethod(SubMenuPanelLogicController)
-
-  public final func HandlePlayerMaxWeightUpdated(value: Int32, curInventoryWeight: Float) -> Void {
-
-    if (this.m_player.m_limitedEncumbranceTracking.modON) { 
-      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
-
-      inkTextRef.SetText(this.m_weightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(curInventoryWeight));
-    } else {
-      // Vanilla code
-
-      inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(curInventoryWeight)) + "/" + ToString(value));
-
-    }
-  }
-
-
-// public class VendorHubMenuGameController extends gameuiMenuGameController {
-@replaceMethod(VendorHubMenuGameController)
-
-  protected cb func OnPlayerWeightUpdated(value: Float) -> Bool {
-    let gameInstance: GameInstance = this.m_player.GetGame();
-    let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
-
-    if (this.m_player.m_limitedEncumbranceTracking.modON) {
-      this.m_player.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
-
-      inkTextRef.SetText(this.m_playerWeightValue, this.m_player.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
-    } else {
-      // Vanilla code
-
-      inkTextRef.SetText(this.m_playerWeightValue, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
-
-    }
-  }
