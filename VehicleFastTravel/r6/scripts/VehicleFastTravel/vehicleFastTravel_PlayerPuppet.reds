@@ -1,11 +1,38 @@
 
 // public class PlayerPuppet extends ScriptedPuppet {
-@addField(PlayerPuppet)
+@addField(PlayerPuppetPS)
 public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
+
+@addMethod(PlayerPuppetPS)
+  private final func InitVehicleFasTravelSystem(playerPuppet: ref<GameObject>) -> Void {
+    // set up tracker if it doesn't exist
+    if !IsDefined(this.m_vehicleFasTravelTracking) {
+      // LogChannel(n"DEBUG", "::::: INIT NEW VEHICLE FAST TRAVEL OBJECT ");
+      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
+      this.m_vehicleFasTravelTracking.init(playerPuppet as PlayerPuppet);
+
+    } else {
+      // Reset if already exists (in case of changed default values)
+      // LogChannel(n"DEBUG", "::::: RESET EXISTING VEHICLE FAST TRAVEL OBJECT ");
+      this.m_vehicleFasTravelTracking.reset(playerPuppet as PlayerPuppet);
+    };
+  }
+
+// Bridge between PlayerPuppet and PlayerPuppetPS - Set up Player Puppet Persistent State when game loads (player is attached)
+@wrapMethod(PlayerPuppet)
+  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+
+    _playerPuppetPS.InitVehicleFasTravelSystem(playerPuppet);
+
+    wrappedMethod(playerPuppet);
+}
 
 @replaceMethod(PlayerPuppet)
 
   protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+
     if Equals(ListenerAction.GetName(action), n"ToggleWalk") && ListenerAction.IsButtonJustReleased(action) {
       this.ProcessToggleWalkInput();
       return true;
@@ -33,18 +60,9 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
     } else {
       /* Patch - Disable call vehicle key -> replaced by fast travel action     */
       if Equals(ListenerAction.GetName(action), n"CallVehicle") {
-          // set up tracker if it doesn't exist
-          if !IsDefined(this.m_vehicleFasTravelTracking) {
-            this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
-            this.m_vehicleFasTravelTracking.init(this);
-            // LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking not found - initializing"  );
-          } else {
-            // Reset if already exists (in case of changed default values) 
-            this.m_vehicleFasTravelTracking.reset(this);
-            // LogChannel(n"DEBUG", ">>> VehicleFastTravelTracking found - resetting"  );
-          };
+          _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
  
-          if (!this.m_vehicleFasTravelTracking.modON) {
+          if (!_playerPuppetPS.m_vehicleFasTravelTracking.modON) {
             if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {
               this.ProcessCallVehicleAction(ListenerAction.GetType(action));
             };
@@ -53,11 +71,11 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
             let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
             let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
-            // LogChannel(n"DEBUG", ">>> enableVehicleRecallKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON  );
+            // LogChannel(n"DEBUG", ">>> enableVehicleRecallKeyON: " + _playerPuppetPS.m_vehicleFasTravelTracking.enableVehicleRecallKeyON  );
             // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
             // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
 
-            if  ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
+            if  ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!_playerPuppetPS.m_vehicleFasTravelTracking.enableVehicleRecallKeyON) {
               // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
             } else {
               if !GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).GetBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_RELEASED) {

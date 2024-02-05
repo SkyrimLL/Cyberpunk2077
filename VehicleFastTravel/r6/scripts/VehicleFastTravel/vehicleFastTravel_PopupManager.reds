@@ -1,30 +1,13 @@
 // public native class PopupsManager extends inkGameController {
 @addField(PopupsManager)
-public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
+public let m_playerPuppet: ref<PlayerPuppet>;
 
-@replaceMethod(PopupsManager)
+@wrapMethod(PopupsManager)
 
   protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool {
-    this.m_blackboard = this.GetUIBlackboard();
-    this.m_bbDefinition = GetAllBlackboardDefs().UIGameData;
-    this.m_journalManager = GameInstance.GetJournalManager(playerPuppet.GetGame());
-    this.m_uiSystemBB = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
-    this.m_uiSystemBBDef = GetAllBlackboardDefs().UI_System;
-    this.m_uiSystemId = this.m_uiSystemBB.RegisterListenerBool(this.m_uiSystemBBDef.IsInMenu, this, n"OnMenuUpdate");
-    this.m_isShownBbId = this.m_blackboard.RegisterDelayedListenerBool(this.m_bbDefinition.Popup_IsShown, this, n"OnUpdateVisibility");
-    this.m_dataBbId = this.m_blackboard.RegisterDelayedListenerVariant(this.m_bbDefinition.Popup_Data, this, n"OnUpdateData");
-    this.m_photomodeActiveId = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().PhotoMode).RegisterListenerBool(GetAllBlackboardDefs().PhotoMode.IsActive, this, n"OnPhotomodeUpdate");
+    this.m_playerPuppet = GameInstance.GetPlayerSystem(playerPuppet.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
 
-    // set up tracker if it doesn't exist
-    if !IsDefined(this.m_vehicleFasTravelTracking) {
-      let m_player: wref<PlayerPuppet> = GetPlayer(playerPuppet.GetGame());
-      this.m_vehicleFasTravelTracking = new VehicleFastTravelTracking();
-      this.m_vehicleFasTravelTracking.init(m_player);
-    } else {
-      // Reset if already exists (in case of changed default values)
-      let m_player: wref<PlayerPuppet> = GetPlayer(playerPuppet.GetGame()) ;
-      this.m_vehicleFasTravelTracking.reset(m_player);
-    };
+    wrappedMethod( playerPuppet );
   }
 
 @replaceMethod(PopupsManager)
@@ -35,12 +18,17 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
       /* Patch - disable popup menu on action key hold 
         this.SpawnVehiclesManagerPopup();
         */
-        let m_player: wref<PlayerPuppet> = this.m_vehicleFasTravelTracking.player;
+        // let m_player: wref<PlayerPuppet> = this.m_vehicleFasTravelTracking.player;
+        // let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(playerPuppet.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+
+        let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_playerPuppet.GetPS();
+        let m_player: wref<PlayerPuppet> = _playerPuppetPS.m_vehicleFasTravelTracking.player;
+
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
         let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(m_player.GetGame()).GetFact(n"ep1_standalone") >= 1;
-        this.m_vehicleFasTravelTracking.refreshConfig();
+        _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
 
-        if (!this.m_vehicleFasTravelTracking.modON) {
+        if (!_playerPuppetPS.m_vehicleFasTravelTracking.modON) {
           this.SpawnVehiclesManagerPopup();
 
         } else {
@@ -48,7 +36,7 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
           // LogChannel(n"DEBUG", ">>>     isVictorHUDInstalled: " + isVictorHUDInstalled  );
           // LogChannel(n"DEBUG", ">>>     isPhantomLiberyStandalone: " + isPhantomLiberyStandalone  );
 
-          if ( ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) ) {
+          if ( ((isVictorHUDInstalled) || (isPhantomLiberyStandalone)) && (!_playerPuppetPS.m_vehicleFasTravelTracking.enableVehicleMenuKeyON) ) {
               // If Victor HUD installed or DLC standalone is ON, or key menu override is OFF, do Nothing
               this.SpawnVehicleRadioPopup();
               // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
@@ -73,13 +61,15 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
 
   protected cb func OnTriggeredVehicleManagerEvent(evt: ref<TriggeredVehicleManagerEvent>) -> Bool {
     // Event is triggered by custom code on Data Terminals used for Fast Travel
-    this.m_vehicleFasTravelTracking.refreshConfig();
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_playerPuppet.GetPS();
+    let m_player: wref<PlayerPuppet> = _playerPuppetPS.m_vehicleFasTravelTracking.player;
+    _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
 
     if (!this.MalwareAttack()) {
       this.SpawnVehiclesManagerPopup();
     } else {
       // Reset 'data term open' flag to allow activation again
-      this.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      
+      _playerPuppetPS.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      
     }
   }
 
@@ -94,23 +84,27 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
     let player: wref<PlayerPuppet>; 
     let ownerPuppet: wref<ScriptedPuppet>;
 
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_playerPuppet.GetPS();
+    let m_player: wref<PlayerPuppet> = _playerPuppetPS.m_vehicleFasTravelTracking.player;
+    _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
+
     let chanceHack: Int32 = RandRange(1,100);
     let randomMalwareType: Int32 = RandRange(1,100);
     let malwareType: TweakDBID = t"TrackedVirus"; 
-    let chanceMalwareLow: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareLow);
-    let chanceMalwareMedium: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareMedium);
-    let chanceMalwareHigh: Int32 = Cast<Int32>(this.m_vehicleFasTravelTracking.chanceMalwareHigh);
+    let chanceMalwareLow: Int32 = Cast<Int32>(_playerPuppetPS.m_vehicleFasTravelTracking.chanceMalwareLow);
+    let chanceMalwareMedium: Int32 = Cast<Int32>(_playerPuppetPS.m_vehicleFasTravelTracking.chanceMalwareMedium);
+    let chanceMalwareHigh: Int32 = Cast<Int32>(_playerPuppetPS.m_vehicleFasTravelTracking.chanceMalwareHigh);
 
     // Master switch for malware system
-    if (!this.m_vehicleFasTravelTracking.malwareON) { 
+    if (!_playerPuppetPS.m_vehicleFasTravelTracking.malwareON) { 
       return false;
     }
 
     // Reset 'data term open' flag to allow activation again
-    this.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;
+    _playerPuppetPS.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;
 
     // player = GameInstance.FindEntityByID(ownerPuppet.GetGame(), playerID) as PlayerPuppet;
-    player = this.m_vehicleFasTravelTracking.player;
+    player = _playerPuppetPS.m_vehicleFasTravelTracking.player;
 
     if (RandRange(1,100) < chanceMalwareLow) {
       if (randomMalwareType < 100) {
@@ -180,7 +174,7 @@ public let m_vehicleFasTravelTracking: ref<VehicleFastTravelTracking>;
 
       evt = new HackTargetEvent();
       evt.targetID = player.GetEntityID();
-      evt.netrunnerID = player.GetEntityID(); // this.m_vehicleFasTravelTracking.terminalEntityID;
+      evt.netrunnerID = player.GetEntityID(); // _playerPuppetPS.m_vehicleFasTravelTracking.terminalEntityID;
       evt.objectRecord = TweakDBInterface.GetObjectActionRecord(malwareType);
       evt.settings.showDirectionalIndicator = false;
       evt.settings.isRevealPositionAction = false;

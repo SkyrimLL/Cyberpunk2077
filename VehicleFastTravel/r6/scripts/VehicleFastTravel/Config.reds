@@ -27,6 +27,13 @@
   @runtimeProperty("ModSettings.description", "Turn ON to restore the vehicle garage menu on the 'V' key (instead of the Radio menu set by this mod).")
   let enableVehicleMenuKeyON: Bool = false; 
 
+  // @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
+  // @runtimeProperty("ModSettings.category", "Main switch")
+  // @runtimeProperty("ModSettings.category.order", "4")
+  // @runtimeProperty("ModSettings.displayName", "Disable Metro Fast Travel")
+  // @runtimeProperty("ModSettings.description", "Turn ON to REMOVE the Fast Travel option at Metro stations.")
+  // let disableMetroFastTravelON: Bool = false; 
+
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Malware System")
   @runtimeProperty("ModSettings.category.order", "4")

@@ -16,7 +16,7 @@ public class VehicleFastTravelTracking
 public class TriggeredVehicleManagerEvent extends Event
 */
 
-public class VehicleFastTravelTracking {
+public class VehicleFastTravelTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>;
   public let iVehicleMenuOpen: Bool;
   public let terminalEntityID: EntityID;
@@ -32,6 +32,7 @@ public class VehicleFastTravelTracking {
 
   public let enableVehicleRecallKeyON: Bool;
   public let enableVehicleMenuKeyON: Bool;
+  // public let disableMetroFastTravelON: Bool;
 
   public let debugON: Bool;
   public let warningsON: Bool;   
@@ -77,6 +78,7 @@ public class VehicleFastTravelTracking {
  
     this.enableVehicleRecallKeyON = this.config.enableVehicleRecallKeyON;
     this.enableVehicleMenuKeyON = this.config.enableVehicleMenuKeyON;
+    // this.disableMetroFastTravelON = this.config.disableMetroFastTravelON;
 
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
