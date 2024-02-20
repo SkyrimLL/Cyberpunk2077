@@ -25,8 +25,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_chevalier_thrax_maelstrom_mws
   - !append Vehicle.v_standard2_chevalier_thrax_mafia_courier
   - !append Vehicle.v_standard2_chevalier_thrax_mq304
-  - !append Vehicle.v_standard2_chevalier_thrax_ncu
-  - !append Vehicle.v_standard2_chevalier_thrax_player
+  - !append Vehicle.v_standard2_chevalier_thrax_ncu 
   - !append Vehicle.v_standard2_chevalier_thrax_poor
   - !append Vehicle.v_standard2_chevalier_thrax_premium
   - !append Vehicle.v_standard2_chevalier_thrax_premium_quest
@@ -41,8 +40,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard3_chevalier_emperor_arasaka_courier
   - !append Vehicle.v_standard3_chevalier_emperor_courier
   - !append Vehicle.v_standard3_chevalier_emperor_courier_expanded
-  - !append Vehicle.v_standard3_chevalier_emperor_ncu
-  - !append Vehicle.v_standard3_chevalier_emperor_player
+  - !append Vehicle.v_standard3_chevalier_emperor_ncu 
   - !append Vehicle.v_standard3_chevalier_emperor_police
   - !append Vehicle.v_standard3_chevalier_emperor_police_mws
   - !append Vehicle.v_standard3_chevalier_emperor_police_prevention

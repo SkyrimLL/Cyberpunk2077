@@ -8,14 +8,11 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q000_nomad_v_sport1_rayfield_caliburn_quest
   - !append Vehicle.v_sport1_rayfield_aerondight
   - !append Vehicle.v_sport1_rayfield_aerondight_courier
-  - !append Vehicle.v_sport1_rayfield_aerondight_kerry
-  - !append Vehicle.v_sport1_rayfield_aerondight_player
+  - !append Vehicle.v_sport1_rayfield_aerondight_kerry 
   - !append Vehicle.v_sport1_rayfield_aerondight_quest
-  - !append Vehicle.v_sport1_rayfield_caliburn
-  - !append Vehicle.v_sport1_rayfield_caliburn_02_player
+  - !append Vehicle.v_sport1_rayfield_caliburn 
   - !append Vehicle.v_sport1_rayfield_caliburn_courier
-  - !append Vehicle.v_sport1_rayfield_caliburn_murdered
-  - !append Vehicle.v_sport1_rayfield_caliburn_player
+  - !append Vehicle.v_sport1_rayfield_caliburn_murdered 
   - !append Vehicle.v_sport1_rayfield_caliburn_quest
   - !append Vehicle.v_013_rayfield_aerodnight
   - !append Vehicle.cs_savable_rayfield_caliburn_disabled_interactions

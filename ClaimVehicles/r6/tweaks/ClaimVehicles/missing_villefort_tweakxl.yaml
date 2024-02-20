@@ -78,8 +78,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard25_villefort_columbus_judy_van
   - !append Vehicle.v_standard25_villefort_columbus_kangtao
   - !append Vehicle.v_standard25_villefort_columbus_kangtao_courier
-  - !append Vehicle.v_standard25_villefort_columbus_locked_doors
-  - !append Vehicle.v_standard25_villefort_columbus_player
+  - !append Vehicle.v_standard25_villefort_columbus_locked_doors 
   - !append Vehicle.v_standard25_villefort_columbus_poor
   - !append Vehicle.v_standard25_villefort_columbus_quest
   - !append Vehicle.v_standard25_villefort_columbus_scavengers
@@ -92,12 +91,9 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_villefort_cortes_arasaka
   - !append Vehicle.v_standard2_villefort_cortes_courier
   - !append Vehicle.v_standard2_villefort_cortes_courier_expanded
-  - !append Vehicle.v_standard2_villefort_cortes_delamain
-  - !append Vehicle.v_standard2_villefort_cortes_delamain_player
   - !append Vehicle.v_standard2_villefort_cortes_kangtao
   - !append Vehicle.v_standard2_villefort_cortes_kangtao_courier
-  - !append Vehicle.v_standard2_villefort_cortes_mafia_courier
-  - !append Vehicle.v_standard2_villefort_cortes_player
+  - !append Vehicle.v_standard2_villefort_cortes_mafia_courier 
   - !append Vehicle.v_standard2_villefort_cortes_police
   - !append Vehicle.v_standard2_villefort_cortes_police_border_patrol
   - !append Vehicle.v_standard2_villefort_cortes_police_border_patrol_prevention

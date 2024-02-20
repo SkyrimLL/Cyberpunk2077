@@ -21,19 +21,15 @@
   - !append Vehicle.v_mizutani_shion_muamar_courier_car
   - !append Vehicle.v_sport2_mizutani_shion
   - !append Vehicle.v_sport2_mizutani_shion_courier_expanded
-  - !append Vehicle.v_sport2_mizutani_shion_nomad
-  - !append Vehicle.v_sport2_mizutani_shion_nomad_02_player
+  - !append Vehicle.v_sport2_mizutani_shion_nomad 
   - !append Vehicle.v_sport2_mizutani_shion_nomad_buggy
   - !append Vehicle.v_sport2_mizutani_shion_nomad_buggy_quest
   - !append Vehicle.v_sport2_mizutani_shion_nomad_courier
-  - !append Vehicle.v_sport2_mizutani_shion_nomad_ncu
-  - !append Vehicle.v_sport2_mizutani_shion_nomad_player
-  - !append Vehicle.v_sport2_mizutani_shion_nomad_player_missiles
+  - !append Vehicle.v_sport2_mizutani_shion_nomad_ncu 
   - !append Vehicle.v_sport2_mizutani_shion_nomad_quest
   - !append Vehicle.v_sport2_mizutani_shion_nomad_samum
   - !append Vehicle.v_sport2_mizutani_shion_nomad_technical
-  - !append Vehicle.v_sport2_mizutani_shion_nomad_wraith
-  - !append Vehicle.v_sport2_mizutani_shion_player
+  - !append Vehicle.v_sport2_mizutani_shion_nomad_wraith 
   - !append Vehicle.v_sport2_mizutani_shion_poor
   - !append Vehicle.v_sport2_mizutani_shion_quest
   - !append Vehicle.v_sport2_mizutani_shion_sport
@@ -42,8 +38,7 @@
   - !append Vehicle.v_sport2_mizutani_shion_tyger
   - !append Vehicle.v_sport2_mizutani_shion_tyger_courier
   - !append Vehicle.v_standard2_mizutani_hozuki
-  - !append Vehicle.v_standard2_mizutani_hozuki_courier
-  - !append Vehicle.v_standard2_mizutani_hozuki_player
+  - !append Vehicle.v_standard2_mizutani_hozuki_courier 
   - !append Vehicle.v_standard2_mizutani_hozuki_poor
   - !append Vehicle.v_standard2_mizutani_hozuki_poor_dogtown
   - !append Vehicle.v_standard2_mizutani_hozuki_premium

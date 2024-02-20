@@ -31,16 +31,14 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q114_archer_quartz_nomad
   - !append Vehicle.q304_v_standard2_archer_hella_scanning
   - !append Vehicle.sq004_raffen_shiv_car_archer
-  - !append Vehicle.v_standard2_archer_bandit
-  - !append Vehicle.v_standard2_archer_bandit_player
+  - !append Vehicle.v_standard2_archer_bandit 
   - !append Vehicle.v_standard2_archer_bandit_quest
   - !append Vehicle.v_standard2_archer_hella
   - !append Vehicle.v_standard2_archer_hella_combat_cab
   - !append Vehicle.v_standard2_archer_hella_courier_expanded
   - !append Vehicle.v_standard2_archer_hella_getto
   - !append Vehicle.v_standard2_archer_hella_kurtz
-  - !append Vehicle.v_standard2_archer_hella_ncu
-  - !append Vehicle.v_standard2_archer_hella_player
+  - !append Vehicle.v_standard2_archer_hella_ncu 
   - !append Vehicle.v_standard2_archer_hella_police
   - !append Vehicle.v_standard2_archer_hella_police_mws
   - !append Vehicle.v_standard2_archer_hella_police_prevention
@@ -63,13 +61,10 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_archer_quartz_locked_doors
   - !append Vehicle.v_standard2_archer_quartz_mox
   - !append Vehicle.v_standard2_archer_quartz_nomad
-  - !append Vehicle.v_standard2_archer_quartz_nomad_courier
-  - !append Vehicle.v_standard2_archer_quartz_nomad_player
-  - !append Vehicle.v_standard2_archer_quartz_nomad_player_02
+  - !append Vehicle.v_standard2_archer_quartz_nomad_courier 
   - !append Vehicle.v_standard2_archer_quartz_nomad_prevention
   - !append Vehicle.v_standard2_archer_quartz_nomad_quest
-  - !append Vehicle.v_standard2_archer_quartz_nomad_wraith
-  - !append Vehicle.v_standard2_archer_quartz_player
+  - !append Vehicle.v_standard2_archer_quartz_nomad_wraith 
   - !append Vehicle.v_standard2_archer_quartz_poor
   - !append Vehicle.v_standard2_archer_quartz_quest
   - !append Vehicle.v_standard2_archer_quartz_tyger

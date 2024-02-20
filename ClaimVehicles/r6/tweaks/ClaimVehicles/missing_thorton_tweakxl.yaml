@@ -70,23 +70,18 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard25_thorton_colby_nomad_courier
   - !append Vehicle.v_standard25_thorton_colby_nomad_courier_expanded
   - !append Vehicle.v_standard25_thorton_colby_nomad_mule
-  - !append Vehicle.v_standard25_thorton_colby_nomad_ncu
-  - !append Vehicle.v_standard25_thorton_colby_nomad_player
-  - !append Vehicle.v_standard25_thorton_colby_nomad_player_missiles
+  - !append Vehicle.v_standard25_thorton_colby_nomad_ncu 
   - !append Vehicle.v_standard25_thorton_colby_nomad_prevention
   - !append Vehicle.v_standard25_thorton_colby_nomad_quest
   - !append Vehicle.v_standard25_thorton_colby_nomad_vulture
   - !append Vehicle.v_standard25_thorton_colby_nomad_wraith
-  - !append Vehicle.v_standard25_thorton_colby_pickup
-  - !append Vehicle.v_standard25_thorton_colby_pickup_02_player
+  - !append Vehicle.v_standard25_thorton_colby_pickup 
   - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz
   - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd
   - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd_no_hull
   - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_courier
-  - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_no_hull
-  - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_player
-  - !append Vehicle.v_standard25_thorton_colby_pickup_nomad__basic_01_mq304
-  - !append Vehicle.v_standard25_thorton_colby_pickup_player
+  - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_no_hull 
+  - !append Vehicle.v_standard25_thorton_colby_pickup_nomad__basic_01_mq304 
   - !append Vehicle.v_standard25_thorton_colby_pickup_poor
   - !append Vehicle.v_standard25_thorton_colby_pickup_quest
   - !append Vehicle.v_standard25_thorton_kurtz_no_hull_01_prevention
@@ -95,8 +90,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard25_thorton_merrimac_courier
   - !append Vehicle.v_standard25_thorton_merrimac_maxtac
   - !append Vehicle.v_standard25_thorton_merrimac_maxtac_prevention
-  - !append Vehicle.v_standard25_thorton_merrimac_pickup
-  - !append Vehicle.v_standard25_thorton_merrimac_player
+  - !append Vehicle.v_standard25_thorton_merrimac_pickup 
   - !append Vehicle.v_standard25_thorton_merrimac_police
   - !append Vehicle.v_standard25_thorton_merrimac_poor
   - !append Vehicle.v_standard25_thorton_merrimac_premium
@@ -105,8 +99,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_thorton_colby
   - !append Vehicle.v_standard2_thorton_colby_courier_expanded
   - !append Vehicle.v_standard2_thorton_colby_family
-  - !append Vehicle.v_standard2_thorton_colby_gt
-  - !append Vehicle.v_standard2_thorton_colby_player
+  - !append Vehicle.v_standard2_thorton_colby_gt 
   - !append Vehicle.v_standard2_thorton_colby_poor
   - !append Vehicle.v_standard2_thorton_colby_quest
   - !append Vehicle.v_standard2_thorton_colby_scavengers
@@ -116,8 +109,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_thorton_colby_valentinos_courier
   - !append Vehicle.v_standard2_thorton_colby_valentinos_mws
   - !append Vehicle.v_standard2_thorton_galena
-  - !append Vehicle.v_standard2_thorton_galena_bobas
-  - !append Vehicle.v_standard2_thorton_galena_bobas_player
+  - !append Vehicle.v_standard2_thorton_galena_bobas 
   - !append Vehicle.v_standard2_thorton_galena_courier
   - !append Vehicle.v_standard2_thorton_galena_courier_expanded
   - !append Vehicle.v_standard2_thorton_galena_gt
@@ -129,38 +121,31 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_thorton_galena_nomad
   - !append Vehicle.v_standard2_thorton_galena_nomad_courier
   - !append Vehicle.v_standard2_thorton_galena_nomad_courier_expanded
-  - !append Vehicle.v_standard2_thorton_galena_nomad_locust
-  - !append Vehicle.v_standard2_thorton_galena_nomad_player
-  - !append Vehicle.v_standard2_thorton_galena_nomad_player_missiles
+  - !append Vehicle.v_standard2_thorton_galena_nomad_locust 
   - !append Vehicle.v_standard2_thorton_galena_nomad_prevention
   - !append Vehicle.v_standard2_thorton_galena_nomad_prevention_2
   - !append Vehicle.v_standard2_thorton_galena_nomad_quest
   - !append Vehicle.v_standard2_thorton_galena_nomad_red_green
   - !append Vehicle.v_standard2_thorton_galena_nomad_scorpion
-  - !append Vehicle.v_standard2_thorton_galena_nomad_wraith
-  - !append Vehicle.v_standard2_thorton_galena_player
+  - !append Vehicle.v_standard2_thorton_galena_nomad_wraith 
   - !append Vehicle.v_standard2_thorton_galena_poor
   - !append Vehicle.v_standard2_thorton_galena_poor_dogtown
   - !append Vehicle.v_standard2_thorton_galena_quest
   - !append Vehicle.v_standard2_thorton_galena_voodoo_boys
-  - !append Vehicle.v_standard3_thorton_mackinaw
-  - !append Vehicle.v_standard3_thorton_mackinaw_02_player
+  - !append Vehicle.v_standard3_thorton_mackinaw 
   - !append Vehicle.v_standard3_thorton_mackinaw_cargo_courier
   - !append Vehicle.v_standard3_thorton_mackinaw_country
   - !append Vehicle.v_standard3_thorton_mackinaw_country_poor
   - !append Vehicle.v_standard3_thorton_mackinaw_country_premium
-  - !append Vehicle.v_standard3_thorton_mackinaw_courier
-  - !append Vehicle.v_standard3_thorton_mackinaw_ncu_player
+  - !append Vehicle.v_standard3_thorton_mackinaw_courier 
   - !append Vehicle.v_standard3_thorton_mackinaw_nomad
   - !append Vehicle.v_standard3_thorton_mackinaw_nomad_ncu
   - !append Vehicle.v_standard3_thorton_mackinaw_nomad_panam
-  - !append Vehicle.v_standard3_thorton_mackinaw_nomad_quest
-  - !append Vehicle.v_standard3_thorton_mackinaw_player
+  - !append Vehicle.v_standard3_thorton_mackinaw_nomad_quest 
   - !append Vehicle.v_standard3_thorton_mackinaw_poor
   - !append Vehicle.v_standard3_thorton_mackinaw_premium
   - !append Vehicle.v_standard3_thorton_mackinaw_quest
   - !append Vehicle.v_standard3_thorton_mackinaw_quest_bfr
   - !append Vehicle.v_standard3_thorton_mackinaw_sixth_street
   - !append Vehicle.v_standard3_thorton_mackinaw_valentinos
-  - !append Vehicle.v_utility4_thorton_mackinaw_bmf
-  - !append Vehicle.v_utility4_thorton_mackinaw_bmf_player
+  - !append Vehicle.v_utility4_thorton_mackinaw_bmf 

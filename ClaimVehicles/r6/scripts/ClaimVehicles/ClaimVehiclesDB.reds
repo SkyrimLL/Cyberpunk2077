@@ -32,20 +32,20 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   public persistent let vehiclesUnlockStateDB: array<ref<VehicleUnlockState>>;
 
   public func lookupVehicle(_id: TweakDBID) -> ref<VehicleProperties> {
-    // LogChannel(n"DEBUG",">>> ClaimVehicleDB: lookupVehicle()..." );
-    // LogChannel(n"DEBUG",">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id)); 
+    // this.showDebugMessage(">>> ClaimVehicleDB: lookupVehicle()..." );
+    // this.showDebugMessage(">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id)); 
 
     for thisVehicle in this.vehiclesDB { 
-      // LogChannel(n"DEBUG",">>>>>> ClaimVehicleDB: comparing :" + TDBID.ToStringDEBUG(thisVehicle.vehicleRecordID) + " and " + TDBID.ToStringDEBUG(_id));
+      // this.showDebugMessage(">>>>>> ClaimVehicleDB: comparing :" + TDBID.ToStringDEBUG(thisVehicle.vehicleRecordID) + " and " + TDBID.ToStringDEBUG(_id));
 
       if (Equals(thisVehicle.vehicleRecordID, _id)) {
-        // LogChannel(n"DEBUG",">>>>>> ClaimVehicleDB: entry found!"); 
+        // this.showDebugMessage(">>>>>> ClaimVehicleDB: entry found!"); 
 
         return thisVehicle;
       }  
     };
 
-    // LogChannel(n"DEBUG",">>> ClaimVehicleDB: entry not found (slot empty / unregistered item)"); 
+    // this.showDebugMessage(">>> ClaimVehicleDB: entry not found (slot empty / unregistered item)"); 
     return this.vehiclesDB[0];
   }
 
@@ -589,7 +589,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.q304_get_away_car","Vehicle.q304_get_away_car");
       this.updateVehicleDB(t"Vehicle.q304_get_away_car_stadium","Vehicle.q304_get_away_car_stadium"); 
       this.updateVehicleDB(t"Vehicle.q304_songbird_escape_002","Vehicle.q304_songbird_escape_002");
-      this.updateVehicleDB(t"Vehicle.q304_songbird_escape_player","Vehicle.q304_songbird_escape_player");
       this.updateVehicleDB(t"Vehicle.q304_songbird_escape_trap_bike","Vehicle.q304_songbird_escape_trap_bike");
       this.updateVehicleDB(t"Vehicle.q304_songbird_escape_trap_car_01","Vehicle.q304_songbird_escape_trap_car_01");
       this.updateVehicleDB(t"Vehicle.q304_songbird_escape_trap_car_02","Vehicle.q304_songbird_escape_trap_car_02");
@@ -747,12 +746,9 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw","Vehicle.v_sport1_herrera_outlaw");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw_courier","Vehicle.v_sport1_herrera_outlaw_courier");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw_heist","Vehicle.v_sport1_herrera_outlaw_heist");
-      this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw_heist_player","Vehicle.v_sport1_herrera_outlaw_heist_player");
-      this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw_player","Vehicle.v_sport1_herrera_outlaw_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_outlaw_quest","Vehicle.v_sport1_herrera_outlaw_quest");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide","Vehicle.v_sport1_herrera_riptide");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide_courier","Vehicle.v_sport1_herrera_riptide_courier");
-      this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide_player","Vehicle.v_sport1_herrera_riptide_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide_premium","Vehicle.v_sport1_herrera_riptide_premium");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide_terrier","Vehicle.v_sport1_herrera_riptide_terrier");
       this.updateVehicleDB(t"Vehicle.v_sport1_herrera_riptide_web","Vehicle.v_sport1_herrera_riptide_web");
@@ -763,8 +759,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_netrunner","Vehicle.v_sport1_quadra_sport_r7_netrunner");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_netrunner_01","Vehicle.v_sport1_quadra_sport_r7_netrunner_01");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_netrunner_02","Vehicle.v_sport1_quadra_sport_r7_netrunner_02");
-      this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_player","Vehicle.v_sport1_quadra_sport_r7_player");
-      this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_player_02","Vehicle.v_sport1_quadra_sport_r7_player_02");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_poor","Vehicle.v_sport1_quadra_sport_r7_poor");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_premium","Vehicle.v_sport1_quadra_sport_r7_premium");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_sport_r7_rocket","Vehicle.v_sport1_quadra_sport_r7_rocket");
@@ -772,39 +766,30 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo","Vehicle.v_sport1_quadra_turbo");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_courier","Vehicle.v_sport1_quadra_turbo_courier");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_courier_expanded","Vehicle.v_sport1_quadra_turbo_courier_expanded");
-      this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_player","Vehicle.v_sport1_quadra_turbo_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_poor","Vehicle.v_sport1_quadra_turbo_poor");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_quest","Vehicle.v_sport1_quadra_turbo_quest");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_r","Vehicle.v_sport1_quadra_turbo_r");
-      this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_r_player","Vehicle.v_sport1_quadra_turbo_r_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_tyger_claw","Vehicle.v_sport1_quadra_turbo_tyger_claw");
       this.updateVehicleDB(t"Vehicle.v_sport1_quadra_turbo_tyger_claw_courier","Vehicle.v_sport1_quadra_turbo_tyger_claw_courier");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_aerondight","Vehicle.v_sport1_rayfield_aerondight");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_aerondight_courier","Vehicle.v_sport1_rayfield_aerondight_courier");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_aerondight_kerry","Vehicle.v_sport1_rayfield_aerondight_kerry");
-      this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_aerondight_player","Vehicle.v_sport1_rayfield_aerondight_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_aerondight_quest","Vehicle.v_sport1_rayfield_aerondight_quest");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn","Vehicle.v_sport1_rayfield_caliburn");
-      this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn_02_player","Vehicle.v_sport1_rayfield_caliburn_02_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn_courier","Vehicle.v_sport1_rayfield_caliburn_courier");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn_murdered","Vehicle.v_sport1_rayfield_caliburn_murdered");
-      this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn_player","Vehicle.v_sport1_rayfield_caliburn_player");
       this.updateVehicleDB(t"Vehicle.v_sport1_rayfield_caliburn_quest","Vehicle.v_sport1_rayfield_caliburn_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion","Vehicle.v_sport2_mizutani_shion");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_courier_expanded","Vehicle.v_sport2_mizutani_shion_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad","Vehicle.v_sport2_mizutani_shion_nomad");
-      this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_02_player","Vehicle.v_sport2_mizutani_shion_nomad_02_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_buggy","Vehicle.v_sport2_mizutani_shion_nomad_buggy");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_buggy_quest","Vehicle.v_sport2_mizutani_shion_nomad_buggy_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_courier","Vehicle.v_sport2_mizutani_shion_nomad_courier");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_ncu","Vehicle.v_sport2_mizutani_shion_nomad_ncu");
-      this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_player","Vehicle.v_sport2_mizutani_shion_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_player_missiles","Vehicle.v_sport2_mizutani_shion_nomad_player_missiles");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_quest","Vehicle.v_sport2_mizutani_shion_nomad_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_samum","Vehicle.v_sport2_mizutani_shion_nomad_samum");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_technical","Vehicle.v_sport2_mizutani_shion_nomad_technical");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_nomad_wraith","Vehicle.v_sport2_mizutani_shion_nomad_wraith");
-      this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_player","Vehicle.v_sport2_mizutani_shion_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_poor","Vehicle.v_sport2_mizutani_shion_poor");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_quest","Vehicle.v_sport2_mizutani_shion_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_sport","Vehicle.v_sport2_mizutani_shion_sport");
@@ -813,28 +798,20 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_tyger","Vehicle.v_sport2_mizutani_shion_tyger");
       this.updateVehicleDB(t"Vehicle.v_sport2_mizutani_shion_tyger_courier","Vehicle.v_sport2_mizutani_shion_tyger_courier");
       this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo","Vehicle.v_sport2_porsche_911turbo");
-      this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo_player","Vehicle.v_sport2_porsche_911turbo_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo_quest","Vehicle.v_sport2_porsche_911turbo_quest"); 
       this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo_cabrio","Vehicle.v_sport2_porsche_911turbo_cabrio");
       this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo_cabrio_offer","Vehicle.v_sport2_porsche_911turbo_cabrio_offer");
-      this.updateVehicleDB(t"Vehicle.v_sport2_porsche_911turbo_cabrio_player","Vehicle.v_sport2_porsche_911turbo_cabrio_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66","Vehicle.v_sport2_quadra_type66");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_02_player","Vehicle.v_sport2_quadra_type66_02_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_avenger","Vehicle.v_sport2_quadra_type66_avenger");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_avenger_player","Vehicle.v_sport2_quadra_type66_avenger_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_bulleat","Vehicle.v_sport2_quadra_type66_bulleat");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_corier_client_car","Vehicle.v_sport2_quadra_type66_corier_client_car");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_courier_expanded","Vehicle.v_sport2_quadra_type66_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad","Vehicle.v_sport2_quadra_type66_nomad");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_courier","Vehicle.v_sport2_quadra_type66_nomad_courier");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_kb","Vehicle.v_sport2_quadra_type66_nomad_kb");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_ncu_player","Vehicle.v_sport2_quadra_type66_nomad_ncu_player");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_player","Vehicle.v_sport2_quadra_type66_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_player_03","Vehicle.v_sport2_quadra_type66_nomad_player_03");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_quest","Vehicle.v_sport2_quadra_type66_nomad_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_tribute","Vehicle.v_sport2_quadra_type66_nomad_tribute");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_nomad_wraith","Vehicle.v_sport2_quadra_type66_nomad_wraith");
-      this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_player","Vehicle.v_sport2_quadra_type66_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_poor","Vehicle.v_sport2_quadra_type66_poor");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_quest","Vehicle.v_sport2_quadra_type66_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_quadra_type66_rogue","Vehicle.v_sport2_quadra_type66_rogue");
@@ -845,22 +822,18 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_cabrio","Vehicle.v_sport2_villefort_alvarado_cabrio");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_courier","Vehicle.v_sport2_villefort_alvarado_courier");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_hearse","Vehicle.v_sport2_villefort_alvarado_hearse");
-      this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_hearse_player","Vehicle.v_sport2_villefort_alvarado_hearse_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_hearse_poor","Vehicle.v_sport2_villefort_alvarado_hearse_poor");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_hearse_premium","Vehicle.v_sport2_villefort_alvarado_hearse_premium");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_hearse_web","Vehicle.v_sport2_villefort_alvarado_hearse_web");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_mox","Vehicle.v_sport2_villefort_alvarado_mox");
-      this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_player","Vehicle.v_sport2_villefort_alvarado_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_poor","Vehicle.v_sport2_villefort_alvarado_poor");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_premium","Vehicle.v_sport2_villefort_alvarado_premium");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_quest","Vehicle.v_sport2_villefort_alvarado_quest");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_valentinos","Vehicle.v_sport2_villefort_alvarado_valentinos");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_valentinos_cabrio","Vehicle.v_sport2_villefort_alvarado_valentinos_cabrio");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_valentinos_courier","Vehicle.v_sport2_villefort_alvarado_valentinos_courier");
-      this.updateVehicleDB(t"Vehicle.v_sport2_villefort_alvarado_valentinos_player","Vehicle.v_sport2_villefort_alvarado_valentinos_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon","Vehicle.v_sport2_villefort_deleon");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon_courier","Vehicle.v_sport2_villefort_deleon_courier");
-      this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon_player","Vehicle.v_sport2_villefort_deleon_player");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon_poor","Vehicle.v_sport2_villefort_deleon_poor");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon_sport","Vehicle.v_sport2_villefort_deleon_sport");
       this.updateVehicleDB(t"Vehicle.v_sport2_villefort_deleon_vindicator","Vehicle.v_sport2_villefort_deleon_vindicator");
@@ -870,37 +843,23 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_courier","Vehicle.v_sportbike1_yaiba_kusanagi_courier");
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_courier_expanded","Vehicle.v_sportbike1_yaiba_kusanagi_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_mox","Vehicle.v_sportbike1_yaiba_kusanagi_mox");
-      this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_player","Vehicle.v_sportbike1_yaiba_kusanagi_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_player_02","Vehicle.v_sportbike1_yaiba_kusanagi_player_02");
-      this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_player_03","Vehicle.v_sportbike1_yaiba_kusanagi_player_03");
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_quest","Vehicle.v_sportbike1_yaiba_kusanagi_quest");
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_tyger","Vehicle.v_sportbike1_yaiba_kusanagi_tyger");
       this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_tyger_courier","Vehicle.v_sportbike1_yaiba_kusanagi_tyger_courier");
-      this.updateVehicleDB(t"Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player","Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch","Vehicle.v_sportbike2_arch");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_courier","Vehicle.v_sportbike2_arch_courier");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_jackie","Vehicle.v_sportbike2_arch_jackie");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_jackie_player","Vehicle.v_sportbike2_arch_jackie_player");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_jackie_tuned","Vehicle.v_sportbike2_arch_jackie_tuned");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_jackie_tuned_player","Vehicle.v_sportbike2_arch_jackie_tuned_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_linas_player","Vehicle.v_sportbike2_arch_linas_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_player","Vehicle.v_sportbike2_arch_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_player_02","Vehicle.v_sportbike2_arch_player_02");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_player_03","Vehicle.v_sportbike2_arch_player_03");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_quest","Vehicle.v_sportbike2_arch_quest");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_sport","Vehicle.v_sportbike2_arch_sport");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_tyger","Vehicle.v_sportbike2_arch_tyger");
       this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_tyger_courier","Vehicle.v_sportbike2_arch_tyger_courier");
-      this.updateVehicleDB(t"Vehicle.v_sportbike2_arch_tyger_player","Vehicle.v_sportbike2_arch_tyger_player");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo","Vehicle.v_sportbike3_brennan_apollo");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_basic_01_prevention","Vehicle.v_sportbike3_brennan_apollo_basic_01_prevention");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_courier","Vehicle.v_sportbike3_brennan_apollo_courier");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_courier_expanded","Vehicle.v_sportbike3_brennan_apollo_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_kurtz","Vehicle.v_sportbike3_brennan_apollo_kurtz");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_nomad","Vehicle.v_sportbike3_brennan_apollo_nomad");
-      this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_nomad_player","Vehicle.v_sportbike3_brennan_apollo_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_player","Vehicle.v_sportbike3_brennan_apollo_player");
-      this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_player_02","Vehicle.v_sportbike3_brennan_apollo_player_02");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_police","Vehicle.v_sportbike3_brennan_apollo_police");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_quest","Vehicle.v_sportbike3_brennan_apollo_quest");
       this.updateVehicleDB(t"Vehicle.v_sportbike3_brennan_apollo_scorpion","Vehicle.v_sportbike3_brennan_apollo_scorpion");
@@ -911,7 +870,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron","Vehicle.v_standard25_mahir_supron");
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_courier","Vehicle.v_standard25_mahir_supron_courier");
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_courier_expanded","Vehicle.v_standard25_mahir_supron_courier_expanded");
-      this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_player","Vehicle.v_standard25_mahir_supron_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_poor","Vehicle.v_standard25_mahir_supron_poor");
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_poor_dogtown","Vehicle.v_standard25_mahir_supron_poor_dogtown");
       this.updateVehicleDB(t"Vehicle.v_standard25_mahir_supron_quest","Vehicle.v_standard25_mahir_supron_quest");
@@ -923,22 +881,17 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_courier_expanded","Vehicle.v_standard25_thorton_colby_nomad_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_mule","Vehicle.v_standard25_thorton_colby_nomad_mule");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_ncu","Vehicle.v_standard25_thorton_colby_nomad_ncu");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_player","Vehicle.v_standard25_thorton_colby_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_player_missiles","Vehicle.v_standard25_thorton_colby_nomad_player_missiles");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_prevention","Vehicle.v_standard25_thorton_colby_nomad_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_quest","Vehicle.v_standard25_thorton_colby_nomad_quest");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_vulture","Vehicle.v_standard25_thorton_colby_nomad_vulture");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_nomad_wraith","Vehicle.v_standard25_thorton_colby_nomad_wraith");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup","Vehicle.v_standard25_thorton_colby_pickup");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_02_player","Vehicle.v_standard25_thorton_colby_pickup_02_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz","Vehicle.v_standard25_thorton_colby_pickup_kurtz");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd","Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd_no_hull","Vehicle.v_standard25_thorton_colby_pickup_kurtz_cd_no_hull");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz_courier","Vehicle.v_standard25_thorton_colby_pickup_kurtz_courier");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz_no_hull","Vehicle.v_standard25_thorton_colby_pickup_kurtz_no_hull");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_kurtz_player","Vehicle.v_standard25_thorton_colby_pickup_kurtz_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_nomad__basic_01_mq304","Vehicle.v_standard25_thorton_colby_pickup_nomad__basic_01_mq304");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_player","Vehicle.v_standard25_thorton_colby_pickup_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_poor","Vehicle.v_standard25_thorton_colby_pickup_poor");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_colby_pickup_quest","Vehicle.v_standard25_thorton_colby_pickup_quest");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_kurtz_no_hull_01_prevention","Vehicle.v_standard25_thorton_kurtz_no_hull_01_prevention");
@@ -948,7 +901,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_maxtac","Vehicle.v_standard25_thorton_merrimac_maxtac");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_maxtac_prevention","Vehicle.v_standard25_thorton_merrimac_maxtac_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_pickup","Vehicle.v_standard25_thorton_merrimac_pickup");
-      this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_player","Vehicle.v_standard25_thorton_merrimac_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_police","Vehicle.v_standard25_thorton_merrimac_police");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_poor","Vehicle.v_standard25_thorton_merrimac_poor");
       this.updateVehicleDB(t"Vehicle.v_standard25_thorton_merrimac_premium","Vehicle.v_standard25_thorton_merrimac_premium");
@@ -963,7 +915,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_kangtao","Vehicle.v_standard25_villefort_columbus_kangtao");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_kangtao_courier","Vehicle.v_standard25_villefort_columbus_kangtao_courier");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_locked_doors","Vehicle.v_standard25_villefort_columbus_locked_doors");
-      this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_player","Vehicle.v_standard25_villefort_columbus_player");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_poor","Vehicle.v_standard25_villefort_columbus_poor");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_quest","Vehicle.v_standard25_villefort_columbus_quest");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_scavengers","Vehicle.v_standard25_villefort_columbus_scavengers");
@@ -973,7 +924,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_songbird","Vehicle.v_standard25_villefort_columbus_songbird");
       this.updateVehicleDB(t"Vehicle.v_standard25_villefort_columbus_tyger","Vehicle.v_standard25_villefort_columbus_tyger");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_bandit","Vehicle.v_standard2_archer_bandit");
-      this.updateVehicleDB(t"Vehicle.v_standard2_archer_bandit_player","Vehicle.v_standard2_archer_bandit_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_bandit_quest","Vehicle.v_standard2_archer_bandit_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella","Vehicle.v_standard2_archer_hella");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_combat_cab","Vehicle.v_standard2_archer_hella_combat_cab");
@@ -981,7 +931,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_getto","Vehicle.v_standard2_archer_hella_getto");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_kurtz","Vehicle.v_standard2_archer_hella_kurtz");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_ncu","Vehicle.v_standard2_archer_hella_ncu");
-      this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_player","Vehicle.v_standard2_archer_hella_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_police","Vehicle.v_standard2_archer_hella_police");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_police_mws","Vehicle.v_standard2_archer_hella_police_mws");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_hella_police_prevention","Vehicle.v_standard2_archer_hella_police_prevention");
@@ -1005,12 +954,9 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_mox","Vehicle.v_standard2_archer_quartz_mox");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad","Vehicle.v_standard2_archer_quartz_nomad");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_courier","Vehicle.v_standard2_archer_quartz_nomad_courier");
-      this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_player","Vehicle.v_standard2_archer_quartz_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_player_02","Vehicle.v_standard2_archer_quartz_nomad_player_02");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_prevention","Vehicle.v_standard2_archer_quartz_nomad_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_quest","Vehicle.v_standard2_archer_quartz_nomad_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_nomad_wraith","Vehicle.v_standard2_archer_quartz_nomad_wraith");
-      this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_player","Vehicle.v_standard2_archer_quartz_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_poor","Vehicle.v_standard2_archer_quartz_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_quest","Vehicle.v_standard2_archer_quartz_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_archer_quartz_tyger","Vehicle.v_standard2_archer_quartz_tyger");
@@ -1027,7 +973,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_mafia_courier","Vehicle.v_standard2_chevalier_thrax_mafia_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_mq304","Vehicle.v_standard2_chevalier_thrax_mq304");
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_ncu","Vehicle.v_standard2_chevalier_thrax_ncu");
-      this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_player","Vehicle.v_standard2_chevalier_thrax_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_poor","Vehicle.v_standard2_chevalier_thrax_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_premium","Vehicle.v_standard2_chevalier_thrax_premium");
       this.updateVehicleDB(t"Vehicle.v_standard2_chevalier_thrax_premium_quest","Vehicle.v_standard2_chevalier_thrax_premium_quest");
@@ -1042,14 +987,12 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_courier","Vehicle.v_standard2_makigai_maimai_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_courier_expanded","Vehicle.v_standard2_makigai_maimai_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_gt","Vehicle.v_standard2_makigai_maimai_gt");
-      this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_player","Vehicle.v_standard2_makigai_maimai_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_poor","Vehicle.v_standard2_makigai_maimai_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_poor_dogtown","Vehicle.v_standard2_makigai_maimai_poor_dogtown");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_premium","Vehicle.v_standard2_makigai_maimai_premium");
       this.updateVehicleDB(t"Vehicle.v_standard2_makigai_maimai_quest","Vehicle.v_standard2_makigai_maimai_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki","Vehicle.v_standard2_mizutani_hozuki");
       this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki_courier","Vehicle.v_standard2_mizutani_hozuki_courier");
-      this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki_player","Vehicle.v_standard2_mizutani_hozuki_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki_poor","Vehicle.v_standard2_mizutani_hozuki_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki_poor_dogtown","Vehicle.v_standard2_mizutani_hozuki_poor_dogtown");
       this.updateVehicleDB(t"Vehicle.v_standard2_mizutani_hozuki_premium","Vehicle.v_standard2_mizutani_hozuki_premium");
@@ -1060,7 +1003,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_courier_expanded","Vehicle.v_standard2_thorton_colby_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_family","Vehicle.v_standard2_thorton_colby_family");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_gt","Vehicle.v_standard2_thorton_colby_gt");
-      this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_player","Vehicle.v_standard2_thorton_colby_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_poor","Vehicle.v_standard2_thorton_colby_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_quest","Vehicle.v_standard2_thorton_colby_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_scavengers","Vehicle.v_standard2_thorton_colby_scavengers");
@@ -1071,7 +1013,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_colby_valentinos_mws","Vehicle.v_standard2_thorton_colby_valentinos_mws");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena","Vehicle.v_standard2_thorton_galena");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_bobas","Vehicle.v_standard2_thorton_galena_bobas");
-      this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_bobas_player","Vehicle.v_standard2_thorton_galena_bobas_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_courier","Vehicle.v_standard2_thorton_galena_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_courier_expanded","Vehicle.v_standard2_thorton_galena_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_gt","Vehicle.v_standard2_thorton_galena_gt");
@@ -1084,15 +1025,12 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_courier","Vehicle.v_standard2_thorton_galena_nomad_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_courier_expanded","Vehicle.v_standard2_thorton_galena_nomad_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_locust","Vehicle.v_standard2_thorton_galena_nomad_locust");
-      this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_player","Vehicle.v_standard2_thorton_galena_nomad_player");
-      this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_player_missiles","Vehicle.v_standard2_thorton_galena_nomad_player_missiles");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_prevention","Vehicle.v_standard2_thorton_galena_nomad_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_prevention_2","Vehicle.v_standard2_thorton_galena_nomad_prevention_2");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_quest","Vehicle.v_standard2_thorton_galena_nomad_quest");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_red_green","Vehicle.v_standard2_thorton_galena_nomad_red_green");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_scorpion","Vehicle.v_standard2_thorton_galena_nomad_scorpion");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_nomad_wraith","Vehicle.v_standard2_thorton_galena_nomad_wraith");
-      this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_player","Vehicle.v_standard2_thorton_galena_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_poor","Vehicle.v_standard2_thorton_galena_poor");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_poor_dogtown","Vehicle.v_standard2_thorton_galena_poor_dogtown");
       this.updateVehicleDB(t"Vehicle.v_standard2_thorton_galena_quest","Vehicle.v_standard2_thorton_galena_quest");
@@ -1102,11 +1040,9 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_courier","Vehicle.v_standard2_villefort_cortes_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_courier_expanded","Vehicle.v_standard2_villefort_cortes_courier_expanded");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_delamain","Vehicle.v_standard2_villefort_cortes_delamain");
-      this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_delamain_player","Vehicle.v_standard2_villefort_cortes_delamain_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_kangtao","Vehicle.v_standard2_villefort_cortes_kangtao");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_kangtao_courier","Vehicle.v_standard2_villefort_cortes_kangtao_courier");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_mafia_courier","Vehicle.v_standard2_villefort_cortes_mafia_courier");
-      this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_player","Vehicle.v_standard2_villefort_cortes_player");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_police","Vehicle.v_standard2_villefort_cortes_police");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_police_border_patrol","Vehicle.v_standard2_villefort_cortes_police_border_patrol");
       this.updateVehicleDB(t"Vehicle.v_standard2_villefort_cortes_police_border_patrol_prevention","Vehicle.v_standard2_villefort_cortes_police_border_patrol_prevention");
@@ -1130,7 +1066,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention","Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention_2","Vehicle.v_standard3_chevalier_emperor_militech_wasteland_prevention_2");
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_ncu","Vehicle.v_standard3_chevalier_emperor_ncu");
-      this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_player","Vehicle.v_standard3_chevalier_emperor_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_police","Vehicle.v_standard3_chevalier_emperor_police");
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_police_mws","Vehicle.v_standard3_chevalier_emperor_police_mws");
       this.updateVehicleDB(t"Vehicle.v_standard3_chevalier_emperor_police_prevention","Vehicle.v_standard3_chevalier_emperor_police_prevention");
@@ -1140,35 +1075,28 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_standard3_mahir_supron_kurtz","Vehicle.v_standard3_mahir_supron_kurtz");
       this.updateVehicleDB(t"Vehicle.v_standard3_mahir_supron_kurtz_basic_mq304","Vehicle.v_standard3_mahir_supron_kurtz_basic_mq304");
       this.updateVehicleDB(t"Vehicle.v_standard3_mahir_supron_kurtz_overlander","Vehicle.v_standard3_mahir_supron_kurtz_overlander");
-      this.updateVehicleDB(t"Vehicle.v_standard3_mahir_supron_kurtz_player","Vehicle.v_standard3_mahir_supron_kurtz_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_mahir_supron_kurtz_prevention","Vehicle.v_standard3_mahir_supron_kurtz_prevention");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi","Vehicle.v_standard3_makigai_tanishi");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_cargo_courier","Vehicle.v_standard3_makigai_tanishi_cargo_courier");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_courier","Vehicle.v_standard3_makigai_tanishi_courier");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_hfs","Vehicle.v_standard3_makigai_tanishi_hfs");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_kuma","Vehicle.v_standard3_makigai_tanishi_kuma");
-      this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_player","Vehicle.v_standard3_makigai_tanishi_player");
-      this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_player_mr_hands","Vehicle.v_standard3_makigai_tanishi_player_mr_hands");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_poor","Vehicle.v_standard3_makigai_tanishi_poor");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_poor_dogtown","Vehicle.v_standard3_makigai_tanishi_poor_dogtown");
       this.updateVehicleDB(t"Vehicle.v_standard3_makigai_tanishi_premium","Vehicle.v_standard3_makigai_tanishi_premium");
       this.updateVehicleDB(t"Vehicle.v_standard3_militech_hellhound","Vehicle.v_standard3_militech_hellhound");
       this.updateVehicleDB(t"Vehicle.v_standard3_militech_hellhound_courier","Vehicle.v_standard3_militech_hellhound_courier");
-      this.updateVehicleDB(t"Vehicle.v_standard3_militech_hellhound_player","Vehicle.v_standard3_militech_hellhound_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_militech_hellhound_police","Vehicle.v_standard3_militech_hellhound_police");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw","Vehicle.v_standard3_thorton_mackinaw");
-      this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_02_player","Vehicle.v_standard3_thorton_mackinaw_02_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_cargo_courier","Vehicle.v_standard3_thorton_mackinaw_cargo_courier");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_country","Vehicle.v_standard3_thorton_mackinaw_country");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_country_poor","Vehicle.v_standard3_thorton_mackinaw_country_poor");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_country_premium","Vehicle.v_standard3_thorton_mackinaw_country_premium");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_courier","Vehicle.v_standard3_thorton_mackinaw_courier");
-      this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_ncu_player","Vehicle.v_standard3_thorton_mackinaw_ncu_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_nomad","Vehicle.v_standard3_thorton_mackinaw_nomad");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_nomad_ncu","Vehicle.v_standard3_thorton_mackinaw_nomad_ncu");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_nomad_panam","Vehicle.v_standard3_thorton_mackinaw_nomad_panam");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_nomad_quest","Vehicle.v_standard3_thorton_mackinaw_nomad_quest");
-      this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_player","Vehicle.v_standard3_thorton_mackinaw_player");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_poor","Vehicle.v_standard3_thorton_mackinaw_poor");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_premium","Vehicle.v_standard3_thorton_mackinaw_premium");
       this.updateVehicleDB(t"Vehicle.v_standard3_thorton_mackinaw_quest","Vehicle.v_standard3_thorton_mackinaw_quest");
@@ -1236,7 +1164,6 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.v_utility4_militech_behemoth_police","Vehicle.v_utility4_militech_behemoth_police");
       this.updateVehicleDB(t"Vehicle.v_utility4_militech_behemoth_quest","Vehicle.v_utility4_militech_behemoth_quest");
       this.updateVehicleDB(t"Vehicle.v_utility4_thorton_mackinaw_bmf","Vehicle.v_utility4_thorton_mackinaw_bmf");
-      this.updateVehicleDB(t"Vehicle.v_utility4_thorton_mackinaw_bmf_player","Vehicle.v_utility4_thorton_mackinaw_bmf_player");
       this.updateVehicleDB(t"Vehicle.v_villefort_columbus_courier_intro_chase ","Vehicle.v_villefort_columbus_courier_intro_chase ");
       this.updateVehicleDB(t"Vehicle.Villefort","Vehicle.Villefort");
       this.updateVehicleDB(t"Vehicle.villefort_alvarado_offer","Vehicle.villefort_alvarado_offer");
@@ -1256,6 +1183,9 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
       this.updateVehicleDB(t"Vehicle.Zeya","Vehicle.Zeya");
   }
 
+  private func showDebugMessage(debugMessage: String) {
+    LogChannel(n"DEBUG", debugMessage ); 
+  }
 } 
 
 /* 

@@ -268,12 +268,10 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_bubble_demo_trigger
   - !append Vehicle.v_golf_demo_trigger
   - !append Vehicle.v_lego_demo_trigger
-  - !append Vehicle.v_sport2_porsche_911turbo
-  - !append Vehicle.v_sport2_porsche_911turbo_player
+  - !append Vehicle.v_sport2_porsche_911turbo 
   - !append Vehicle.v_sport2_porsche_911turbo_quest
   - !append Vehicle.v_sport2_porsche_911turbo_cabrio
-  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_offer
-  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_player
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_offer 
   - !append Vehicle.v_trailer_supron
   - !append Vehicle.v_villefort_columbus_courier_intro_chase  
   - !append Vehicle.vm_001_motorcycle

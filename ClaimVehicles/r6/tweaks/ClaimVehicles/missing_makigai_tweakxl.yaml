@@ -14,8 +14,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_makigai_maimai
   - !append Vehicle.v_standard2_makigai_maimai_courier
   - !append Vehicle.v_standard2_makigai_maimai_courier_expanded
-  - !append Vehicle.v_standard2_makigai_maimai_gt
-  - !append Vehicle.v_standard2_makigai_maimai_player
+  - !append Vehicle.v_standard2_makigai_maimai_gt 
   - !append Vehicle.v_standard2_makigai_maimai_poor
   - !append Vehicle.v_standard2_makigai_maimai_poor_dogtown
   - !append Vehicle.v_standard2_makigai_maimai_premium
@@ -24,9 +23,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard3_makigai_tanishi_cargo_courier
   - !append Vehicle.v_standard3_makigai_tanishi_courier
   - !append Vehicle.v_standard3_makigai_tanishi_hfs
-  - !append Vehicle.v_standard3_makigai_tanishi_kuma
-  - !append Vehicle.v_standard3_makigai_tanishi_player
-  - !append Vehicle.v_standard3_makigai_tanishi_player_mr_hands
+  - !append Vehicle.v_standard3_makigai_tanishi_kuma 
   - !append Vehicle.v_standard3_makigai_tanishi_poor
   - !append Vehicle.v_standard3_makigai_tanishi_poor_dogtown
   - !append Vehicle.v_standard3_makigai_tanishi_premium

@@ -11,11 +11,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_animal
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_courier
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_courier_expanded
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_mox
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player_02
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player_03
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_mox 
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_quest
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger_courier
-  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger_courier 

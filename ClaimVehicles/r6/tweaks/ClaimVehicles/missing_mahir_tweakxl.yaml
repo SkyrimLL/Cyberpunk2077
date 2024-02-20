@@ -19,8 +19,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard25_mahir_mox
   - !append Vehicle.v_standard25_mahir_supron
   - !append Vehicle.v_standard25_mahir_supron_courier
-  - !append Vehicle.v_standard25_mahir_supron_courier_expanded
-  - !append Vehicle.v_standard25_mahir_supron_player
+  - !append Vehicle.v_standard25_mahir_supron_courier_expanded 
   - !append Vehicle.v_standard25_mahir_supron_poor
   - !append Vehicle.v_standard25_mahir_supron_poor_dogtown
   - !append Vehicle.v_standard25_mahir_supron_quest
@@ -29,6 +28,5 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard25_mahir_voodoo_boys_courier_expanded
   - !append Vehicle.v_standard3_mahir_supron_kurtz
   - !append Vehicle.v_standard3_mahir_supron_kurtz_basic_mq304
-  - !append Vehicle.v_standard3_mahir_supron_kurtz_overlander
-  - !append Vehicle.v_standard3_mahir_supron_kurtz_player
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_overlander 
   - !append Vehicle.v_standard3_mahir_supron_kurtz_prevention

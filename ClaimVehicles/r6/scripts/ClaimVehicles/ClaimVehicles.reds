@@ -369,7 +369,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"ep1_standalone") >= 1;
  
     if (this.debugON) {
-      // LogChannel(n"DEBUG", ":: tryClaimVehicle - isVictorHUDInstalled: " + isVictorHUDInstalled);
+      this.showDebugMessage(":: tryClaimVehicle - isVictorHUDInstalled: " + isVictorHUDInstalled);
     }
 
     switch vehClassName {
@@ -874,5 +874,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     }
   }
 
+  private func showDebugMessage(debugMessage: String) {
+    LogChannel(n"DEBUG", debugMessage ); 
+  }
 }
 

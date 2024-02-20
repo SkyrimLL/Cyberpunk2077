@@ -11,13 +11,10 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q000_nomad_v_sport1_herrera_outlaw_quest
   - !append Vehicle.v_sport1_herrera_outlaw
   - !append Vehicle.v_sport1_herrera_outlaw_courier
-  - !append Vehicle.v_sport1_herrera_outlaw_heist
-  - !append Vehicle.v_sport1_herrera_outlaw_heist_player
-  - !append Vehicle.v_sport1_herrera_outlaw_player
+  - !append Vehicle.v_sport1_herrera_outlaw_heist 
   - !append Vehicle.v_sport1_herrera_outlaw_quest
   - !append Vehicle.v_sport1_herrera_riptide
-  - !append Vehicle.v_sport1_herrera_riptide_courier
-  - !append Vehicle.v_sport1_herrera_riptide_player
+  - !append Vehicle.v_sport1_herrera_riptide_courier 
   - !append Vehicle.v_sport1_herrera_riptide_premium
   - !append Vehicle.v_sport1_herrera_riptide_terrier
   - !append Vehicle.v_sport1_herrera_riptide_web

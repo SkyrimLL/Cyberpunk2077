@@ -17,10 +17,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sportbike3_brennan_apollo_courier
   - !append Vehicle.v_sportbike3_brennan_apollo_courier_expanded
   - !append Vehicle.v_sportbike3_brennan_apollo_kurtz
-  - !append Vehicle.v_sportbike3_brennan_apollo_nomad
-  - !append Vehicle.v_sportbike3_brennan_apollo_nomad_player
-  - !append Vehicle.v_sportbike3_brennan_apollo_player
-  - !append Vehicle.v_sportbike3_brennan_apollo_player_02
+  - !append Vehicle.v_sportbike3_brennan_apollo_nomad 
   - !append Vehicle.v_sportbike3_brennan_apollo_police
   - !append Vehicle.v_sportbike3_brennan_apollo_quest
   - !append Vehicle.v_sportbike3_brennan_apollo_scorpion

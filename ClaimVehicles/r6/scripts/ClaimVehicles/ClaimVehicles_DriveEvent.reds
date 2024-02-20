@@ -45,8 +45,8 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
         let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(_playerPuppet.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
         if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
-          // LogChannel(n"DEBUG", ":: tryClaimVehicle - isVictorHUDInstalled: " + isVictorHUDInstalled);
-          // LogChannel(n"DEBUG", ":: tryClaimVehicle - isPhantomLiberyStandalone: " + isPhantomLiberyStandalone);
+          _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: tryClaimVehicle - isVictorHUDInstalled: " + isVictorHUDInstalled);
+          _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: tryClaimVehicle - isPhantomLiberyStandalone: " + isPhantomLiberyStandalone);
         }
 
         let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(_playerPuppet.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
