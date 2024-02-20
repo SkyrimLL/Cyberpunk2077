@@ -5,6 +5,8 @@ module DiverseDeathScreens.OnDeathEvent
   protected cb func OnDeath(evt: ref<gameDeathEvent>) -> Bool {
     // LogChannel(n"DEBUG", ">>> DiverseDeathScreens: Santa Muerte not available - Change anim for regular death" );  
 
+    // GameObject.PlaySoundEvent(this, n"ONO_V_LongPain");
+
     let DeathSequenceController: ref<FullScreenDeathSequenceController> = new FullScreenDeathSequenceController();
     DeathSequenceController.init(this.GetGame());
 
@@ -16,6 +18,8 @@ module DiverseDeathScreens.OnDeathEvent
   protected cb func OnDeath(evt: ref<gameDeathEvent>) -> Bool {
     // LogChannel(n"DEBUG", ">>> DiverseDeathScreens: Santa Muerte detected! - Change anim for resurrection" );  
 
+    // GameObject.PlaySoundEvent(this, n"ONO_V_LongPain");
+
     let DeathSequenceController: ref<FullScreenDeathSequenceController> = new FullScreenDeathSequenceController();
     DeathSequenceController.init(this.GetGame());
 
@@ -26,3 +30,16 @@ module DiverseDeathScreens.OnDeathEvent
     // GameInstance.GetAutoSaveSystem(this.GetGame()).InvalidateAutoSaveRequests();
  
   }
+
+  
+@wrapMethod(ResurrectEvents)
+protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void 
+{
+    let inkSystem = GameInstance.GetInkSystem();
+    let hudRoot = inkSystem.GetLayer(n"inkHUDLayer").GetVirtualWindow();
+    hudRoot.SetOpacity(1.0);
+ 
+    wrappedMethod( stateContext, scriptInterface ); 
+}
+
+ 

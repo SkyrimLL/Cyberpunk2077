@@ -37,6 +37,16 @@
   let chanceLongAnimation: Int32 = 10;
 
   @runtimeProperty("ModSettings.mod", "DIVERSE DEATH SCREENS")
+  @runtimeProperty("ModSettings.category", "Options")
+  @runtimeProperty("ModSettings.category.order", "5")
+  @runtimeProperty("ModSettings.displayName", "Death Screens Opacity")
+  @runtimeProperty("ModSettings.description", "Set to 0 for fully transparent and 100 for fully opaque.")
+  @runtimeProperty("ModSettings.step", "5")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "100")
+  let deathScreensOpacity: Int32 = 50;
+
+  @runtimeProperty("ModSettings.mod", "DIVERSE DEATH SCREENS")
   @runtimeProperty("ModSettings.category", "Testing only")
   @runtimeProperty("ModSettings.category.order", "9")
   @runtimeProperty("ModSettings.displayName", "Display Test Messages")

@@ -22,9 +22,7 @@ public class FullScreenDeathSequenceController extends inkHUDGameController {
 1st argument: expected wref<inkCompoundWidget>, given ref<FullScreenDeathSequenceController>
 
 */
-import Codeware.UI.*
-
-
+import Codeware.UI.* 
 
 public class FullScreenDeathSequenceController  {  
   public let config: ref<DiverseDeathScreensConfig>;
@@ -35,6 +33,7 @@ public class FullScreenDeathSequenceController  {
   public let randomizeDeathScreensON: Bool ;  
   public let enableLongAnimationsON: Bool ;  
   public let chanceLongAnimation: Int32 ;
+  public let deathScreensOpacity: Int32 ;
 
   public let debugON: Bool;
   public let warningsON: Bool;   
@@ -80,6 +79,7 @@ public class FullScreenDeathSequenceController  {
     this.randomizeDeathScreensON = this.config.randomizeDeathScreensON;
     this.enableLongAnimationsON = this.config.enableLongAnimationsON;
     this.chanceLongAnimation = this.config.chanceLongAnimation;
+    this.deathScreensOpacity = this.config.deathScreensOpacity;
 
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
@@ -101,7 +101,8 @@ public class FullScreenDeathSequenceController  {
   }
 
   public  func PlayVideoSequence() -> Void {
-    if (this.randomizeDeathScreensON) {
+    // Only allow random animations when Relic is installed.
+    if (this.randomizeDeathScreensON) && (this.isRelicInstalled()) {
       // Comment out once callbacks are working properly for a sequence
    
       // this.Fade(0.00, 1.00, n"OnFadeInEnd"); 
@@ -166,7 +167,7 @@ public class FullScreenDeathSequenceController  {
         }            
       } 
     } else {
-
+        // If relic is not installed, only allow two fixed animations - one before the Heist and one after (if randomization is turned off)
         if (this.isRelicInstalled()) {
           this.m_video_sequence = 1;
           this.PlayVideoFile(r"base\\movies\\fullscreen\\q101\\broken-ui.bk2", 0.7, false, n"None");
@@ -194,6 +195,7 @@ public class FullScreenDeathSequenceController  {
     // LogChannel(n"DEBUG", ">>> FullScreenDeathSequenceController: PlayVideoFile " );   
 
     this.m_videoWidget.Stop();
+    this.m_videoWrapper.SetOpacity(opacity);
     this.m_videoWidget.SetOpacity(opacity);
     this.m_videoWidget.SetVideoPath(videoPath);
     this.m_videoWidget.SetLoop(looped);
@@ -234,9 +236,8 @@ public class FullScreenDeathSequenceController  {
       // let video = new FullScreenDeathSequenceController();
 
       // LogChannel(n"DEBUG", ">>> FullScreenDeathSequenceController: init " );  
-
+      let videoOpacity: Float = Cast<Float>(this.deathScreensOpacity) / 100.0;
       let inkSystem = GameInstance.GetInkSystem();
-
       let layers = inkSystem.GetLayers();
 
       // for layer in layers {
@@ -289,7 +290,7 @@ public class FullScreenDeathSequenceController  {
       videoWidget.Reparent(videoWrapper);  
 
       // ---
-      // hudRoot.SetOpacity(0.5);
+      hudRoot.SetOpacity(videoOpacity);
       videoWidget.SetVisible(true);
       
       videoWrapper.SetOpacity(0.9);
