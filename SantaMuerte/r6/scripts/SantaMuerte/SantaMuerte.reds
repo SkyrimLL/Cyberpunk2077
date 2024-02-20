@@ -8,23 +8,33 @@ For redscript mod developers
 
 :: New classes
 public class SantaMuerteTracking 
-*/
+*/  
 
 public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>; 
 
   public persistent let resurrectCount:  Int32;
 
+  public let newDeathAnimationON: Bool; 
+  public let randomDeathAnimationON: Bool; 
+  public let santaMuerteRelicDifficulty: santaMuerteRelicMode;
+  public let santaMuerteLoreDifficulty: santaMuerteRelicMode;
+  public let santaMuerteLoreDifficultyON: Bool; 
   public let resurrectCountMax:  Int32;
   public let scaleResurrectionsModifier: Float;
   public let capResurrectionsOverride: Int32;
   public let deathLandingProtectionON: Bool;
   public let skipTimeON: Bool;
   public let maxSkippedTime: Float;
+  public let blackoutON: Bool;
+  public let teleportON: Bool;
+  public let blackoutTeleportChance: Int32;
   public let blackoutSafeTeleportON: Bool;  
   public let blackoutSafeTeleportChance: Int32;
   public let blackoutDetourTeleportON: Bool;  
   public let blackoutDetourTeleportChance: Int32;
+  public let santaMuerteWidgetON: Bool;
+  public let informativeHUDCOmpatibilityON: Bool;
 
   public let config: ref<SantaMuerteConfig>;
 
@@ -67,27 +77,105 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // Push into config
     this.config.resurrectCount = this.resurrectCount;
     this.config.resurrectCountMax = this.resurrectCountMax;
+    this.config.santaMuerteRelicDifficulty = this.santaMuerteRelicDifficulty;
 
     // Pull from config
+    this.newDeathAnimationON = this.config.newDeathAnimationON;
+    this.randomDeathAnimationON = this.config.randomDeathAnimationON; 
+    this.santaMuerteRelicDifficulty = this.config.santaMuerteRelicDifficulty;
+    this.santaMuerteLoreDifficultyON = this.config.santaMuerteLoreDifficultyON;
     this.scaleResurrectionsModifier = this.config.scaleResurrectionsModifier;
     this.capResurrectionsOverride = this.config.capResurrectionsOverride;
     this.unlimitedResurrectON = this.config.unlimitedResurrectON;
     this.deathLandingProtectionON = this.config.deathLandingProtectionON;
     this.skipTimeON = this.config.skipTimeON;
+    this.blackoutON = this.config.blackoutON;
+    this.teleportON = this.config.teleportON;
     this.maxSkippedTime = this.config.maxSkippedTime;
+    this.blackoutTeleportChance = this.config.blackoutTeleportChance;
     this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON;
     this.blackoutSafeTeleportChance = this.config.blackoutSafeTeleportChance;
     this.blackoutDetourTeleportON = this.config.blackoutDetourTeleportON;
     this.blackoutDetourTeleportChance = this.config.blackoutDetourTeleportChance;
-
+    this.santaMuerteWidgetON = this.config.santaMuerteWidgetON;
+    this.informativeHUDCOmpatibilityON = this.config.informativeHUDCOmpatibilityON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
   } 
 
+  public func updateResurrections(isSecondHeartInstalled: Bool) -> Void {    
+    let relicMetaquestContribution: Int32 = this.getRelicMetaquestContribution() ;
+    // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: relicMetaquestContribution = " + ToString(relicMetaquestContribution) );
+    if (this.santaMuerteLoreDifficultyON) {
+      this.santaMuerteRelicDifficulty = this.santaMuerteLoreDifficulty;
+    }
+
+    switch this.santaMuerteRelicDifficulty {
+    case santaMuerteRelicMode.Low:
+      if (RandRange(0,100) < (relicMetaquestContribution * 10)) {
+        // Relic check successful, keep resurrection count level or add chance for a rebate
+        if (RandRange(0,100) >= (100 - (4 * (relicMetaquestContribution)))) {
+          this.decrementResurrections();
+          // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going DOWN! " );
+
+        } else {
+          // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount unchanged " );
+
+        }
+
+      } else {
+        // Relic check failed - increase resurrection count towards Max value
+        this.incrementResurrections();
+        // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going UP " );
+
+      }
+      break;
+    case santaMuerteRelicMode.Medium:
+      this.incrementResurrections();
+      break;
+    case santaMuerteRelicMode.High:
+      this.incrementResurrections(); 
+
+      if (RandRange(0,100) < (relicMetaquestContribution * 10)) {
+        // Relic check successful, add chance for an extra removal of points
+        if (RandRange(0,100) >= (100 - (4 * (relicMetaquestContribution)))) {
+          this.incrementResurrections();
+          // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going UP " )
+        }  
+      } 
+      break;
+      break;
+
+    }
+
+    
+    this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount = " + ToString(this.resurrectCount) );
+    this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
+
+    let message: String = StrReplace(SantaMuerteText.RESURRECT(), "%VAL%",  "-" + ToString(this.resurrectCount) + "-" + ToString(this.resurrectCountMax));
+
+    if (this.unlimitedResurrectON) || (isSecondHeartInstalled) {
+      message = StrReplace(SantaMuerteText.RESURRECTUNLIMITED(), "%VAL%", "");
+    }
+
+    if (this.warningsON) {
+      this.player.SetWarningMessage(message, SimpleMessageType.Relic);  
+    }
+  } 
+
   public func incrementResurrections() -> Void {    
 
     this.resurrectCount += 1;  
+  } 
+
+  public func decrementResurrections() -> Void {    
+
+    this.resurrectCount -= 1;  
+
+    if (this.resurrectCount < 0) {
+      this.resurrectCount = 0;
+    }
   } 
 
   public func maxResurrectionReached(isSecondHeartInstalled: Bool) -> Bool {    
@@ -98,19 +186,36 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     return (this.resurrectCount >= this.resurrectCountMax);  
   } 
 
+  public func getMaxResurrectionPercent() -> Float {    
+    if (this.unlimitedResurrectON) { 
+      return 100.0;
+    }
+
+    return (Cast<Float>(this.resurrectCount) * 100.0) / Cast<Float>(this.resurrectCountMax) ;  
+  } 
+
   public func updateMaxResurrections() -> Void {    
 
     let resurrectionFacts: Int32 = this.getResurrectionFacts();
     let playerLevelContribution: Int32 = this.getPlayerLevelContribution();
     let cyberwareContribution: Int32 = this.getCyberwareContribution();
     let relicMetaquestContribution: Int32 = this.getRelicMetaquestContribution();
+    let tarotCardsContribution: Int32 = this.getTarotCardsContribution();
 
     // Check fact for Jackie's tomb 
     // Get player cyberware level
 
     if this.isRelicInstalled() {
       if (this.capResurrectionsOverride==0) {
-        this.resurrectCountMax = Cast<Int32>( (Cast<Float>(playerLevelContribution + relicMetaquestContribution + cyberwareContribution + resurrectionFacts)) * this.scaleResurrectionsModifier); 
+
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectionFacts = " + ToString(resurrectionFacts) );
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: playerLevelContribution = " + ToString(playerLevelContribution) );
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: cyberwareContribution = " + ToString(cyberwareContribution) );
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicMetaquestContribution = " + ToString(relicMetaquestContribution) );
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: tarotCardsContribution = " + ToString(tarotCardsContribution) );
+
+
+        this.resurrectCountMax = Cast<Int32>( (Cast<Float>(playerLevelContribution + relicMetaquestContribution + cyberwareContribution + resurrectionFacts + tarotCardsContribution)) * this.scaleResurrectionsModifier); 
       } else {
         this.resurrectCountMax = this.capResurrectionsOverride;
       }
@@ -123,6 +228,19 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
 
   } 
+
+  public func resurrectionCostsMemory() -> Bool {
+    let statPoolsSystem: ref<StatPoolsSystem> = GameInstance.GetStatPoolsSystem(this.player.GetGame()); 
+    let currentMemory: Float = statPoolsSystem.GetStatPoolValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Memory, false);
+    let memoryConsumed: Bool = false;
+
+    if currentMemory > 1.00 {
+      statPoolsSystem.RequestChangingStatPoolValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Memory, -1.0, this.player, false, false);
+      memoryConsumed = true;
+    };
+
+    return memoryConsumed;
+  }
 
 /*
 
@@ -139,6 +257,10 @@ sq018_03_padre_onspot
   } 
 
   public func getResurrectionFacts() -> Int32 {  
+    let jackieStayNotell: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q005_jackie_stay_notell") >= 1;
+    let jackieToMama: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q005_jackie_to_mama") >= 1;
+    let jackieAtVictors: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q005_14_body_at_victors") >= 1;
+
     let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
     let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
@@ -154,6 +276,18 @@ sq018_03_padre_onspot
     let _resurrectionFacts: Int32 = 0;
 
     _resurrectionFacts = factHeistDone * ( factMamaWellesMet + (factMandalaFound * 2) + factMistyInvited + factOfrendaPicked + (factJackieFuneralDone * 2) + (factMistyTarotDone * 2) );
+
+    // Sets Lore Difficulty based on choice with Jackie's body
+    if (jackieStayNotell) {
+      this.santaMuerteLoreDifficulty = santaMuerteRelicMode.Low;
+    }
+    if (jackieToMama) {
+      this.santaMuerteLoreDifficulty = santaMuerteRelicMode.Medium;
+    }
+    if (jackieAtVictors) {
+      this.santaMuerteLoreDifficulty = santaMuerteRelicMode.High;
+    }
+
 
     return(_resurrectionFacts);
 
@@ -194,41 +328,131 @@ sq018_03_padre_onspot
     return(_relicMetaquestContribution);
   } 
 
-  public func skipTimeWithBlackout(skipHoursAmount: Float) -> Void {
-    if (this.skipTimeON ) {
+  public func getTarotCardsContribution() -> Int32 {
+    let manager: ref<JournalManager> = GameInstance.GetJournalManager(this.player.GetGame());
+    let groups: array<wref<JournalEntry>>;
+    let request: JournalRequestContext;
+    let count: Int32 = 0;
+    
+    request.stateFilter.active = true;
+    manager.GetTarots(request, groups);
+    for group in groups {
+      let entries: array<wref<JournalEntry>>;
+      
+      manager.GetChildren(group, request.stateFilter, entries);
+      count += ArraySize(entries);
+    }
 
-      let teleportSuccessful: Bool = false;
+    // this.showDebugMessage( ">>> Santa Muerte: getTarotCardsContribution: getTarotCardsContribution = " + ToString(count) );
+
+    return count;
+  }
+
+/*
+  public func getTarotCardsContribution() -> Int32 {   
+    let journalManager: ref<JournalManager>;
+    let journalContext: JournalRequestContext;
+    let groupEntries: array<wref<JournalEntry>>;
+    let tarotEntries: array<wref<JournalEntry>>;
+    let entry: wref<JournalTarot>;
+    let data: TarotCardData;
+    let dataArray: array<TarotCardData>;
+    let f: Int32;
+    let i: Int32;
+    let numberTarotCardsFound: Int32;
+
+    journalManager = GameInstance.GetJournalManager(this.player.GetGame());
+    journalContext.stateFilter.active = true;
+    journalManager.GetTarots(journalContext, groupEntries); 
+
+    i = 0;
+    while i < ArraySize(groupEntries) {
+      ArrayClear(tarotEntries);
+      journalManager.GetChildren(groupEntries[i], journalContext.stateFilter, tarotEntries); 
+
+      f = 0;
+      while f < ArraySize(tarotEntries) {
+        entry = tarotEntries[f] as JournalTarot;
+        data.empty = false;
+        data.index = entry.GetIndex();
+        data.imagePath = entry.GetImagePart();
+        data.label = entry.GetName();
+        data.desc = entry.GetDescription();
+        data.isEp1 = journalManager.IsEp1Entry(entry);
+        ArrayPush(dataArray, data);
+        f += 1;
+      };
+      i += 1;
+    };
+
+    numberTarotCardsFound = ArraySize(dataArray); 
+
+    return numberTarotCardsFound;
+  }
+*/
+
+  public func skipTimeWithBlackout(skipHoursAmount: Float) -> Void {
+    let teleportSuccessful: Bool = false;
+    let canBeTeleported: Bool = this.canBeTeleported();
+
+    if ( RandRange(1,100) <= this.blackoutTeleportChance ) && (canBeTeleported)  && (this.teleportON) {
+      this.applyBlackout();
+      // Test Detour teleports first
+      if (this.blackoutDetourTeleportON) && (RandRange(0,100)> (100 - this.blackoutDetourTeleportChance)) {
+          teleportSuccessful = this.tryResurrectionDetourTeleport();           
+      }  
+
+      // If Detour teleport failed, test safe teleports
+      if (!teleportSuccessful) && (this.blackoutSafeTeleportON) && (RandRange(0,100)> (100 - this.blackoutSafeTeleportChance)) {
+          teleportSuccessful = this.tryResurrectionSafeTeleport();           
+      }     
+
+      if (teleportSuccessful) {
+
+        this.applyLoadingScreen();
+
+        // Add 6 to 12 hours to account for transportation and healing
+        skipHoursAmount += RandRangeF(6.0, 12.0);
+      }
+      
+    }
+
+    if (this.skipTimeON) && (!StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip")) {
 
       this.showDebugMessage( ">>> Santa Muerte: skipTime: skipHoursAmount = " + ToString(skipHoursAmount) ); 
 
-      if (skipHoursAmount>=1.0) {
-        this.applyBlackout();
-
-        // TO DO: Add mod settings to enable teleport scenarios on black out
-        // TO DO: Add mod settings to set chance of teleport on blackout
-        this.applyLoadingScreen();
-
-        // Test Detour teleports first
-        if (this.blackoutDetourTeleportON) && (RandRange(0,100)> (100 - this.blackoutDetourTeleportChance)) {
-            teleportSuccessful = this.tryResurrectionDetourTeleport();           
-        }  
-
-        // If Detour teleport failed, test safe teleports
-        if (!teleportSuccessful) && (this.blackoutSafeTeleportON) && (RandRange(0,100)> (100 - this.blackoutSafeTeleportChance)) {
-            teleportSuccessful = this.tryResurrectionSafeTeleport();           
-        }     
-
-        if (teleportSuccessful) {
-          // Add 6 to 12 hours to account for transportation and healing
-          skipHoursAmount += RandRangeF(6.0, 12.0);
-        }
-        
-
-      }
-
       this.skipTimeForced(skipHoursAmount);
+    } else {
+      this.showDebugMessage( ">>> Santa Muerte: skipTime: Aborted due to timeskip restrictions" ); 
     }
   } 
+
+  public func applyLoadingScreen() -> Void {
+    globalApplyLoadingScreen();
+
+    this.clearBlackout();
+  }
+
+  // @if(ModuleExists("DiverseDeathScreens.OnDeathEvent"))
+  /*
+  public func applyLoadingScreen() -> Void {
+    let controller = GameInstance.GetInkSystem().GetLayer(n"inkHUDLayer").GetGameController() as inkGameController;
+
+    if IsDefined(controller) { 
+      let nextLoadingTypeEvt = new inkSetNextLoadingScreenEvent();
+      nextLoadingTypeEvt.SetNextLoadingScreenType(inkLoadingScreenType.FastTravel);
+      controller.QueueBroadcastEvent(nextLoadingTypeEvt);
+        
+      this.clearBlackout();
+ 
+    };
+  }
+  */
+  
+  // @if(!ModuleExists("DiverseDeathScreens.OnDeathEvent"))
+  // public func applyLoadingScreen() -> Void {
+      // Do nothing
+  // }
 
   public func skipTimeForced(skipHoursAmount: Float) -> Void {
       let timeSystem: ref<TimeSystem> = GameInstance.GetTimeSystem(this.player.GetGame());
@@ -238,26 +462,75 @@ sq018_03_padre_onspot
 
       timeSystem.SetGameTimeBySeconds(Cast<Int32>(newTimeStamp));
       GameTimeUtils.FastForwardPlayerState(this.player);
+
+      this.clearBlackout();
+ 
   } 
 
+  public func applyJohnnySickness() -> Void {
+    let maxResurrectionPercent: Float;
+    let sicknessDuration: Float;
+    let m_statusEffectSystem: wref<StatusEffectSystem>;
+    m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
 
+    maxResurrectionPercent = this.getMaxResurrectionPercent();
+
+    sicknessDuration = 2.0 + (maxResurrectionPercent / 10.0);
+
+    if (maxResurrectionPercent <= 25.0) {
+      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessLow", this.player.GetEntityID(), 0.00, sicknessDuration);
+    }
+
+    if (maxResurrectionPercent > 25.0) && (maxResurrectionPercent < 85.0) {
+      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessMedium", this.player.GetEntityID(), 0.00, sicknessDuration);
+    }
+
+    if (maxResurrectionPercent >= 85.0) {
+      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessHeavy", this.player.GetEntityID(), 0.00, sicknessDuration);
+    }
+
+    // Trying to consumer 1 RAM to force a refresh of counter
+    if (this.santaMuerteWidgetON) {
+      this.resurrectionCostsMemory();      
+    }
+
+    // Attempt at removing second heart effect icon 
+    // Commenting out because of hard crash when used here.
+    // StatusEffectHelper.RemoveStatusEffect(this.player, t"BaseStatusEffect.SecondHeart");
+
+  }
+ 
   public func applyBlackout() -> Void {
     let m_statusEffectSystem: wref<StatusEffectSystem>;
     m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
 
-    this.showDebugMessage( ">>> Santa Muerte: applyBlackout" ); 
+    if (this.blackoutON) {
+      this.showDebugMessage( ">>> Santa Muerte: applyBlackout" ); 
 
-    m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+      m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+
+    }
   } 
 
   public func clearBlackout() -> Void {
     let m_statusEffectSystem: wref<StatusEffectSystem>;
     m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
 
-    this.showDebugMessage( ">>> Santa Muerte: clearBlackout" ); 
+    if (this.blackoutON) {
+      this.showDebugMessage( ">>> Santa Muerte: clearBlackout" ); 
 
-    m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+      m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+    }
   } 
+ 
+  public func forceBlackout() -> Void {
+    let m_statusEffectSystem: wref<StatusEffectSystem>;
+    m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+
+    m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+
+  } 
+ 
 
   public func forceCombatExit() -> Void {
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS();
@@ -268,45 +541,44 @@ sq018_03_padre_onspot
       let invalidateEvent: ref<PlayerCombatControllerInvalidateEvent> = new PlayerCombatControllerInvalidateEvent();
       invalidateEvent.m_state = PlayerCombatState.OutOfCombat;
       this.player.QueueEvent(invalidateEvent);
+
+      GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
+      GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
+      
+      /*
+      this.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);
+      this.SendAnimFeatureData(false);
+      PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
+      GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
+      ChatterHelper.TryPlayLeaveCombatChatter(this.player);
+      FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.player.GetGame());
+      GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"stealth_mode");   
+      */   
     };
 
     this.clearBlackout();
-  }
-  
-  private func applyLoadingScreen() -> Void {
-    let controller = GameInstance.GetInkSystem().GetLayer(n"inkHUDLayer").GetGameController() as inkGameController;
-
-    if IsDefined(controller) { 
-      let nextLoadingTypeEvt = new inkSetNextLoadingScreenEvent();
-      nextLoadingTypeEvt.SetNextLoadingScreenType(inkLoadingScreenType.FastTravel);
-      controller.QueueBroadcastEvent(nextLoadingTypeEvt);
-    };
   }
   
   private func tryResurrectionSafeTeleport() -> Bool {
     let randNum: Int32;
     let teleportSuccessful: Bool = false;
 
-    if (this.canBeTeleported()) {
-      randNum = RandRange(0,100);
+    randNum = RandRange(0,100);
 
-      if (randNum >= 90) {
-        this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
-        teleportSuccessful = this.tryTeleportMedicalCenter();
-      }
-
-      if (randNum < 90) && (randNum > 0) {
-        this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
-        teleportSuccessful = this.tryTeleportRipperDoc();
-      }
-
-      // if (randNum <= 20) {
-      //   this.showDebugMessage( ">>> Santa Muerte: Viktor only" ); 
-      //   teleportSuccessful = this.tryTeleportViktor();
-      // }
-  
-
+    if (randNum >= 90) {
+      this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
+      teleportSuccessful = this.tryTeleportMedicalCenter();
     }
+
+    if (randNum < 90) && (randNum > 0) {
+      this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
+      teleportSuccessful = this.tryTeleportRipperDoc();
+    }
+
+    // if (randNum <= 20) {
+    //   this.showDebugMessage( ">>> Santa Muerte: Viktor only" ); 
+    //   teleportSuccessful = this.tryTeleportViktor();
+    // }
 
     return teleportSuccessful;
 
@@ -498,19 +770,21 @@ sq018_03_padre_onspot
           // Church Clinic
           position = new Vector4(-1668.095, -2487.934, 37.151, 1.000000);
           rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
         }  
         if (randNum > 20) && (randNum < 80) {
           // Doc Costyn Lahovary
           position = new Vector4(-2400.081, -2655.728, 27.842, 1.000000);
           rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
         }  
         if (randNum <= 20) {
           // Doc Farida Clinic
           position = new Vector4(-1887.505, -2486.323, 28.052, 1.000000);
           rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
         }  
 
-        isDestinationFound = true;
         break;
 
       case gamedataDistrict.Badlands:
@@ -566,6 +840,11 @@ sq018_03_padre_onspot
 
     switch currentDistrict {
       case gamedataDistrict.Watson:
+        // Back of Hospital
+        position = new Vector4(-1279.890, 1858.963, 18.163, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
+
         break;
       case gamedataDistrict.LittleChina:
         // Regina Fixer Hideout
@@ -580,6 +859,27 @@ sq018_03_padre_onspot
         isDestinationFound = true;
         break;
       case gamedataDistrict.Northside:
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Creepy Maelstrom BD shack 
+          position = new Vector4(-1006.454, 3378.892, 8.540, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum > 20) && (randNum < 80) {
+          // Oil Fields
+          position = new Vector4(-1833.609, 3824.832, 5.484, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum <= 20) {
+          // Northside beach dump
+          position = new Vector4(-2346.953, 3687.689, 7.844, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+
         break;
       case gamedataDistrict.ArasakaWaterfront:
         break;
@@ -594,24 +894,68 @@ sq018_03_padre_onspot
       case gamedataDistrict.Heywood:
         break;
       case gamedataDistrict.Glen:
+        // Trash pile in Reconciliation Park
+        position = new Vector4(-1561.247, -440.721, -11.796, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.Wellsprings:
+        // Valentinos scrap yard
+        position = new Vector4(-506.051, -96.526, 7.770, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.VistaDelRey:
+        // Dark alley
+        position = new Vector4(-605.527, -224.119, 7.678, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
 
       case gamedataDistrict.Pacifica:
         break;
       case gamedataDistrict.WestWindEstate:
+        // Beach Trash Pile
+        position = new Vector4(-2672.360, -2340.655, 0.747, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.Coastview:
+        // Butcher shop
+        position = new Vector4(-2286.622, -1931.526, 6.055, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
 
       case gamedataDistrict.SantoDomingo:
         break;
       case gamedataDistrict.Arroyo:
+        // Trash pile under overpass
+        position = new Vector4(157.737, -730.418, 4.276, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.RanchoCoronado:
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Homeless camp
+          position = new Vector4(449.555, -1686.285, 9.842, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum >= 40) && (randNum < 80)  {
+          // Dump near new tower
+          position = new Vector4(908.807, -1545.698, 45.001, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum < 40) {
+          // Warehouse
+          position = new Vector4(1080.595, -722.294, 22.271, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
         break;
 
       case gamedataDistrict.Westbrook:
@@ -625,7 +969,20 @@ sq018_03_padre_onspot
           rotation = new EulerAngles(0.0, -30.0, 0.0);
           isDestinationFound = true;
         }
-        if (randNum <= 20) {
+        if (randNum >= 40) && (randNum < 80)  {
+          // Japantown reservoir
+          position = new Vector4(-445.489, 417.814, 131.998, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        let isAutomaticLoveCompleted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"sq032_q105_done") >= 1;
+        if (randNum >= 20) && (randNum < 40) && (isAutomaticLoveCompleted) {
+          // Fingers MD
+          position = new Vector4(-569.782, 799.393, 24.908, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum < 20) {
           // Tyger Claw's Cages Hideout
           position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
           rotation = new EulerAngles(0.0, -30.0, 0.0);
@@ -646,10 +1003,42 @@ sq018_03_padre_onspot
         break;
 
       case gamedataDistrict.Badlands:
+        // Sunset Motel - room 102
+        position = new Vector4(1662.659, -791.086, 49.826, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.NorthBadlands:
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Safe garage 
+          position = new Vector4(2575.148, 0.298, 80.875, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum <= 20) {
+          // Trash Dump
+          position = new Vector4(2329.168, -1826.530, 79.302, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
         break;
       case gamedataDistrict.SouthBadlands:
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Trailer Arm Dealer
+          position = new Vector4(131.666, -4679.567, 54.711, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum <= 20) {
+          // Gas station with Wraiths
+          position = new Vector4(-1705.800, -5016.451, 80.346, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
         break;
 
       default:
@@ -802,12 +1191,35 @@ sq018_03_padre_onspot
   private final func canBeTeleported() -> Bool {
     let bb: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
 
-    let dogtown: Bool = (GameInstance.GetPreventionSpawnSystem(this.player.GetGame()).IsPlayerInDogTown()) && (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"mr_hands_dogtown_introduced") == 0);
+    let endgameStarted: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q115_embers_elevator_unlocked") >= 1);
+    let endgameDone: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"loaded_ponr_save") >= 1);
+    let endgame: Bool = (endgameStarted) && (!endgameDone);
+
+    let dogtownIntroStarted: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q301_sb_agreed") >= 1);
+    let dogtownIntroDone: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q302_done") >= 1);
+    let dogtownIntro: Bool = (dogtownIntroStarted) && (!dogtownIntroDone);
+
+    let somiStadiumStarted: Bool = (GameInstance.GetPreventionSpawnSystem(this.player.GetGame()).IsPlayerInDogTown()) && (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q304_started") >= 1);
+    let somiStadiumDone: Bool = (GameInstance.GetPreventionSpawnSystem(this.player.GetGame()).IsPlayerInDogTown()) && (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q304_done") >= 1);
+    let somiStadium: Bool = (somiStadiumStarted) && (!somiStadiumDone);
+
+    let cynosureStarted: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q305_started") >= 1);
+    let cynosureDone: Bool = (GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q305_done") >= 1);
+    let cynosure: Bool = (cynosureStarted) && (!cynosureDone);
+
+    let dogtown: Bool = (dogtownIntro) || (somiStadium) || (cynosure);
+
+    this.showDebugMessage( s">>> Santa Muerte: Teleport check: Player in Dogtown " + ToString((GameInstance.GetPreventionSpawnSystem(this.player.GetGame()).IsPlayerInDogTown())));
+    this.showDebugMessage( s">>> Santa Muerte: Teleport check: dogtownIntro \(dogtownIntro)");
+    this.showDebugMessage( s">>> Santa Muerte: Teleport check: somiStadium \(somiStadium)");
+    this.showDebugMessage( s">>> Santa Muerte: Teleport check: cynosure \(cynosure)");
+    this.showDebugMessage( s">>> Santa Muerte: Teleport check: dogtown \(dogtown)"); 
 
     let isInNamedDistrict: Bool = (!this.isPlayerInGenericDistrict());
 
     let paused: Bool = GameInstance.GetTimeSystem(this.player.GetGame()).IsPausedState();
-    let blocked: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip");
+    let noTimeSkip: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip"); 
+    let noFastTravel: Bool = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"GameplayRestriction.BlockFastTravel");
 
     let tier: Int32 = bb.GetInt(GetAllBlackboardDefs().PlayerStateMachine.HighLevel);
     let scene: Bool = tier >= EnumInt(gamePSMHighLevel.SceneTier3) && tier <= EnumInt(gamePSMHighLevel.SceneTier5);
@@ -817,25 +1229,49 @@ sq018_03_padre_onspot
     let carrying: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.Carrying);
     let lore_animation: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInLoreAnimationScene);
 
-    if dogtown || isInNamedDistrict || paused || blocked || scene || mounted || swimming || carrying || lore_animation {
-      this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: Dogtown \(dogtown), paused: \(paused), blocked: \(blocked), scene: \(scene), mounted: \(mounted), swimming: \(swimming), carrying: \(carrying), lore_animation: \(lore_animation)");
+    if dogtown || somiStadium || cynosure || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation {
+      this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: Endgame \(endgame), Dogtown \(dogtown), somiStadium \(somiStadium), Cynosure \(cynosure), paused: \(paused), noTimeSkip: \(noTimeSkip), noFastTravel: \(noFastTravel), scene: \(scene), mounted: \(mounted), swimming: \(swimming), carrying: \(carrying), lore_animation: \(lore_animation)");
       return false;
     };
 
     return true;
   }
-
+  
   private func showDebugMessage(debugMessage: String) {
-    LogChannel(n"DEBUG", debugMessage ); 
+    // LogChannel(n"DEBUG", debugMessage ); 
   }
+
+  public func markGameForPermaDeath() -> Void {
+    this.showDebugMessage( ">>> Santa Muerte: Final Death" ); 
+    this.forceBlackout();
+  }
+
+/* 
+
+*/
 
 }
 
+
+// Moving this code here for compatibility with Codeware
+@if(ModuleExists("Codeware"))
+public func globalApplyLoadingScreen() -> Void {
+  let controller = GameInstance.GetInkSystem().GetLayer(n"inkHUDLayer").GetGameController() as inkGameController;
+
+  if IsDefined(controller) { 
+    let nextLoadingTypeEvt = new inkSetNextLoadingScreenEvent();
+    nextLoadingTypeEvt.SetNextLoadingScreenType(inkLoadingScreenType.FastTravel);
+    controller.QueueBroadcastEvent(nextLoadingTypeEvt);
+  };
+} 
+
+@if(!ModuleExists("Codeware"))
+public func globalApplyLoadingScreen() -> Void {
+    // Do nothing
+}
+ 
+
 /*
-
-
-
-
   Didn't work to fix the stuck combat mode after resurrection:
   
     _playerPuppetPS.SetCombatExitTimestamp(currentTime);

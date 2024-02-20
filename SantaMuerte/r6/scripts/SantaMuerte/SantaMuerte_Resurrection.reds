@@ -10,6 +10,8 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
 
     _playerPuppetPS.m_santaMuerteTracking.forceCombatExit();
 
+    _playerPuppetPS.m_santaMuerteTracking.applyJohnnySickness();
+
 	  wrappedMethod( stateContext, scriptInterface );
     GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, enableVisibilityEvt, 0.1 );
 }
@@ -64,17 +66,7 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
       	
         if (doResurrect) {
 
-          let message: String = StrReplace(SantaMuerteText.RESURRECT(), "%VAL%", "-" + ToString(_playerPuppetPS.m_santaMuerteTracking.resurrectCount) + "-" + ToString(_playerPuppetPS.m_santaMuerteTracking.resurrectCountMax));
-
-          if this.HasSecondHeart(scriptInterface) {
-            message = StrReplace(SantaMuerteText.RESURRECTUNLIMITED(), "%VAL%", "");
-          }
-
-          if (_playerPuppetPS.m_santaMuerteTracking.warningsON) {
-            _playerPuppetPS.m_santaMuerteTracking.player.SetWarningMessage(message);  
-          }
-
-          _playerPuppetPS.m_santaMuerteTracking.incrementResurrections();
+          _playerPuppetPS.m_santaMuerteTracking.updateResurrections(this.HasSecondHeart(scriptInterface));
 
           _playerPuppetPS.m_santaMuerteTracking.player.SetSlowMo(1.0,20.0);
 
@@ -83,7 +75,7 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
         
         } else {
           // Final death detected
-          _playerPuppetPS.m_santaMuerteTracking.applyBlackout();
+          _playerPuppetPS.m_santaMuerteTracking.markGameForPermaDeath();
 
         };      		
       	

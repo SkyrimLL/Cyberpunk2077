@@ -64,14 +64,17 @@ protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: r
 protected final func EvaluateSettingCustomDeathAnimation(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void 
 {
     let _playerPuppet: ref<PlayerPuppet> = DefaultTransition.GetPlayerPuppet(scriptInterface) as PlayerPuppet;
-    let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
+    let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS(); 
 
     if (_playerPuppetPS.m_santaMuerteTracking.modON) {
 	// if ( this.HasSecondHeart( scriptInterface ) )
-	// {
-    	this.SetPlayerDeathAnimFeatureData(stateContext, scriptInterface, 1);
-
-		return;
+	// { 
+			if (_playerPuppetPS.m_santaMuerteTracking.newDeathAnimationON) {
+				if ((_playerPuppetPS.m_santaMuerteTracking.randomDeathAnimationON) && (RandRange(0,100)>=50)) || (!_playerPuppetPS.m_santaMuerteTracking.randomDeathAnimationON) {
+		    	this.SetPlayerDeathAnimFeatureData(stateContext, scriptInterface, 1);			
+					return;
+				}
+			}
 	// }    	
     }
 
@@ -90,9 +93,7 @@ protected func ToResurrect( stateContext: ref<StateContext>, scriptInterface: re
 	}
 	return false;
 }
-
-/* Will comment this section if I hear back from Second Heart Fix */
-
+ 
 @wrapMethod(HighLevelTransition)
 protected final func StartDeathEffects(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void
 {
@@ -129,7 +130,7 @@ private func DeathVanish( scriptInterface : ref<StateGameScriptInterface> )
 		}
 		vanishEvt = new ExitCombatOnOpticalCamoActivatedEvent();
 		vanishEvt.npc = hostileTarget;
-		GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, vanishEvt, 0.1  ); // 0.1 originally instead of exitCombatDelay
+		GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, vanishEvt, 0.1  );  
 		j += 1;
 	} 
 

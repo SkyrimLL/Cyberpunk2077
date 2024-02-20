@@ -5,8 +5,8 @@ public class SantaMuerteText {
 
   // %VAL% will be replaced by a number, e.g. 3, 2.5, etc.
 
-  public static func RESURRECT() -> String { return "RELIC Protocol Initiated Load Address: 0x00%VAL% STATUS: CRITICAL "; } 
+  public static func RESURRECT() -> String { return "RELIC Protocol Initiated Load Address: 0x00R%VAL% STATUS: CRITICAL "; } 
 
-  public static func RESURRECTUNLIMITED() -> String { return "RELIC Protocol Initiated Load Address: 0x00 S%VAL%S: CRITICAL ::FATAERROR::"; } 
+  public static func RESURRECTUNLIMITED() -> String { return "RELIC Protocol Initiated Load Address: 0x00R%VAL%S: CRITICAL ::FATAERROR::"; } 
 
 }
