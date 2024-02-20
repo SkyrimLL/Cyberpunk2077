@@ -47,6 +47,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let newEncumbranceDisplayON: Bool;
 
   public let limitedCarryCapacity: Float;
+  public let carryCapacityContribution: Float;
+  public let carryCapacityOverride: Float;
 
   public let carryCapacityBase: Float; 
   public let carryCapacityBackpack: Float; 
@@ -102,18 +104,21 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     this.limitedCarryCapacity = 30.0;
 
   }
+ 
 
   public func refreshConfig() -> Void {
     this.config = new LimitedEncumbranceConfig();
-    this.invalidateCurrentState();
+    this.invalidateCurrentState(); 
   }
 
   public func invalidateCurrentState() -> Void {
     this.carryCapacityBase = Cast<Float>(this.config.carryCapacityBase);
     this.carryCapacityBackpack= Cast<Float>(this.config.carryCapacityBackpack);
+    this.carryCapacityContribution = Cast<Float>(this.config.carryCapacityContribution) / 100.0;  
     this.playerLevelMod = Cast<Float>(this.config.playerLevelMod) / 100.0;  
     this.playerPerkMod = Cast<Float>(this.config.playerPerkMod) / 100.0;  
     this.carryCapacityCapMod = Cast<Float>(this.config.carryCapacityCapMod);  
+    this.carryCapacityOverride = Cast<Float>(this.config.carryCapacityOverride);  
     this.encumbranceEquipmentBonus = Cast<Float>(this.config.encumbranceEquipmentBonus) / 100.0;
     this.carryCapacityAlertTheshold = this.config.carryCapacityAlertTheshold; 
     this.warningsON = this.config.warningsON;
@@ -537,6 +542,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     let qualityAgileJoints: Float;
     let qualityTitaniumBones: Float;
 
+    this.refreshConfig();
+
     // Reduce base carry capacity
     // 1 Rifle + 2 Handguns + 1 long blade + 1 knife + coat + outer torso + inner torso + pants + shoes + headgear = about 30 weight
     // Carry capacity is default capacity (30) + a bonus based on player power level -> capped at 60 total to allow for combat/runnning
@@ -603,9 +610,6 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
       LogChannel(n"DEBUG", ":::     = limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );
     */
 
-      if (this.limitedCarryCapacity >= this.carryCapacityCapMod ) {
-        this.limitedCarryCapacity = this.carryCapacityCapMod;
-      } 
 
       // LogChannel(n"DEBUG", ":::     <= carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
 
@@ -613,14 +617,40 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   }
 
+  public func getCarryCapacity() -> Float {
+    let carryCapacity: Float; 
+    let baseCarryCapacity: Float; 
+    let limitedCarryCapacity: Float; 
+
+    this.refreshConfig();
+
+    baseCarryCapacity = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.CarryCapacity);
+    limitedCarryCapacity = this.limitedCarryCapacity;
+
+    carryCapacity = (baseCarryCapacity * this.carryCapacityContribution) + this.limitedCarryCapacity;
+
+    if (carryCapacity >= this.carryCapacityCapMod ) {
+      carryCapacity = this.carryCapacityCapMod;
+    } 
+
+    if (this.carryCapacityOverride > 0.0) {
+      carryCapacity = this.carryCapacityOverride;
+    }
+
+    return carryCapacity;
+  }
+
   public func printEncumbrance(playerWeight: Float) -> String {
+    let carryCapacity: Float; 
     let encumbranceMsg: String;
+
     // this.player.m_curInventoryWeight
+    carryCapacity = this.getCarryCapacity();
 
     if (this.newEncumbranceDisplayON) {
-      return IntToString(Cast<Int32>(this.limitedCarryCapacity) - Cast<Int32>(playerWeight)) + " (" + IntToString(Cast<Int32>(this.limitedCarryCapacity)) + ")";
+      return IntToString(Cast<Int32>(carryCapacity) - Cast<Int32>(playerWeight)) + " (" + IntToString(Cast<Int32>(carryCapacity)) + ")";
       } else {
-      return IntToString(Cast<Int32>(playerWeight)) + " / " + IntToString(Cast<Int32>(this.limitedCarryCapacity)); 
+      return IntToString(Cast<Int32>(playerWeight)) + " / " + IntToString(Cast<Int32>(carryCapacity)); 
       }
 
   }
