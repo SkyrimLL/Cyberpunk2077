@@ -34,7 +34,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let blackoutDetourTeleportON: Bool;  
   public let blackoutDetourTeleportChance: Int32;
   public let santaMuerteWidgetON: Bool;
-  public let informativeHUDCOmpatibilityON: Bool;
+  public let informativeHUDCompatibilityON: Bool;
 
   public let config: ref<SantaMuerteConfig>;
 
@@ -98,7 +98,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.blackoutDetourTeleportON = this.config.blackoutDetourTeleportON;
     this.blackoutDetourTeleportChance = this.config.blackoutDetourTeleportChance;
     this.santaMuerteWidgetON = this.config.santaMuerteWidgetON;
-    this.informativeHUDCOmpatibilityON = this.config.informativeHUDCOmpatibilityON;
+    this.informativeHUDCompatibilityON = this.config.informativeHUDCompatibilityON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
@@ -205,15 +205,16 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // Check fact for Jackie's tomb 
     // Get player cyberware level
 
+    this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: isRelicInstalled = " + ToString(this.isRelicInstalled()) );
+
     if this.isRelicInstalled() {
       if (this.capResurrectionsOverride==0) {
 
-        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectionFacts = " + ToString(resurrectionFacts) );
-        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: playerLevelContribution = " + ToString(playerLevelContribution) );
-        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: cyberwareContribution = " + ToString(cyberwareContribution) );
-        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicMetaquestContribution = " + ToString(relicMetaquestContribution) );
-        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: tarotCardsContribution = " + ToString(tarotCardsContribution) );
-
+        this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectionFacts = " + ToString(resurrectionFacts) );
+        this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: playerLevelContribution = " + ToString(playerLevelContribution) );
+        this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: cyberwareContribution = " + ToString(cyberwareContribution) );
+        this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicMetaquestContribution = " + ToString(relicMetaquestContribution) );
+        this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: tarotCardsContribution = " + ToString(tarotCardsContribution) );
 
         this.resurrectCountMax = Cast<Int32>( (Cast<Float>(playerLevelContribution + relicMetaquestContribution + cyberwareContribution + resurrectionFacts + tarotCardsContribution)) * this.scaleResurrectionsModifier); 
       } else {
@@ -224,8 +225,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.resurrectCountMax = 0;
     }
 
-    // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectCount = " + ToString(this.resurrectCount) );
-    // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
+    this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectCount = " + ToString(this.resurrectCount) );
+    this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
 
   } 
 
@@ -253,7 +254,7 @@ sq018_03_padre_onspot
 
   public func isRelicInstalled() -> Bool {  
     // return GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q005_done") >= 1; // Heist + No tell motel
-    return GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q101_done") >= 1; // After Heist + back to H10 building
+    return GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q005_done") >= 1; // After Heist + back to H10 building
   } 
 
   public func getResurrectionFacts() -> Int32 {  
@@ -288,6 +289,18 @@ sq018_03_padre_onspot
       this.santaMuerteLoreDifficulty = santaMuerteRelicMode.High;
     }
 
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: jackieStayNotell = " + ToString(jackieStayNotell) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: jackieToMama = " + ToString(jackieToMama) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: jackieAtVictors = " + ToString(jackieAtVictors) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: isVictorHUDInstalled = " + ToString(isVictorHUDInstalled) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: isPhantomLiberyStandalone = " + ToString(isPhantomLiberyStandalone) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factHeistDone = " + ToString(factHeistDone) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factMamaWellesMet = " + ToString(factMamaWellesMet) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factMandalaFound = " + ToString(factMandalaFound) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factMistyInvited = " + ToString(factMistyInvited) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factJackieFuneralDone = " + ToString(factJackieFuneralDone) );
+    this.showDebugMessage( ">>> Santa Muerte: getResurrectionFacts: factMistyTarotDone = " + ToString(factMistyTarotDone) ); 
+
 
     return(_resurrectionFacts);
 
@@ -297,7 +310,7 @@ sq018_03_padre_onspot
     let playerLevel: Float = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.Level);
     let _playerLevelContribution: Int32 = 0;
 
-    _playerLevelContribution = 1 + ((Cast<Int32>(playerLevel)) / 10);
+    _playerLevelContribution = 5 + ((Cast<Int32>(playerLevel)) / 10);
 
     return(_playerLevelContribution);
 
@@ -746,7 +759,7 @@ sq018_03_padre_onspot
         break;
       case gamedataDistrict.JapanTown:
         // Japantown Ripper Doc
-        position = new Vector4(-712.075, -871.053, 11.982, 1.000000);
+        position = new Vector4(-712.075, 871.053, 11.982, 1.000000);
         rotation = new EulerAngles(0.0, -30.0, 0.0);
         isDestinationFound = true;
         break;
@@ -847,14 +860,14 @@ sq018_03_padre_onspot
 
         break;
       case gamedataDistrict.LittleChina:
-        // Regina Fixer Hideout
-        position = new Vector4(-1147.539, 1573.210, 71.712, 1.000000);
+        // Trash pile south west of Little China
+        position = new Vector4(-1952.074, 997.060, 1.353, 1.000000);
         rotation = new EulerAngles(0.0, -30.0, 0.0);
         isDestinationFound = true;
         break;
       case gamedataDistrict.Kabuki:
-        // Regina Fixer Hideout
-        position = new Vector4(-1147.539, 1573.210, 71.712, 1.000000);
+        // Back of Hospital
+        position = new Vector4(-1279.890, 1858.963, 18.163, 1.000000);
         rotation = new EulerAngles(0.0, -30.0, 0.0);
         isDestinationFound = true;
         break;
@@ -1217,6 +1230,8 @@ sq018_03_padre_onspot
 
     let isInNamedDistrict: Bool = (!this.isPlayerInGenericDistrict());
 
+    let isImpersonating: Bool = this.isPlayerImpersonating();
+
     let paused: Bool = GameInstance.GetTimeSystem(this.player.GetGame()).IsPausedState();
     let noTimeSkip: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip"); 
     let noFastTravel: Bool = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"GameplayRestriction.BlockFastTravel");
@@ -1229,16 +1244,48 @@ sq018_03_padre_onspot
     let carrying: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.Carrying);
     let lore_animation: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInLoreAnimationScene);
 
-    if dogtown || somiStadium || cynosure || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation {
-      this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: Endgame \(endgame), Dogtown \(dogtown), somiStadium \(somiStadium), Cynosure \(cynosure), paused: \(paused), noTimeSkip: \(noTimeSkip), noFastTravel: \(noFastTravel), scene: \(scene), mounted: \(mounted), swimming: \(swimming), carrying: \(carrying), lore_animation: \(lore_animation)");
+    if isImpersonating || dogtown || somiStadium || cynosure || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation {
+      this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: Endgame \(endgame), Dogtown \(dogtown), somiStadium \(somiStadium), Cynosure \(cynosure), isImpersonating \(isImpersonating), paused: \(paused), noTimeSkip: \(noTimeSkip), noFastTravel: \(noFastTravel), scene: \(scene), mounted: \(mounted), swimming: \(swimming), carrying: \(carrying), lore_animation: \(lore_animation)");
       return false;
     };
 
     return true;
   }
+
+  private final func isPlayerImpersonating() -> Bool {
+    let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+    let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
+    let isImpersonating: Bool = false;
+
+    switch controlledObjRecordID {
+      case t"Character.johnny_replacer":
+        isImpersonating=true;
+        break;
+      case t"Character.q000_vr_replacer":
+        isImpersonating=true;
+        break;
+      case t"Character.mq304_assassin_replacer_male":
+        isImpersonating=true;
+        break;
+      case t"Character.mq304_assassin_replacer_female":
+        isImpersonating=true;
+        break;
+      case t"Character.Player_Puppet_Base":
+        isImpersonating=false;
+        break;
+      case t"Character.kurt_replacer":
+        isImpersonating=true;
+        break;
+      default:
+        isImpersonating=false;
+    };
+
+    return isImpersonating;
+  }
   
   private func showDebugMessage(debugMessage: String) {
-    // LogChannel(n"DEBUG", debugMessage ); 
+    LogChannel(n"DEBUG", debugMessage ); 
   }
 
   public func markGameForPermaDeath() -> Void {

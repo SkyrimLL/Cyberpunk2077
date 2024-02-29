@@ -31,7 +31,7 @@
 
     _playerPuppetPS.m_santaMuerteTracking.refreshConfig();
 
-    if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) && (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCOmpatibilityON) {   
+    if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCompatibilityON) {   
 
       //grabbing the root widget
       let root = this.GetRootCompoundWidget() as inkCompoundWidget;
@@ -53,51 +53,51 @@
 
     _playerPuppetPS.m_santaMuerteTracking.refreshConfig();
 
+    //grabbing the root widget
+    let root = this.GetRootCompoundWidget() as inkCompoundWidget;
+    //grabbing bars container
+    let hPanel = root.GetWidget(n"buffsHolder/barsLayout/quickhacks/barsContainer") as inkHorizontalPanel;
+
+    //adding memory text widget
+    let canvas = new inkCanvas();
+    canvas.SetName(n"santaMuerteRAM");
+    canvas.SetAnchor(inkEAnchor.CenterFillHorizontaly);
+    canvas.SetAnchorPoint(new Vector2(0.0, 0.5));
+    hPanel.RemoveChildByName(n"santaMuerteRAM");
+    canvas.Reparent(hPanel);
+
+    if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCompatibilityON) {
+      let numbers = new inkText();
+      numbers.SetText("  " + ToString(FloorF(this.m_memoryFillCells)) + "/" + ToString(this.m_memoryMaxCells));
+      numbers.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
+      numbers.SetFontStyle(n"Regular");
+      numbers.SetFontSize(20);
+      //numbers.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
+      numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
+      numbers.SetAnchor(inkEAnchor.CenterFillHorizontaly);
+      numbers.SetAnchorPoint(0.0, 0.5);
+      numbers.Reparent(canvas);        
+    }
+
     if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) {   
-      //grabbing the root widget
-      let root = this.GetRootCompoundWidget() as inkCompoundWidget;
-      //grabbing bars container
-      let hPanel = root.GetWidget(n"buffsHolder/barsLayout/quickhacks/barsContainer") as inkHorizontalPanel;
+    // if (player.IsInCombat()) 
+    // {
+      let resurrections = new inkText();
+      if (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) {
+          resurrections.SetText("               0x00R" +  ToString(_playerPuppetPS.m_santaMuerteTracking.resurrectCountMax - _playerPuppetPS.m_santaMuerteTracking.resurrectCount));  
+        } else {
+          resurrections.SetText("               ");  
+        }
 
-      //adding memory text widget
-      let canvas = new inkCanvas();
-      canvas.SetName(n"santaMuerteRAM");
-      canvas.SetAnchor(inkEAnchor.CenterFillHorizontaly);
-      canvas.SetAnchorPoint(new Vector2(0.0, 0.5));
-      hPanel.RemoveChildByName(n"santaMuerteRAM");
-      canvas.Reparent(hPanel);
+      resurrections.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
+      resurrections.SetFontStyle(n"Regular");
+      resurrections.SetFontSize(20);
+      resurrections.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
+      //numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
+      resurrections.SetAnchor(inkEAnchor.CenterFillHorizontaly);
+      resurrections.SetAnchorPoint(0.0, 0.5);
+      resurrections.Reparent(canvas);        
+    // }
 
-      if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCOmpatibilityON) {
-        let numbers = new inkText();
-        numbers.SetText("  " + ToString(FloorF(this.m_memoryFillCells)) + "/" + ToString(this.m_memoryMaxCells));
-        numbers.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
-        numbers.SetFontStyle(n"Regular");
-        numbers.SetFontSize(20);
-        //numbers.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
-        numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
-        numbers.SetAnchor(inkEAnchor.CenterFillHorizontaly);
-        numbers.SetAnchorPoint(0.0, 0.5);
-        numbers.Reparent(canvas);        
-      }
-
-      // if (player.IsInCombat()) 
-      // {
-        let resurrections = new inkText();
-        if (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) {
-            resurrections.SetText("               0x00R" +  ToString(_playerPuppetPS.m_santaMuerteTracking.resurrectCountMax - _playerPuppetPS.m_santaMuerteTracking.resurrectCount));  
-          } else {
-            resurrections.SetText("               ");  
-          }
-
-        resurrections.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
-        resurrections.SetFontStyle(n"Regular");
-        resurrections.SetFontSize(20);
-        resurrections.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
-        //numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
-        resurrections.SetAnchor(inkEAnchor.CenterFillHorizontaly);
-        resurrections.SetAnchorPoint(0.0, 0.5);
-        resurrections.Reparent(canvas);        
-      // }
-
-   }
+    }
   }

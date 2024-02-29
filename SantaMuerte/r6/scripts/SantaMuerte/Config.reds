@@ -172,7 +172,7 @@
   @runtimeProperty("ModSettings.category.order", "51")
   @runtimeProperty("ModSettings.displayName", "Compatibility Informative HUD")
   @runtimeProperty("ModSettings.description", "Turn ON for compatibility with Informative HUD Quickhacks Memory Counter.")
-  let informativeHUDCOmpatibilityON: Bool = false;
+  let informativeHUDCompatibilityON: Bool = false;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Notifications")
