@@ -38,7 +38,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.category", "Limited Encumbrance System")
   @runtimeProperty("ModSettings.category.order", "4")
   @runtimeProperty("ModSettings.displayName", "Backpack size")
-  @runtimeProperty("ModSettings.description", "How much weight you can carry in your backpack and still be able to run and jump.")
+  @runtimeProperty("ModSettings.description", "How much weight you can carry in your default 'backpack' and still be able to run and jump.")
   @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
@@ -99,7 +99,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.category.order", "9")
   @runtimeProperty("ModSettings.displayName", "Carry Capacity Override")
   @runtimeProperty("ModSettings.description", "Overrides the Limited Carry Capacity system with a fixed value (use 0 to turn OFF)")
-  @runtimeProperty("ModSettings.step", "10")
+  @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "400")
   let carryCapacityOverride: Int32 = 0;
