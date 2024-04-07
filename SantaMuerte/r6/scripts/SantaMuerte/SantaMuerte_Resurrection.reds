@@ -41,7 +41,11 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
           // Resurrect if mod is ON and death landing is detected and allowed
           if (!_playerPuppetPS.m_santaMuerteTracking.deathLandingProtectionON) && (Equals(locomotionState, gamePSMDetailedLocomotionStates.DeathLand))  {
             doResurrect = true;
-          }        
+          } 
+          // Do NOT resurrect if player is impersonating Johnny and safety check if ON in the menu
+          if (_playerPuppetPS.m_santaMuerteTracking.deathWhenImpersonatingJohnnyON) && (_playerPuppetPS.m_santaMuerteTracking.isPlayerImpersonatingJohnny()) {
+            doResurrect = false;
+          }       
         } else {
           // Resurrect if mod is OFF and Second Heart is installed
           if ( (scriptInterface.GetStatsSystem().GetStatValue(Cast<StatsObjectID>(scriptInterface.ownerEntityID), gamedataStatType.ForcePreventResurrect) == 0.00) && this.HasSecondHeart(scriptInterface)) {
@@ -70,6 +74,8 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
 
           _playerPuppetPS.m_santaMuerteTracking.player.SetSlowMo(1.0,20.0);
 
+          _playerPuppetPS.m_santaMuerteTracking.player.GetPreventionSystem().HeatPipelineCooldown("CrimeWitness");
+
           stateContext.SetPermanentBoolParameter(n"isResurrectionAllowed", true, true);
           return;
         
@@ -89,3 +95,11 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
     scriptInterface.GetStatPoolsSystem().RequestSettingStatPoolValueIgnoreChangeMode(Cast<StatsObjectID>(scriptInterface.ownerEntityID), gamedataStatPoolType.Health, 0.00, null);
   }
 
+// public class PreventionSystem extends ScriptableSystem {
+@addMethod(PreventionSystem)
+  private final func HeatPipelineCooldown(heatChangeReason: String) -> Void {
+    if (EnumInt(this.m_heatStage)>0) {
+      let heatStageToSet: EPreventionHeatStage = IntToEPreventionHeatStage(EnumInt(this.m_heatStage) - 1);
+      this.ChangeHeatStage(heatStageToSet, heatChangeReason);
+    }
+  }

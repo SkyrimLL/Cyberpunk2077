@@ -152,13 +152,19 @@
   @runtimeProperty("ModSettings.max", "100")
   let blackoutDetourTeleportChance: Int32 = 20;
 
-
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Safeguards")
   @runtimeProperty("ModSettings.category.order", "40")
   @runtimeProperty("ModSettings.displayName", "Protection from Death Landings")
   @runtimeProperty("ModSettings.description", "Turn ON for safeguard against getting stuck in unreachable areas.")
   let deathLandingProtectionON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Safeguards")
+  @runtimeProperty("ModSettings.category.order", "41")
+  @runtimeProperty("ModSettings.displayName", "Allow death when V is Johnny")
+  @runtimeProperty("ModSettings.description", "Turn OFF for infinite resurrection (but no teleport) when V is Johnny.")
+  let deathWhenImpersonatingJohnnyON: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "HUD")
