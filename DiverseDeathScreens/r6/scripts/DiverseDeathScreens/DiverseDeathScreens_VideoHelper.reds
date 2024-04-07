@@ -100,9 +100,32 @@ public class FullScreenDeathSequenceController  {
     return GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q101_done") >= 1; // After Heist + back to H10 building
   }
 
+  private final func isPlayerImpersonatingJohnny() -> Bool {
+    let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+    let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
+    let isImpersonating: Bool = false;
+
+    switch controlledObjRecordID {
+      case t"Character.johnny_replacer":
+        isImpersonating=true;
+        break;
+      default:
+        isImpersonating=false;
+    };
+
+    return isImpersonating;
+  }
+
   public  func PlayVideoSequence() -> Void {
     // Only allow random animations when Relic is installed.
     if (this.randomizeDeathScreensON) && (this.isRelicInstalled()) {
+      // Force special screen when player is Johnny
+      if (this.isPlayerImpersonatingJohnny()) {
+        this.PlayVideoFile(r"base\\movies\\misc\\generic_noise_red.bk2", 0.9, false, n"None");
+        return;
+      }
+
       // Comment out once callbacks are working properly for a sequence
    
       // this.Fade(0.00, 1.00, n"OnFadeInEnd"); 
@@ -233,6 +256,7 @@ public class FullScreenDeathSequenceController  {
     this.init();
 
     if (this.modON) {
+
       // let video = new FullScreenDeathSequenceController();
 
       // LogChannel(n"DEBUG", ">>> FullScreenDeathSequenceController: init " );  
