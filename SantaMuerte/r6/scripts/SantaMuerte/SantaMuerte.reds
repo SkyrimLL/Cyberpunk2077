@@ -14,6 +14,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>; 
 
   public persistent let resurrectCount:  Int32;
+  public persistent let m_storedItems: array<ItemID>; 
 
   public let newDeathAnimationON: Bool; 
   public let randomDeathAnimationON: Bool; 
@@ -29,13 +30,15 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let blackoutON: Bool;
   public let teleportON: Bool;
   public let blackoutTeleportChance: Int32;
-  public let blackoutSafeTeleportON: Bool;  
-  public let blackoutSafeTeleportChance: Int32;
+  public let blackoutSafeTeleportON: Bool;   
   public let blackoutDetourTeleportON: Bool;  
   public let blackoutDetourTeleportChance: Int32;
   public let santaMuerteWidgetON: Bool;
   public let informativeHUDCompatibilityON: Bool;
   public let deathWhenImpersonatingJohnnyON: Bool;
+  public let hardcoreDetourRobbedON: Bool; 
+  public let hardcoreStealEquippedON: Bool;
+  public let hardcoreDetourRobbedChance: Int32;
 
   public let config: ref<SantaMuerteConfig>;
 
@@ -94,13 +97,15 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.teleportON = this.config.teleportON;
     this.maxSkippedTime = this.config.maxSkippedTime;
     this.blackoutTeleportChance = this.config.blackoutTeleportChance;
-    this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON;
-    this.blackoutSafeTeleportChance = this.config.blackoutSafeTeleportChance;
+    this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON; 
     this.blackoutDetourTeleportON = this.config.blackoutDetourTeleportON;
     this.blackoutDetourTeleportChance = this.config.blackoutDetourTeleportChance;
     this.santaMuerteWidgetON = this.config.santaMuerteWidgetON;
     this.informativeHUDCompatibilityON = this.config.informativeHUDCompatibilityON;
     this.deathWhenImpersonatingJohnnyON = this.config.deathWhenImpersonatingJohnnyON;
+    this.hardcoreDetourRobbedON = this.config.hardcoreDetourRobbedON;
+    this.hardcoreDetourRobbedChance = this.config.hardcoreDetourRobbedChance;
+    this.hardcoreStealEquippedON = this.config.hardcoreStealEquippedON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
@@ -422,17 +427,16 @@ sq018_03_padre_onspot
     if ( RandRange(1,100) <= this.blackoutTeleportChance ) && (canBeTeleported)  && (this.teleportON) {
       this.applyBlackout();
       // Test Detour teleports first
-      if (this.blackoutDetourTeleportON) && (RandRange(0,100)> (100 - this.blackoutDetourTeleportChance)) {
+      if (this.blackoutDetourTeleportON) && (RandRange(1,100) <= this.blackoutDetourTeleportChance) {
           teleportSuccessful = this.tryResurrectionDetourTeleport();           
       }  
 
       // If Detour teleport failed, test safe teleports
-      if (!teleportSuccessful) && (this.blackoutSafeTeleportON) && (RandRange(0,100)> (100 - this.blackoutSafeTeleportChance)) {
+      if (!teleportSuccessful) && (this.blackoutSafeTeleportON) {
           teleportSuccessful = this.tryResurrectionSafeTeleport();           
       }     
 
       if (teleportSuccessful) {
-
         this.applyLoadingScreen();
 
         // Add 6 to 12 hours to account for transportation and healing
@@ -583,13 +587,23 @@ sq018_03_padre_onspot
     this.clearBlackout();
   }
   
+  public func forceCameraReset() -> Void {
+    let resetOrientation: EulerAngles = new EulerAngles(10, 0, 0);
+    let resetPosition: Vector4 = new Vector4(0, 0, 0, 1.0);
+
+    // this.player.GetFPPCameraComponent().ResetPitch();
+    this.player.GetFPPCameraComponent().SetLocalOrientation(EulerAngles.ToQuat(resetOrientation));
+    this.player.GetFPPCameraComponent().SetLocalPosition(resetPosition);
+  }
+
+
   private func tryResurrectionSafeTeleport() -> Bool {
     let randNum: Int32;
     let teleportSuccessful: Bool = false;
 
     randNum = RandRange(0,100);
 
-    if (randNum >= 90) {
+    if (randNum >= 90) && (!(this.isInDogtown())) {
       this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
       teleportSuccessful = this.tryTeleportMedicalCenter();
     }
@@ -920,21 +934,37 @@ sq018_03_padre_onspot
         }
 
         break;
-      case gamedataDistrict.ArasakaWaterfront:
-        // Room 1306 in motel
-        position = new Vector4(-1519.083, 2195.000, 22.198, 1.000000);
+      case gamedataDistrict.ArasakaWaterfront: 
+        // Trash pile outside Konpeki Plaza
+        position = new Vector4(-2174.469, 1904.703, 18.186, 1.000000);
         rotation = new EulerAngles(0.0, -30.0, 0.0);
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.CityCenter:
+        // Arasaka warehouse
+        position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.Downtown:
+        // Dino
+        position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.CorpoPlaza:
+        // Underwater - waterfront
+        position = new Vector4(-1201.325, 685.873, -11.116, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
 
       case gamedataDistrict.Heywood:
+        // Padre
+        position = new Vector4(-1807.022, -1281.709, 21.885, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.Glen:
         // Trash pile in Reconciliation Park
@@ -943,10 +973,20 @@ sq018_03_padre_onspot
         isDestinationFound = true;
         break;
       case gamedataDistrict.Wellsprings:
-        // Valentinos scrap yard
-        position = new Vector4(-506.051, -96.526, 7.770, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
-        isDestinationFound = true;
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Valentinos scrap yard
+          position = new Vector4(-506.051, -96.526, 7.770, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
+        if (randNum < 80) {
+          // Trash burning pits
+          position = new Vector4(-2071.315, -1125.493, 10.963, 1.000000);
+          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          isDestinationFound = true;
+        }
         break;
       case gamedataDistrict.VistaDelRey:
         // Dark alley
@@ -956,6 +996,10 @@ sq018_03_padre_onspot
         break;
 
       case gamedataDistrict.Pacifica:
+        // Homeless camp
+        position = new Vector4(-2017.643, -2218.369, 19.741, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.WestWindEstate:
         // Beach Trash Pile
@@ -1006,6 +1050,10 @@ sq018_03_padre_onspot
         break;
 
       case gamedataDistrict.Westbrook:
+        // Trash pile under overpass
+        position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
+        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        isDestinationFound = true;
         break;
       case gamedataDistrict.JapanTown:
         randNum = RandRange(0,100);
@@ -1124,6 +1172,10 @@ sq018_03_padre_onspot
     }
 
     if (isDestinationFound) {
+      if (this.hardcoreDetourRobbedON) {
+        this.robPlayer();
+      }
+
       GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);      
     }
 
@@ -1339,6 +1391,12 @@ sq018_03_padre_onspot
     return true;
   }
 
+  private final func isInDogtown() -> Bool {
+    let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
+    
+    return Equals(currentDistrict, gamedataDistrict.Dogtown);
+  }
+
   private final func isPlayerImpersonating() -> Bool {
     let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
     let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
@@ -1390,9 +1448,162 @@ sq018_03_padre_onspot
   }
 
 
-  private func showDebugMessage(debugMessage: String) {
-    // LogChannel(n"DEBUG", debugMessage ); 
+/* 
+  HARDCORE MODE: STRIPPED AND LEFT FOR DEAD
+*/
+// From: public class InvisibleSceneStash extends Device {
+
+  protected cb func robPlayer() -> Bool {
+    let i: Int32;
+    let id: ItemID;
+    let itemList: array<ItemID>;
+    // let player: ref<PlayerPuppet> = GetPlayer(this.GetGame());
+    let equipmentSystem: ref<EquipmentSystem>;
+    let equipmentData: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this.player);
+    let slotList: array<gamedataEquipmentArea> = this.GetSlots(equipmentData.IsBuildCensored());
+    let unequipSetRequest: ref<QuestDisableWardrobeSetRequest> = new QuestDisableWardrobeSetRequest();
+    equipmentSystem = EquipmentSystem.GetInstance(this.player);
+    unequipSetRequest.owner = this.player;
+    equipmentSystem.QueueRequest(unequipSetRequest);
+    i = 0;
+    while i < ArraySize(slotList) {
+      id = equipmentData.GetActiveItem(slotList[i]);
+      if ItemID.IsValid(id) {
+        ArrayPush(itemList, id);
+        equipmentSystem.QueueRequest(this.CreateUnequipRequest(this.player, slotList[i], 0));
+
+        if (Equals(slotList[i], gamedataEquipmentArea.Weapon)) {
+          equipmentSystem.QueueRequest(this.CreateUnequipRequest(this.player, slotList[i], 1));
+          equipmentSystem.QueueRequest(this.CreateUnequipRequest(this.player, slotList[i], 2));
+        }
+      };
+      i += 1;
+    };
+
+    // Note: Hardcore mode - stripped items are lost forever
+    //        Maybe extend to a safe locker at some point
+    this.disposeItems(itemList);
   }
+
+  private final const func GetSlots(censored: Bool) -> array<gamedataEquipmentArea> {
+    let slots: array<gamedataEquipmentArea>;
+    ArrayPush(slots, gamedataEquipmentArea.Weapon);  
+    ArrayPush(slots, gamedataEquipmentArea.Face);
+    ArrayPush(slots, gamedataEquipmentArea.Head);
+    ArrayPush(slots, gamedataEquipmentArea.Feet);
+    ArrayPush(slots, gamedataEquipmentArea.Legs);
+    ArrayPush(slots, gamedataEquipmentArea.InnerChest);
+    ArrayPush(slots, gamedataEquipmentArea.OuterChest);
+    ArrayPush(slots, gamedataEquipmentArea.Outfit);
+    if !censored {
+      ArrayPush(slots, gamedataEquipmentArea.UnderwearBottom);
+      ArrayPush(slots, gamedataEquipmentArea.UnderwearTop);
+    };
+    return slots;
+  }
+
+  private final const func CreateUnequipRequest(player: ref<PlayerPuppet>, area: gamedataEquipmentArea, slotIndex: Int32 ) -> ref<UnequipRequest> {
+    let unequipRequest: ref<UnequipRequest> = new UnequipRequest();
+    unequipRequest.owner = player;
+    unequipRequest.slotIndex = slotIndex;
+    unequipRequest.areaType = area;
+    return unequipRequest;
+  }
+
+  public final func disposeItems(itemList: array<ItemID>) -> Void {
+    let i: Int32; 
+    let item: ItemModParams;
+    let m_inventoryManager: wref<InventoryDataManagerV2> = EquipmentSystem.GetData(this.player).GetInventoryManager();
+
+    // Steal all equipped items
+    if (this.hardcoreStealEquippedON) {
+      for itemID in itemList { 
+        GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
+      }      
+    }
+
+    // Add chance of rest of inventory being stolen
+    for itemData in m_inventoryManager.GetPlayerInventoryData() { 
+      let itemID = itemData.ID;
+
+      if this.IsValidItem(itemData) {
+        if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
+          // Tentative solution to record list of lost items
+          // ArrayPush(this.m_storedItems, itemID);
+     
+          GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
+
+        }
+
+      }
+    }
+ 
+  }
+
+  public func IsValidItem(itemData: InventoryItemData) -> Bool { 
+    let itemRecordId = ItemID.GetTDBID(itemData.ID);
+    let itemCategory: gamedataItemCategory = RPGManager.GetItemCategory(itemData.ID);
+    let itemType: gamedataItemType = InventoryItemData.GetGameItemData(itemData).GetItemType();
+    let isValid: Bool = true;
+
+    // let itemRecord = TweakDBInterface.GetClothingRecord(itemRecordId);
+
+    // Exclude unequipable items
+    if InventoryItemData.GetGameItemData(itemData).HasTag(n"UnequipBlocked") || InventoryItemData.GetGameItemData(itemData).HasTag(n"Quest") {
+      isValid = false;
+    };
+
+    // Exclude equipped cyberware 
+    if (RPGManager.IsItemCyberware(itemData.ID)) || (RPGManager.IsItemTypeCyberwareWeapon(itemType)) {
+      isValid = false;
+    }
+
+    // return IsDefined(itemRecord);
+    return isValid;
+  }
+
+/* 
+let currentValue: Float = itemData.GetStatValueByType(this.m_statType);
+
+telemetryItem.friendlyName = InventoryItemData.GetGameItemData(inventoryItemData).GetNameAsString();
+telemetryItem.localizedName = InventoryItemData.GetName(inventoryItemData);
+telemetryItem.itemID = InventoryItemData.GetID(inventoryItemData);
+telemetryItem.quality = InventoryItemData.GetComparedQuality(inventoryItemData);
+telemetryItem.itemType = InventoryItemData.GetItemType(inventoryItemData);
+telemetryItem.itemLevel = InventoryItemData.GetItemLevel(inventoryItemData);
+telemetryItem.iconic = InventoryItemData.GetGameItemData(inventoryItemData).GetStatValueByType(gamedataStatType.IsItemIconic) > 0.00;
+
+NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
+
+
+  public final static func IsItemWeapon(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemCategory(itemID), gamedataItemCategory.Weapon);
+  }
+
+  public final static func IsItemClothing(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemCategory(itemID), gamedataItemCategory.Clothing);
+  }
+
+  public final static func IsItemCyberware(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemCategory(itemID), gamedataItemCategory.Cyberware);
+  }
+
+  public final static func IsItemGadget(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemCategory(itemID), gamedataItemCategory.Gadget);
+  }
+
+  public final static func IsItemProgram(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemType(itemID), gamedataItemType.Prt_Program);
+  }
+
+  public final static func IsItemMisc(itemID: ItemID) -> Bool {
+    return Equals(RPGManager.GetItemType(itemID), gamedataItemType.Gen_Misc);
+  }
+*/
+
+/* 
+  PERMADEATH TEST
+*/
 
   public func markGameForPermaDeath() -> Void {
     this.showDebugMessage( ">>> Santa Muerte: Final Death" ); 
@@ -1400,8 +1611,15 @@ sq018_03_padre_onspot
   }
 
 /* 
-
+  SHOWMESSAGE OVERRIDE FOR DEBUGGING
 */
+  private func showDebugMessage(debugMessage: String) {
+    // LogChannel(n"DEBUG", debugMessage ); 
+  }
+
+
+
+
 
 }
 

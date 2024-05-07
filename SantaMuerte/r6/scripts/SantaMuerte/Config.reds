@@ -127,16 +127,6 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
-  @runtimeProperty("ModSettings.category.order", "33")
-  @runtimeProperty("ModSettings.displayName", "Chance of Safe Haven Teleport")
-  @runtimeProperty("ModSettings.description", "Sets the random chance of a teleport to a safe destination")
-  @runtimeProperty("ModSettings.step", "1")
-  @runtimeProperty("ModSettings.min", "0")
-  @runtimeProperty("ModSettings.max", "100")
-  let blackoutSafeTeleportChance: Int32 = 60;
-
-  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
-  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
   @runtimeProperty("ModSettings.category.order", "34")
   @runtimeProperty("ModSettings.displayName", "Enable Detour Teleport")
   @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Detour location (unique spots, some dangerous)")
@@ -151,6 +141,30 @@
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
   let blackoutDetourTeleportChance: Int32 = 20;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
+  @runtimeProperty("ModSettings.category.order", "36")
+  @runtimeProperty("ModSettings.displayName", "Hardcore mode - Robbed and left for dead")
+  @runtimeProperty("ModSettings.description", "If ON, when teleported to an unsafe destination (Detour), V will be robbed from most inventory items (WARNING: Quest items should be safe. There is no way to recover stolen items).")
+  let hardcoreDetourRobbedON: Bool = false;   
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
+  @runtimeProperty("ModSettings.category.order", "37")
+  @runtimeProperty("ModSettings.displayName", "Hardcore mode - Chance of being robbed")
+  @runtimeProperty("ModSettings.description", "Sets the random chance of stolen items from V's inventory after waking up in an unsafe destination.")
+  @runtimeProperty("ModSettings.step", "1")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "100")
+  let hardcoreDetourRobbedChance: Int32 = 20;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
+  @runtimeProperty("ModSettings.category.order", "38")
+  @runtimeProperty("ModSettings.displayName", "Hardcore mode - Always steal equipped items")
+  @runtimeProperty("ModSettings.description", "If ON, equipped items will be stolen no matter what. If OFF, equipped items will be subjected to the chance of being robbed defined above.")
+  let hardcoreStealEquippedON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Safeguards")

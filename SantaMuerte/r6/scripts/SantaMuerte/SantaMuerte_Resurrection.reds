@@ -12,6 +12,8 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
 
     _playerPuppetPS.m_santaMuerteTracking.applyJohnnySickness();
 
+    // _playerPuppetPS.m_santaMuerteTracking.forceCameraReset();
+
 	  wrappedMethod( stateContext, scriptInterface );
     GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, enableVisibilityEvt, 0.1 );
 }
