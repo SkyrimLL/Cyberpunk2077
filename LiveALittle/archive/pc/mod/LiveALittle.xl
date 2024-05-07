@@ -1,4 +1,5 @@
 localization:
   onscreens:
     en-us: base\localization\en-us\onscreens\LiveALittle.json
-    pt-br: base\localization\en-us\onscreens\LiveALittle.json
+    pt-br: base\localization\pt-br\onscreens\LiveALittle.json
+    de-de: base\localization\de-de\onscreens\LiveALittle.json
