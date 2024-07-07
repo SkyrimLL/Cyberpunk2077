@@ -64,182 +64,182 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Worn out",
+              "femaleVariant": "Aftermarket",
               "maleVariant": "",
               "primaryKey": "91739",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier1"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Second hand",
+              "femaleVariant": "Commercial",
               "maleVariant": "",
               "primaryKey": "91740",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier2"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Well maintained",
+              "femaleVariant": "Preem",
               "maleVariant": "",
               "primaryKey": "91741",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier3"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Factory new",
+              "femaleVariant": "Corp-issued",
               "maleVariant": "",
               "primaryKey": "91742",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier4"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Supercharged",
+              "femaleVariant": "Military Grade",
               "maleVariant": "",
               "primaryKey": "91743",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier5"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Worn out\u002B",
+              "femaleVariant": "Aftermarket\u002B",
               "maleVariant": "",
               "primaryKey": "94240",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier1plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Second hand\u002B",
+              "femaleVariant": "Commercial\u002B",
               "maleVariant": "",
               "primaryKey": "94241",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier2plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Well maintained\u002B",
+              "femaleVariant": "Preem\u002B",
               "maleVariant": "",
               "primaryKey": "94242",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier3plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Factory new\u002B",
+              "femaleVariant": "Corp-issued\u002B",
               "maleVariant": "",
               "primaryKey": "94243",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier4plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Customized\u002B",
+              "femaleVariant": "Military Grade\u002B",
               "maleVariant": "",
               "primaryKey": "94244",
               "secondaryKey": "Gameplay-RPG-Stats-Tiers-Tier5plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Street job",
+              "femaleVariant": "Upgrade to Aftermarket",
               "maleVariant": "",
               "primaryKey": "94330",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier1"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Street job\u002B",
+              "femaleVariant": "Upgrade to Aftermarket\u002B",
               "maleVariant": "",
               "primaryKey": "94331",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier1plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Bio Fitted",
+              "femaleVariant": "Upgrade to Commercial",
               "maleVariant": "",
               "primaryKey": "94332",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier2"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Bio Fitted\u002B",
+              "femaleVariant": "Upgrade to Commercial\u002B",
               "maleVariant": "",
               "primaryKey": "94333",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier2plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Silver Certified",
+              "femaleVariant": "Upgrade to Preem",
               "maleVariant": "",
               "primaryKey": "94334",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier3"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Silver Certified\u002B",
+              "femaleVariant": "Upgrade to Preem\u002B",
               "maleVariant": "",
               "primaryKey": "94335",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier3plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Gold Certified",
+              "femaleVariant": "Upgrade to Corp-issued",
               "maleVariant": "",
               "primaryKey": "94336",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier4"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Gold Certified\u002B",
+              "femaleVariant": "Upgrade to Corp-issued\u002B",
               "maleVariant": "",
               "primaryKey": "94337",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier4plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Platinum Certified",
+              "femaleVariant": "Upgrade to Military Grade",
               "maleVariant": "",
               "primaryKey": "94338",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier5"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Platinum Certified\u002B",
+              "femaleVariant": "Upgrade to Military Grade\u002B",
               "maleVariant": "",
               "primaryKey": "94339",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier5plus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Upgrade to Trauma Platinum Certified\u002B\u002B",
+              "femaleVariant": "Upgrade to Military Grade\u002B\u002B",
               "maleVariant": "",
               "primaryKey": "94340",
               "secondaryKey": "UI-Ripperdoc-CyberwareUpgrade-Tier5plusplus"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Worn out",
+              "femaleVariant": "Aftermarket",
               "maleVariant": "",
               "primaryKey": "1814",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Common"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Second hand",
+              "femaleVariant": "Commercial",
               "maleVariant": "",
               "primaryKey": "1817",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Uncommon"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Well maintained",
+              "femaleVariant": "Preem",
               "maleVariant": "",
               "primaryKey": "1816",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Rare"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Factory new",
+              "femaleVariant": "Corp-issued",
               "maleVariant": "",
               "primaryKey": "1813",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Epic"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Supercharged",
+              "femaleVariant": "Military Grade",
               "maleVariant": "",
               "primaryKey": "1815",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Legendary"
