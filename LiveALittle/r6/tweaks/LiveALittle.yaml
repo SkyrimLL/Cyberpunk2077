@@ -1,2 +1,5 @@
 EconomicAssignment.q103_rogue_payment.overrideValue: 40000
 EconomicAssignment.q001_victor_debt.overrideValue: 63000
+EconomicAssignment.q003_flathead_payment.overrideValue: 50000
+Price.Flathead.value: 50000
+Items.q003_chip_cracked_funds.price: 50000
