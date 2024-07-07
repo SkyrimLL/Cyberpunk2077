@@ -29,9 +29,9 @@ For redscript mod developers
 
     switch this.m_actionType {
       // case QuantityPickerActionType.TransferToPlayer: // Pick up?
-      // case QuantityPickerActionType.Buy:
+      // case QuantityPickerActionType.Buy: 
       case QuantityPickerActionType.Drop:
-      case QuantityPickerActionType.Sell:
+      case QuantityPickerActionType.Sell: 
       case QuantityPickerActionType.Disassembly:
       case QuantityPickerActionType.Craft:
       case QuantityPickerActionType.TransferToStorage:
