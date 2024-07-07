@@ -156,7 +156,7 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
 
     if (!this.lookupDisassemblyItem(_id)) {
       ArrayPush(this.disassemblyList, this.createItem(_id, _itemType, _itemQuality, _itemQuantity, _itemData));
-      // showDebugMessage(">>>  " + ToString(ArraySize(this.disassemblyList)) + " items in disassembly list.");
+      //this.showDebugMessage(">>>  " + ToString(ArraySize(this.disassemblyList)) + " items in disassembly list.");
 
     } else {
       let Item = this.getDisassemblyItem(_id);
@@ -210,12 +210,12 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
         thisItem.itemCanDisassemble = true;
         }  
 
-      // KeepOneOfEach = 0,
+      // IgnoreQuality = 0,
       // SelectMinQuality = 1,
       // TopQualityOnly = 2,
  
       // By default, keep only one of each item and quality
-      // Add overrides if quality mode is not 'KeepOneOfEach'
+      // Add overrides if quality mode is not 'IgnoreQuality'
 
       if (Equals(this.repeatDisassemblyQualityMode, RepeatDisassemblyQualityModes.SelectMaxQuality)) && (EnumInt(thisItem.itemQuality) <= EnumInt(this.repeatDisassemblyQualityMax)) {
         thisItem.itemCanDisassemble = true;
@@ -233,10 +233,10 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
         thisItem.itemCanDisassemble = false;
       } 
 
-      // showDebugMessage(">>>         itemQuality: " + EnumInt(thisItem.itemQuality) + " repeatDisassemblyQualityMax : " + EnumInt(this.repeatDisassemblyQualityMax) );  
-      // showDebugMessage(">>>         itemQuality: " + EnumInt(thisItem.itemQuality) + " itemQualityMax : " + EnumInt(this.itemQualityMax) );  
+      //this.showDebugMessage(">>>         itemQuality: " + EnumInt(thisItem.itemQuality) + " repeatDisassemblyQualityMax : " + EnumInt(this.repeatDisassemblyQualityMax) );  
+      //this.showDebugMessage(">>>         itemQuality: " + EnumInt(thisItem.itemQuality) + " itemQualityMax : " + EnumInt(this.itemQualityMax) );  
 
-      // showDebugMessage(">>>         removeDisassemblyItem: " + TDBID.ToStringDEBUG(thisItem.itemRecordID) + " Quality : " + ToString(thisItem.itemQuality)  + " Quantity : " + ToString(thisItem.itemQuantity)  + " CanDisassemble : " + ToString(thisItem.itemCanDisassemble) );  
+      //this.showDebugMessage(">>>         removeDisassemblyItem: " + TDBID.ToStringDEBUG(thisItem.itemRecordID) + " Quality : " + ToString(thisItem.itemQuality)  + " Quantity : " + ToString(thisItem.itemQuantity)  + " CanDisassemble : " + ToString(thisItem.itemCanDisassemble) );  
 
       if ( thisItem.itemCanDisassemble ) {
         thisItem.itemQuantity -= 1;
@@ -251,7 +251,7 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
   public func showDisassemblyItemsList() -> Void { 
 
     for thisItem in this.disassemblyList { 
-      showDebugMessage(">>> Disassembly Item: " + TDBID.ToStringDEBUG(thisItem.itemRecordID) + " Quality : " + ToString(thisItem.itemQuality)  + " Quantity : " + ToString(thisItem.itemQuantity) );  
+      this.showDebugMessage(">>> Disassembly Item: " + TDBID.ToStringDEBUG(thisItem.itemRecordID) + " Quality : " + ToString(thisItem.itemQuality)  + " Quantity : " + ToString(thisItem.itemQuantity) );  
     }; 
   }
 /* 
@@ -287,7 +287,7 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
         _playerPuppetPS.m_repeatDisassemblyTracking.refreshConfig();
         ArrayClear(_playerPuppetPS.m_repeatDisassemblyTracking.disassemblyList);
         _playerPuppetPS.m_repeatDisassemblyTracking.itemQualityMax = RepeatDisassemblyQuality.Common; 
-        // showDebugMessage(">>> AUTO DISASSEMBLY: Attachment detected: " ); 
+        //this.showDebugMessage(">>> AUTO DISASSEMBLY: Attachment detected: " ); 
   
         // Loop through inventory to build list of weapon mods class items
 
@@ -299,7 +299,7 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
             itemType = list[i].GetItemType();
             itemQuantity = list[i].GetQuantity();
             itemQuality = RPGManager.GetItemDataQuality(list[i]);
-            // showDebugMessage(">>> Attachment found: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(list[i].GetID())) + " Quality : " + ToString(itemQuality) );
+            //this.showDebugMessage(">>> Attachment found: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(list[i].GetID())) + " Quality : " + ToString(itemQuality) );
 
             _playerPuppetPS.m_repeatDisassemblyTracking.addDisassemblyItem( ItemID.GetTDBID(list[i].GetID()), itemType, itemQuality, 1, list[i]);
           };
@@ -316,15 +316,15 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
           if !list[i].HasTag(n"Fragment") && !list[i].HasTag(n"SoftwareShard") {
 
             itemCanDisassemble = _playerPuppetPS.m_repeatDisassemblyTracking.removeDisassemblyItem( ItemID.GetTDBID(list[i].GetID()));
-            showDebugMessage(">>> Disassembling attachment ["+ToString(i) + "]: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(list[i].GetID())));
+            // _playerPuppetPS.m_repeatDisassemblyTracking.showDebugMessage(">>> Disassembling attachment ["+ToString(i) + "]: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(list[i].GetID())));
 
             if (itemCanDisassemble) {
               // if this.CanItemBeDisassembled(this.m_player, list[i].GetID()) {
                 ItemActionsHelper.DisassembleItem(this.m_player, list[i].GetID(), list[i].GetQuantity());
-                // showDebugMessage(">>>         REMOVE");
+                // _playerPuppetPS.m_repeatDisassemblyTracking.showDebugMessage(">>>         REMOVE");
               // };              
             } // else {
-                // showDebugMessage(">>>         KEEP");
+                // _playerPuppetPS.m_repeatDisassemblyTracking.showDebugMessage(">>>         KEEP");
 
             // }
  

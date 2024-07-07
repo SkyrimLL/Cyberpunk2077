@@ -4,7 +4,7 @@ enum RepeatDisassemblyRepeatModes {
 }
 
 enum RepeatDisassemblyQualityModes {
-  KeepOneOfEach = 0,
+  IgnoreQuality = 0,
   SelectMaxQuality = 1,
   TopQualityOnly = 2
 }
@@ -51,7 +51,7 @@ enum RepeatDisassemblyQuality {
   @runtimeProperty("ModSettings.category.order", "11")
   @runtimeProperty("ModSettings.displayName", "Quality Mode")
   @runtimeProperty("ModSettings.description", "Sets the quality awareness of disassembly - Keep one of each quality, only the top quality for each or disassemble ALL weapon mods.") 
-  let repeatDisassemblyQualityMode: RepeatDisassemblyQualityModes = RepeatDisassemblyQualityModes.KeepOneOfEach;
+  let repeatDisassemblyQualityMode: RepeatDisassemblyQualityModes = RepeatDisassemblyQualityModes.IgnoreQuality;
 
   @runtimeProperty("ModSettings.mod", "JUNK MODS DISASSEMBLY")
   @runtimeProperty("ModSettings.category", "Modes")
