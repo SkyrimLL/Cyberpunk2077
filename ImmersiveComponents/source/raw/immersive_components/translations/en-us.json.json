@@ -44,26 +44,6 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "primaryKey": "34881",
-              "femaleVariant": "Super Conducting Interface"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "primaryKey": "54086",
-              "femaleVariant": "Photonic Memchip"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "primaryKey": "34882",
-              "femaleVariant": "Quantum Transcriptor"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "primaryKey": "54087",
-              "femaleVariant": "Gold Plated Diagnet Expansion Chip"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
               "femaleVariant": "Aftermarket",
               "maleVariant": "",
               "primaryKey": "91739",
@@ -243,6 +223,34 @@
               "maleVariant": "",
               "primaryKey": "1815",
               "secondaryKey": "Gameplay-RPG-Items-Quality-Legendary"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Decrypted Metadata",
+              "maleVariant": "",
+              "primaryKey": "34881",
+              "secondaryKey": "Gameplay-Crafting-CraftingParts-DisplayName-QuickHackUncommonMaterial1"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Private Encryption Keys",
+              "maleVariant": "",
+              "primaryKey": "54086",
+              "secondaryKey": "Gameplay-Crafting-CraftingParts-DisplayName-QuickHackRareMaterial1"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Sub-system Routines",
+              "maleVariant": "",
+              "primaryKey": "34882",
+              "secondaryKey": "Gameplay-Crafting-CraftingParts-DisplayName-QuickHackEpicMaterial1"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Advanced Agent Library",
+              "maleVariant": "",
+              "primaryKey": "54087",
+              "secondaryKey": "Gameplay-Crafting-CraftingParts-DisplayName-QuickHackLegendaryMaterial1"
             }
           ]
         }
