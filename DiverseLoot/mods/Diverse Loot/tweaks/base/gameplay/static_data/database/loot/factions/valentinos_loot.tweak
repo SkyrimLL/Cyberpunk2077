@@ -1,0 +1,417 @@
+package Loot
+using RTDB
+
+ValentinosDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[ 
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 10;
+			dropCountMax = 30;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 30;
+			dropCountMax = 50;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+ValentinosGenericRangedGruntT1 : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+ValentinosGenericRangedGruntT2_rifle : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.2;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosGenericRangedGruntT2_sideArm : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosGenericMeleeGruntT1_blunt : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+}
+
+ValentinosGenericMeleeGruntT1_blade : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+}
+
+ValentinosGenericMeleeGruntT2_knife : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosGenericMeleeGruntT2_blade : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosShotgunStrongT2 : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}, 
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ValentinosShotgunShotgunT3 : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.BodySkill_Skillbook";
+		}, 
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ValentinosFastMeleeGruntT2_knife : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosFastMeleeGruntT2_blade : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosHeavyMeleeGruntT2_fist : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ValentinosHeavyMeleeGruntT2_knife : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosHeavyMeleeMacheteT3 : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ValentinosSniperSniperT3 : ValentinosDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.ValentinosClothing";
+		} 
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+

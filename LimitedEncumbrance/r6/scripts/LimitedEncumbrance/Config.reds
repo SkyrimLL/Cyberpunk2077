@@ -91,7 +91,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.description", "Sets the maximum value assigned to the carry capacity (in total value)")
   @runtimeProperty("ModSettings.step", "10")
   @runtimeProperty("ModSettings.min", "10")
-  @runtimeProperty("ModSettings.max", "200")
+  @runtimeProperty("ModSettings.max", "500")
   let carryCapacityCapMod: Int32 = 100;
 
   @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
@@ -101,7 +101,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.description", "Overrides the Limited Carry Capacity system with a fixed value (use 0 to turn OFF)")
   @runtimeProperty("ModSettings.step", "5")
   @runtimeProperty("ModSettings.min", "0")
-  @runtimeProperty("ModSettings.max", "400")
+  @runtimeProperty("ModSettings.max", "500")
   let carryCapacityOverride: Int32 = 0;
 
   @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")

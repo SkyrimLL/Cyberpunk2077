@@ -19,6 +19,8 @@
       if spawnedObject.IsVehicle() {
         aiVehicleChaseCommand = new AIVehicleChaseCommand();
         aiVehicleChaseCommand.target = player;
+
+        // DBF - change spawn distance
         aiVehicleChaseCommand.distanceMin = TweakDBInterface.GetFloat(t"DynamicSpawnSystem.dynamic_vehicles_chase_setup.distanceMin", 3.00);
         aiVehicleChaseCommand.distanceMax = TweakDBInterface.GetFloat(t"DynamicSpawnSystem.dynamic_vehicles_chase_setup.distanceMax", 5.00);
         aiVehicleChaseCommand.forcedStartSpeed = 10.00;
@@ -48,6 +50,31 @@
     wrappedMethod(playerPuppet);
 }
 
+//public class scannerDetailsGameController extends inkHUDGameController {
+@replaceMethod(scannerDetailsGameController)
+  private final const func ShouldDisplayTwintoneTab() -> Bool {
+    let i: Int32;
+    let playerVehicles: array<TweakDBID>;
+    if !IsDefined(this.m_player) || Cast<Bool>(GetFact(this.m_player.GetGame(), n"twintone_scan_disabled")) || Cast<Bool>(GetFact(this.m_player.GetGame(), this.GetPlayAsJohnnyFactName())) {
+      return false;
+    };
+    if NotEquals(this.m_scannedObjectType, ScannerObjectType.VEHICLE) || !IsDefined(this.m_scannedObject as VehicleObject) {
+      return false;
+    };
+
+    // DBF - disable check for unlockable vehicles since Claim Vehicles tries to make all vehicles unlockable ahead of time
+    
+    // playerVehicles = TDB.GetForeignKeyArray(t"Vehicle.vehicle_list.list");
+    // i = 0;
+    // while i < ArraySize(playerVehicles) {
+    //   if (this.m_scannedObject as VehicleObject).GetRecord().GetRecordID() == playerVehicles[i] {
+    //     return false;
+    //   };
+    //   i += 1;
+    // };
+    return true;
+  }
+
 /*
 @addMethod(VehiclesManagerPopupGameController)
 
@@ -61,7 +88,7 @@
   }
 
 @wrapMethod(VehiclesManagerPopupGameController)
-
+  
   protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool
   {
       wrappedMethod(playerPuppet);

@@ -1,86 +1,9 @@
 EconomicAssignment.q103_rogue_payment.overrideValue: 40000
 EconomicAssignment.q001_victor_debt.overrideValue: 63000
-# EconomicAssignment.q003_flathead_payment.overrideValue: 50000
-# Items.q003_chip_cracked_funds.price: 50000
-# Price.Flathead.value: 50000
+QuestRewards.mq019_05_reward_recording_inline1.value: 50000
+QuestRewards.mq019_06_body_dispossed_inline1.value: 50000
 
-# Flathead Price script.
-# Source: Economy Reabalance mod by HuteckX (used with permission)
-Price.Flathead:
-  value: 51000.0
-EconomicAssignment.q003_flathead_payment:
-  overrideValue: 50000
-# Cred Chip (deleted the activation action)
-Items.q003_chip_cracked_funds:
-  $type: gamedataItem_Record
-  animFeatureName: ItemData
-  animName: ui_garment_pose
-  animSetResource: ''
-  crosshair: Crosshairs.None
-  dropObject: defaultItemDrop
-  enableNpcRPGData: False
-  friendlyName: q003_chip_cracked
-  garmentOffset: 0
-  icon: UIIcon.ItemIcon
-  iconPath: q003_chip_cracked
-  isCached: False
-  isCustomizable: False
-  isGarment: False
-  isPart: False
-  isSingleInstance: True
-  itemCategory: ItemCategory.General
-  itemType: ItemType.Gen_Misc
-  localizedName: ''
-  mass: 1
-  minigameInstance: minigame_v2.DefaultItemMinigame
-  powerLevelDeterminedByParent: False
-  quality: Quality.Epic
-  qualityRestrictedByParent: False
-  replicateWhenNotActive: False
-  useHeadgearGarmentAggregator: False
-  useNewSpawnMethod: False
-  usesVariants: False
-  savable: False
-  animationParameters: []
-  appearanceSuffixes: []
-  appearanceSuffixesOwnerOverride: []
-  attachmentSlots: []
-  buyPrice:
-    - Price.BasePrice
-    - Price.Flathead
-    - Price.Flathead
-  cameraForward: {x: 0, y: 0, z: 0}
-  cameraUp: {x: 0, y: 0, z: 0}
-  connections: []
-  displayName: LocKey#35619
-  equipAreas: []
-  equipPrereqs: []
-  gameplayRestrictions:
-    - GameplayRestriction.VehicleCombatNoInterruptions
-  hairSkinnedMeshComponents: []
-  localizedDescription: LocKey#35620
-  OnAttach: []
-  OnEquip: []
-  OnLooted: []
-  parts: []
-  placementSlots:
-    - AttachmentSlots.Splinter
-  previewBBoxOverride: []
-  requiredSlots: []
-  sellPrice:
-    - Price.BasePrice
-    - Price.Flathead
-  slotPartList: []
-  slotPartList2: []
-  slotPartListPreset: []
-  tags:
-    - Junk
-  variants: []
-  visualTags: []
-  effectors: []
-  objectActions: []
-  statModifierGroups: []
-  statModifiers: []
-  statPools: []
-  weakspots: []
-  price: 50000
+# Miltech credit chip for the Flathead
+EconomicAssignment.q003_flathead_payment.overrideValue: 50000
+Price.Flathead.value: 51000.0
+Items.q003_chip_cracked_inline0.value: 50000

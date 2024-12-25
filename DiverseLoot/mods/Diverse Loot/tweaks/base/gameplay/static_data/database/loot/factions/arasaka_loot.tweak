@@ -1,0 +1,820 @@
+package Loot
+using RTDB
+
+ArasakaDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 10;
+			dropCountMax = 30;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 30;
+			dropCountMax = 50;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+ArasakaGenericRangedGuardT1_handgun : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+ArasakaGenericRangedGuardT1_smg : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+ArasakaGenericRangedSecurityT1_handgun : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+ArasakaGenericRangedSecurityT1_smg : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+ArasakaGenericRangedRangerT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGenericRangedSoldierT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGenericRangedBodyguardT3_handgun : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.1;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGenericRangedBodyguardT3_rifle : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGenericMeleeGuardT1 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+}
+
+ArasakaGenericMeleeSecurityT1 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+}
+
+ArasakaGenericMeleeRangerT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaShotgunSoldierT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaShotgunTerminatorT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastRangedAgentT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.CorpoClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastRangedCyborgT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastMeleeAgentT2_blade : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.CorpoClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastMeleeAgentT2_knife : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.CorpoClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastMeleeNinjaT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastMeleeNinjaT3_katana : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaFastShotgunAgentT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.CorpoClothing";
+		}
+	];
+}
+
+ArasakaFastShotgunCyborgT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaHeavyMeleeBodyguardT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+}
+
+ArasakaHeavyMeleeSumoT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			itemID = "Items.MoneyShardUncommon";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			itemID = "Items.MoneyShardRare";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			itemID = "Items.MoneyShardEpic";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			itemID = "Items.MoneyShardLegendary";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			itemID = "Items.MoneyShardLegendary";
+		}
+	];
+}
+
+ArasakaHeavyMeleeRareT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];	
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGunnerTankT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PowerModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaGunnerRareT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PowerModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+ArasakaNetrunnerNetrunnerT2 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.2;
+			itemID = "Items.IntelligenceSkill_Skillbook";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.QuickhackRecipesTable_Chance", "LootTables.QuickhackTable_Chance", "LootTables.QuickhackMaterialsTable", "LootTables.Silencers_LootTable"
+	];
+}
+
+ArasakaSniperSniperT3 : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+ArasakaKillSquadLobby : ArasakaDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.ArasakaClothing";
+		}
+	];
+}
+

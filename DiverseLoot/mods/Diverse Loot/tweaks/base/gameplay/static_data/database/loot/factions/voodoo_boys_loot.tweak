@@ -1,0 +1,372 @@
+package Loot
+using RTDB
+
+VoodooBoysDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[ 
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		} 
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 10;
+			dropCountMax = 30;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 30;
+			dropCountMax = 50;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+
+}
+
+VoodooBoysGenericRangedGruntT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 0.22;
+			query = "Query.CasualClothing_EP1";
+		}, 
+		{
+			dropChance = 0.22;
+			query = "Query.CasualClothing";
+		}
+	];
+	lootTableInclusions = 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+VoodooBoysGenericRangedSmartGruntT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.FormalClothing";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.FormalClothing_EP1";
+		} 
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.IntelligenceSkill_Skillbook";
+		}
+	];
+	lootTableInclusions = [];
+}
+
+VoodooBoysShotgunShotgunT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+	lootTableInclusions = [];
+}
+
+VoodooBoysShotgunGruntT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+	lootTableInclusions = [];
+}
+
+VoodooBoysShotgunShotgunT3 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		}, 
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.2;
+			query = "Query.SmartModsQuery";
+		},
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+	lootTableInclusions = [];
+}
+
+VoodooBoysFastMeleeFastT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.IndustrialClothing";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.IndustrialClothing_EP1";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+	lootTableInclusions = [];
+}
+
+VoodooBoysNetrunnerNetrunnerT2 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StylishClothing";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StylishClothing_EP1";
+		} 
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.QuickhackRecipesTable_Chance", "LootTables.QuickhackTable_Chance", "LootTables.QuickhackMaterialsTable", "LootTables.Silencers_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+VoodooBoysNetrunnerNetrunnerT3 : VoodooBoysDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing";
+		},  
+		{
+			dropChance = 1.0;
+			query = "Query.VoodooBoysClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StreetwearClothing_EP1";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StylishClothing";
+		},  
+		{
+			dropChance = 0.4;
+			query = "Query.StylishClothing_EP1";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.IntelligenceSkill_Skillbook";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.QuickhackRecipesTable_Chance", "LootTables.QuickhackTable_Guaranteed", "LootTables.QuickhackMaterialsTable", "LootTables.Silencers_LootTable"
+	];
+}
+

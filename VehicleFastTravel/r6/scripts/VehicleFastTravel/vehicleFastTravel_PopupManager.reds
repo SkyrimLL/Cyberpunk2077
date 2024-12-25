@@ -53,6 +53,9 @@ public let m_playerPuppet: ref<PlayerPuppet>;
       case EDPadSlot.PocketRadio:
         this.TrySpawnPocketRadioPopup();
         break;
+      case EDPadSlot.VehicleVisualCustomization:
+        this.TrySpawnVehicleVisualCustomizationSelectorPopup();
+        break;
       default:
     };
   } 

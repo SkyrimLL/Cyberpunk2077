@@ -12,12 +12,13 @@
     };
     if IsNameValid(slotID.id) {
       vehicleHijackEvent = new VehicleHijackEvent();
+      vehicleHijackEvent.driverAllowedToGetAggressive = Equals(slotID.id, n"seat_front_left");
       VehicleComponent.QueueEventToPassenger(vehicle.GetGame(), vehicle, slotID, vehicleHijackEvent);
     };
     stealEvent = new StealVehicleEvent();
     vehicle.QueueEvent(stealEvent);
 
-    // // LogChannel(n"DEBUG", "Player is stealing a vehicle");
+    // LogChannel(n"DEBUG", "Player is stealing a vehicle");
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
     let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
 

@@ -2,4 +2,8 @@ localization:
   onscreens:
     en-us: base\localization\en-us\onscreens\LiveALittlePL.json 
     ru-ru: base\localization\ru-ru\onscreens\LiveALittlePL.json 
-    zh-tw: base\localization\ru-ru\onscreens\LiveALittlePL.json 
+    zh-tw: base\localization\zh-tw\onscreens\LiveALittlePL.json 
+    de-de: base\localization\de-de\onscreens\LiveALittlePL.json 
+    es-es: base\localization\es-es\onscreens\LiveALittlePL.json 
+    es-mx: base\localization\es-mx\onscreens\LiveALittlePL.json 
+    pt-br: base\localization\pt-br\onscreens\LiveALittlePL.json 

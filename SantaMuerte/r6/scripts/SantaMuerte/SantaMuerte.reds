@@ -39,6 +39,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let hardcoreDetourRobbedON: Bool; 
   public let hardcoreStealEquippedON: Bool;
   public let hardcoreDetourRobbedChance: Int32;
+  public let hardcoreDetourRobbedClothingChance: Int32;
+  public let hardcoreDetourRobbedMoneyPercent: Int32;
 
   public let config: ref<SantaMuerteConfig>;
 
@@ -105,6 +107,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.deathWhenImpersonatingJohnnyON = this.config.deathWhenImpersonatingJohnnyON;
     this.hardcoreDetourRobbedON = this.config.hardcoreDetourRobbedON;
     this.hardcoreDetourRobbedChance = this.config.hardcoreDetourRobbedChance;
+    this.hardcoreDetourRobbedClothingChance = this.config.hardcoreDetourRobbedClothingChance;
+    this.hardcoreDetourRobbedMoneyPercent = this.config.hardcoreDetourRobbedMoneyPercent;
     this.hardcoreStealEquippedON = this.config.hardcoreStealEquippedON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
@@ -573,26 +577,28 @@ sq018_03_padre_onspot
       GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
       GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
       
-      /*
-      this.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);
-      this.SendAnimFeatureData(false);
+      // 2024-12-07 - Testing shut down combat
+      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);
+      this.player.m_combatController.SendAnimFeatureData(false);
       PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
-      GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
+      // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
       ChatterHelper.TryPlayLeaveCombatChatter(this.player);
       FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.player.GetGame());
       GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"stealth_mode");   
-      */   
+ 
     };
 
     this.clearBlackout();
   }
   
   public func forceCameraReset() -> Void {
-    let resetOrientation: EulerAngles = new EulerAngles(10, 0, 0);
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
+    // let resetOrientation: EulerAngles = new EulerAngles(10, 0, 0);
     let resetPosition: Vector4 = new Vector4(0, 0, 0, 1.0);
 
     // this.player.GetFPPCameraComponent().ResetPitch();
-    this.player.GetFPPCameraComponent().SetLocalOrientation(EulerAngles.ToQuat(resetOrientation));
+    this.player.GetFPPCameraComponent().SetLocalOrientation(EulerAngles.ToQuat(playerForwardAngle));
     this.player.GetFPPCameraComponent().SetLocalPosition(resetPosition);
   }
 
@@ -623,6 +629,8 @@ sq018_03_padre_onspot
   }
   
   private func tryTeleportMedicalCenter() -> Bool {
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
     let rotation: EulerAngles;
     let position: Vector4;
     let isDestinationFound: Bool = false;
@@ -630,7 +638,7 @@ sq018_03_padre_onspot
     //Player World Pos: Vector4[ X:-1367.995483, Y:1743.821655, Z:18.189995, W:1.000000 ]
     //Player World Rot: EulerAngles[ Pitch:-0.000000, Yaw:175.044250, Roll:0.000000 ]
     position = new Vector4(-1367.995483, 1743.821655, 18.189995, 1.000000);
-    rotation = new EulerAngles(0.0, 175.0, 0.0);
+    rotation = playerForwardAngle;
     isDestinationFound = true;
 
     GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);
@@ -640,13 +648,15 @@ sq018_03_padre_onspot
   }
 
   private func tryTeleportViktor()  -> Bool {
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
     let rotation: EulerAngles;
     let position: Vector4;
     let isDestinationFound: Bool = false;
 
     // Viktor: 
     position = new Vector4(-1554.434, 1239.794, 11.520, 1.000000);
-    rotation = new EulerAngles(0.0, -30.0, 0.0);
+    rotation = playerForwardAngle;
     isDestinationFound = true;
 
     GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);
@@ -656,6 +666,8 @@ sq018_03_padre_onspot
   }
   
   private func tryTeleportRipperDoc() -> Bool{
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
     let rotation: EulerAngles;
     let position: Vector4;
     let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
@@ -666,138 +678,138 @@ sq018_03_padre_onspot
       case gamedataDistrict.Watson:
         // Doc Robert
         position = new Vector4(-1242.968, 1943.158, 8.066, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle; // new EulerAngles(0.0, -30.0, 0.0);
         isDestinationFound = true;
         break;
       case gamedataDistrict.LittleChina:
         // Viktor: 
         position = new Vector4(-1554.434, 1239.794, 11.520, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Kabuki:
         // Instant Implants 
         position = new Vector4(-1040.569, 1443.039, 0.493, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Northside:
         // Cassius Ryder
         position = new Vector4(-1682.980, 2380.442, 18.344, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.ArasakaWaterfront:
         // Cassius Ryder
         position = new Vector4(-1682.980, 2380.442, 18.344, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.CityCenter:
         // City Center doc
         position = new Vector4(-2410.167, 393.338, 11.837, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Downtown:
         // City Center doc
         position = new Vector4(-2410.167, 393.338, 11.837, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.CorpoPlaza:
         // Nina Kraviz
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.Heywood:
         // Doc Ryder
         position = new Vector4(-2362.834, -927.831, 12.266, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Glen:
         // Doc Ryder
         position = new Vector4(-2362.834, -927.831, 12.266, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Wellsprings:
         // Doc Ryder
         position = new Vector4(-2362.834, -927.831, 12.266, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.VistaDelRey:
         // Arroyo Doc
         position = new Vector4(-1072.903, -1274.589, 11.457, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.Pacifica:
         // Voodoo Doc
         position = new Vector4(-2609.994, -2496.741, 17.335, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.WestWindEstate:
         // Voodoo Doc
         position = new Vector4(-2609.994, -2496.741, 17.335, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Coastview:
         // Voodoo Doc
         position = new Vector4(-2609.994, -2496.741, 17.335, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.SantoDomingo:
         // Arroyo Doc
         position = new Vector4(-1072.903, -1274.589, 11.457, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Arroyo:
         // Arroyo Doc
         position = new Vector4(-1072.903, -1274.589, 11.457, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.RanchoCoronado:
         // Doc Octavio 
         position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.Westbrook:
         // Nina Kraviz
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.JapanTown:
         // Japantown Ripper Doc
         position = new Vector4(-712.075, 871.053, 11.982, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.NorthOaks:
         // Nina Kraviz
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.CharterHill:
         // Nina Kraviz
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
@@ -807,19 +819,19 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Church Clinic
           position = new Vector4(-1668.095, -2487.934, 37.151, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }  
         if (randNum > 20) && (randNum < 80) {
           // Doc Costyn Lahovary
           position = new Vector4(-2400.081, -2655.728, 27.842, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }  
         if (randNum <= 20) {
           // Doc Farida Clinic
           position = new Vector4(-1887.505, -2486.323, 28.052, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }  
 
@@ -828,19 +840,19 @@ sq018_03_padre_onspot
       case gamedataDistrict.Badlands:
         // Doc Octavio 
         position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.NorthBadlands:
         // Doc Octavio 
         position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.SouthBadlands:
         // Doc Octavio 
         position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
@@ -870,6 +882,8 @@ sq018_03_padre_onspot
   }
 
   private func tryTeleportDetourByDistrict() -> Bool{
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
     let rotation: EulerAngles;
     let position: Vector4;
     let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
@@ -880,13 +894,13 @@ sq018_03_padre_onspot
       case gamedataDistrict.Watson:
         // Back of Hospital
         position = new Vector4(-1279.890, 1858.963, 18.163, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.LittleChina:
         // Trash pile south west of Little China
         position = new Vector4(-1952.074, 997.060, 1.353, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Kabuki:
@@ -895,19 +909,19 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Kabuki temple
           position = new Vector4(-1164.046, 1765.699, 23.371, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum > 20) && (randNum < 80) {
           // Dark alley
           position = new Vector4(-1188.267, 1205.526, 17.370, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum <= 20) {
           // Under overpass to Watson
           position = new Vector4(-1180.250, 1006.626, 0.221, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
@@ -917,19 +931,19 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Creepy Maelstrom BD shack 
           position = new Vector4(-1006.454, 3378.892, 8.540, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum > 20) && (randNum < 80) {
           // Oil Fields
           position = new Vector4(-1833.609, 3824.832, 5.484, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum <= 20) {
           // Northside beach dump
           position = new Vector4(-2346.953, 3687.689, 7.844, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
 
@@ -937,39 +951,39 @@ sq018_03_padre_onspot
       case gamedataDistrict.ArasakaWaterfront: 
         // Trash pile outside Konpeki Plaza
         position = new Vector4(-2174.469, 1904.703, 18.186, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.CityCenter:
         // Arasaka warehouse
         position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Downtown:
         // Dino
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.CorpoPlaza:
         // Underwater - waterfront
         position = new Vector4(-1201.325, 685.873, -11.116, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.Heywood:
         // Padre
         position = new Vector4(-1807.022, -1281.709, 21.885, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Glen:
         // Trash pile in Reconciliation Park
         position = new Vector4(-1561.247, -440.721, -11.796, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Wellsprings:
@@ -978,52 +992,52 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Valentinos scrap yard
           position = new Vector4(-506.051, -96.526, 7.770, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum < 80) {
           // Trash burning pits
           position = new Vector4(-2071.315, -1125.493, 10.963, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
       case gamedataDistrict.VistaDelRey:
         // Dark alley
         position = new Vector4(-605.527, -224.119, 7.678, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.Pacifica:
         // Homeless camp
         position = new Vector4(-2017.643, -2218.369, 19.741, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.WestWindEstate:
         // Beach Trash Pile
         position = new Vector4(-2672.360, -2340.655, 0.747, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Coastview:
         // Butcher shop
         position = new Vector4(-2286.622, -1931.526, 6.055, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
       case gamedataDistrict.SantoDomingo:
         // Hazardous waste dumping ground
         position = new Vector4(-417.634, -2003.798, 6.860, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.Arroyo:
         // Trash pile under overpass
         position = new Vector4(157.737, -730.418, 4.276, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.RanchoCoronado:
@@ -1032,19 +1046,19 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Homeless camp
           position = new Vector4(449.555, -1686.285, 9.842, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum >= 40) && (randNum < 80)  {
           // Dump near new tower
           position = new Vector4(908.807, -1545.698, 45.001, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum < 40) {
           // Warehouse
           position = new Vector4(1080.595, -722.294, 22.271, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
@@ -1052,7 +1066,7 @@ sq018_03_padre_onspot
       case gamedataDistrict.Westbrook:
         // Trash pile under overpass
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.JapanTown:
@@ -1061,26 +1075,26 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Creepy Scav BD shack 
           position = new Vector4(-697.153, 956.792, 12.368, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum >= 40) && (randNum < 80)  {
           // Japantown reservoir
           position = new Vector4(-445.489, 417.814, 131.998, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         let isAutomaticLoveCompleted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"sq032_q105_done") >= 1;
         if (randNum >= 20) && (randNum < 40) && (isAutomaticLoveCompleted) {
           // Fingers MD
           position = new Vector4(-569.782, 799.393, 24.908, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum < 20) {
           // Tyger Claw's Cages Hideout
           position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
 
@@ -1088,13 +1102,13 @@ sq018_03_padre_onspot
       case gamedataDistrict.NorthOaks:
         // Under overpass to Japantown
         position = new Vector4(-238.494, 1336.841, 33.166, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.CharterHill:
         // Elevated dumping ground
         position = new Vector4(-305.537, 631.754, 42.855, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
 
@@ -1104,25 +1118,25 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Somi's favorite spot
           position = new Vector4(-1732.673, -2683.120, 78.083, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum >= 60) && (randNum < 80) {
           // Water hole
           position = new Vector4(-1843.006, -2496.886, 25.165, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum >= 40) && (randNum < 60) {
           // Dogtown wasteland
           position = new Vector4(-1661.173, -2882.097, 79.999, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum < 40) {
           // Scav container
           position = new Vector4(-1777.360, -2160.756, 41.821, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
@@ -1130,7 +1144,7 @@ sq018_03_padre_onspot
       case gamedataDistrict.Badlands:
         // Sunset Motel - room 102
         position = new Vector4(1662.659, -791.086, 49.826, 1.000000);
-        rotation = new EulerAngles(0.0, -30.0, 0.0);
+        rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
       case gamedataDistrict.NorthBadlands:
@@ -1139,13 +1153,13 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Safe garage 
           position = new Vector4(2575.148, 0.298, 80.875, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum <= 20) {
           // Trash Dump
           position = new Vector4(2329.168, -1826.530, 79.302, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
@@ -1155,13 +1169,13 @@ sq018_03_padre_onspot
         if (randNum >= 80) {
           // Trailer Arm Dealer
           position = new Vector4(131.666, -4679.567, 54.711, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         if (randNum <= 20) {
           // Gas station with Wraiths
           position = new Vector4(-1705.800, -5016.451, 80.346, 1.000000);
-          rotation = new EulerAngles(0.0, -30.0, 0.0);
+          rotation = playerForwardAngle;
           isDestinationFound = true;
         }
         break;
@@ -1465,6 +1479,7 @@ sq018_03_padre_onspot
     equipmentSystem = EquipmentSystem.GetInstance(this.player);
     unequipSetRequest.owner = this.player;
     equipmentSystem.QueueRequest(unequipSetRequest);
+
     i = 0;
     while i < ArraySize(slotList) {
       id = equipmentData.GetActiveItem(slotList[i]);
@@ -1482,7 +1497,16 @@ sq018_03_padre_onspot
 
     // Note: Hardcore mode - stripped items are lost forever
     //        Maybe extend to a safe locker at some point
-    this.disposeItems(itemList);
+    if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
+      this.disposeItems(itemList);
+
+      // Remove percent of player money
+      // Set up Mod Settings later
+      if (this.hardcoreDetourRobbedMoneyPercent > 0) {
+        this.RemovePlayerMoney(this.hardcoreDetourRobbedMoneyPercent);
+      }
+    }
+
   }
 
   private final const func GetSlots(censored: Bool) -> array<gamedataEquipmentArea> {
@@ -1518,7 +1542,7 @@ sq018_03_padre_onspot
     // Steal all equipped items
     if (this.hardcoreStealEquippedON) {
       for itemID in itemList { 
-        GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
+           GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
       }      
     }
 
@@ -1527,7 +1551,7 @@ sq018_03_padre_onspot
       let itemID = itemData.ID;
 
       if this.IsValidItem(itemData) {
-        if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
+        if (RandRange(1,100) <= this.hardcoreDetourRobbedClothingChance) {
           // Tentative solution to record list of lost items
           // ArrayPush(this.m_storedItems, itemID);
      
@@ -1562,6 +1586,14 @@ sq018_03_padre_onspot
     return isValid;
   }
 
+
+  private final func RemovePlayerMoney(percentAmount: Int32) -> Bool {
+    let gi: GameInstance = this.player.GetGame(); 
+    let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(gi);
+    let currentPlayerAmount = transactionSystem.GetItemQuantity(this.player, MarketSystem.Money());
+
+    return transactionSystem.RemoveItem(this.player, MarketSystem.Money(), (currentPlayerAmount / 100) * percentAmount );
+  }
 /* 
 let currentValue: Float = itemData.GetStatValueByType(this.m_statType);
 

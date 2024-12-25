@@ -106,9 +106,10 @@ protected final func StartDeathEffects(stateContext: ref<StateContext>, scriptIn
 private func DeathVanish( scriptInterface : ref<StateGameScriptInterface> )
 {
 	let owner : ref<PlayerPuppet> = scriptInterface.owner as PlayerPuppet;
-	let exitCombatDelay : Float = TweakDBInterface.GetFloat( t"Items.AdvancedOpticalCamoCommon.exitCombatDelay", 1.5 );
+	let exitCombatDelay : Float = TweakDBInterface.GetFloat( t"Items.AdvancedOpticalCamoCommon.exitCombatDelay", 0.5);
 
-	// owner.PromoteOpticalCamoEffectorToCompletelyBlocking();
+	// 2024-12-07 - Testing optical camo effect to shut down combat
+	owner.PromoteOpticalCamoEffectorToCompletelyBlocking();
 
 	let enableVisiblityDelay : Float = GameInstance.GetStatsSystem( owner.GetGame() ).GetStatValue( Cast<StatsObjectID>( owner.GetEntityID() ), gamedataStatType.OpticalCamoDuration );
 	let hostileTargets : array<TrackedLocation> = owner.GetTargetTrackerComponent().GetHostileThreats( false );
@@ -134,8 +135,9 @@ private func DeathVanish( scriptInterface : ref<StateGameScriptInterface> )
 		j += 1;
 	} 
 
-  // enableVisibilityEvt = new EnablePlayerVisibilityEvent();
-  // GameInstance.GetDelaySystem(owner.GetGame()).DelayEvent(owner, enableVisibilityEvt, enableVisiblityDelay);
+	// 2024-12-07 - Testing optical camo effect to shut down combat
+  enableVisibilityEvt = new EnablePlayerVisibilityEvent();
+  GameInstance.GetDelaySystem(owner.GetGame()).DelayEvent(owner, enableVisibilityEvt, enableVisiblityDelay);
 }
 
 

@@ -1,0 +1,387 @@
+package Loot
+using RTDB
+
+SixthStreetDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[ 
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing"; 
+		}
+
+	];
+	lootItems += 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 10;
+			dropCountMax = 30;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 30;
+			dropCountMax = 50;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+SixthStreetGenericRangedHooliganT1_nova : SixthStreetDrop
+{
+	minItemsToLoot = 1; 
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SimpleClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+SixthStreetGenericRangedHooliganT1_saratoga : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+SixthStreetGenericRangedPatrolT2 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetGenericRangedVeteranT2 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetGenericMeleeHooliganT1_blunt : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SimpleClothing";
+		}
+	];
+}
+
+SixthStreetGenericMeleeHooliganT1_blade : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BladeModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SimpleClothing";
+		}
+	];
+}
+
+SixthStreetGenericMeleePatrolT2_blunt : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetGenericMeleePatrolT2_knife : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ThrowableModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetShotgunMenaceT2 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetShotgunPatrolT3 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.TechModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetFastMeleeMenaceT2 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+SixthStreetSniperSniperT2 : SixthStreetDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.SixthStreetClothing";
+		},
+		{
+			dropChance = 0.2;
+			query = "Query.CowboyClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+

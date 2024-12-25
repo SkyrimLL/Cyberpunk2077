@@ -1,0 +1,152 @@
+package Loot
+using RTDB
+
+KangTaoDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.5;
+			query = "Query.KangTaoClothing";
+		}
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+KangTaoGenericRangedRangerT2 : KangTaoDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.KangTaoClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+KangTaoGenericRangedSoldierT3 : KangTaoDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.KangTaoClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+KangTaoShotgunSoldierT2 : KangTaoDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.KangTaoClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+KangTaoShotgunSoldierT3 : KangTaoDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.1;
+			query = "Query.PrecisionSniperRifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.KangTaoClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.SniperScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+

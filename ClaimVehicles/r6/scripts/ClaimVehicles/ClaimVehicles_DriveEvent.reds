@@ -22,12 +22,12 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
     if IsDefined(_playerPuppetPS) {
 
-      // LogChannel(n"DEBUG", ":: tryClaimVehicle - Player crouching: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.player.m_inCrouch));
+      //// LogChannel(n"DEBUG", ":: tryClaimVehicle - Player crouching: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.player.m_inCrouch));
       // LogChannel(n"DEBUG", ":: tryClaimVehicle - Scanner active: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive));
+
+      vehicle = scriptInterface.owner as VehicleObject;
       
       if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.scannerModeON)) ) {
-
-        vehicle = scriptInterface.owner as VehicleObject;
 
         // Added here to display vehicle Model strings in logs even when mod doesn't trigger - Remove once testing is done
         let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());
@@ -195,12 +195,22 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
     };
 
+    // Troubleshooting missing paint customization menu
+
+    // let globalEnablingFact: Int32 = GameInstance.GetQuestsSystem(vehicle.GetGame()).GetFact(n"vvc_visual_customization_unlocked");
+    // LogChannel(n"DEBUG", "::: OnExit - vvc_visual_customization_unlocked: "+ToString(globalEnablingFact)  );   
+
+    // let recordID: TweakDBID = vehicle.GetRecordID();
+    // let record: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(recordID);
+    // LogChannel(n"DEBUG", "::: OnExit - HasVisualCustomization: "+ToString(record.HasVisualCustomization())  );
+
+
     this.SetIsVehicleDriver(stateContext, false);
     this.SendAnimFeature(stateContext, scriptInterface);
     this.ResetVehFppCameraParams(stateContext, scriptInterface);
     this.isCameraTogglePressed = false;
     this.ResumeStateMachines(scriptInterface.executionOwner);
-    GameInstance.GetRazerChromaEffectsSystem(scriptInterface.executionOwner.GetGame()).SetIdleAnimation(n"HotKeys", true);
+    GameInstance.GetRazerChromaEffectsSystem(scriptInterface.executionOwner.GetGame()).SetHotKeysIdleAnimation();
     if this.m_inCombatBlockingForbiddenZone {
       this.m_inCombatBlockingForbiddenZone = false;
       StatusEffectHelper.RemoveStatusEffect(scriptInterface.executionOwner, t"GameplayRestriction.NoWeapons", 1u);

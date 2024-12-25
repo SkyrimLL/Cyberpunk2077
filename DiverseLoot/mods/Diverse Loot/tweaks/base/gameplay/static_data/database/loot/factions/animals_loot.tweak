@@ -1,0 +1,745 @@
+package Loot
+using RTDB
+
+AnimalsDrop : LootTable
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		}
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelTrashTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 10;
+			dropCountMax = 30;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelWeakTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 30;
+			dropCountMax = 50;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+AnimalsGenericRangedGruntT1_nova : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+AnimalsGenericRangedGruntT1_pulsar : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+}
+
+AnimalsGenericRangedBouncerT1 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+}
+
+AnimalsGenericRangedGruntT2 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RifleModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Rifle_SMG_Muzzle_LootTable", "LootTables.LongScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericRangedBouncerT2_handgun : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericRangedBouncerT2_handgunTech : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.TechModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericRangedEliteT3 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		}, 
+		{
+			dropChance = 0.2;
+			query = "Query.TechModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootTableInclusions += 
+	[
+		"LootTables.Handgun_Muzzle_LootTable", "LootTables.ShortScopes_LootTable"
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.12;
+			itemID = "Items.CoolSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericMeleeGruntT1_fist : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+}
+
+AnimalsGenericMeleeGruntT1_blunt : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+}
+
+AnimalsGenericMeleeBouncerT1 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+}
+
+AnimalsGenericMeleeGruntT2_blunt : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericMeleeGruntT2_blade : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGenericMeleeBouncerT2 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.GenericMeleeModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsShotgunGruntT2 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsShotgunEliteT3 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.ShotgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGunnerGruntT2 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PowerModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.TechnicalAbilitySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsGunnerEliteT3 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PowerModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.StreetwearClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeBouncerT2_fist : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.PowerModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.1;
+			itemID = "Items.ReflexesSkill_Skillbook";
+		}
+	];
+
+}
+
+AnimalsHeavyMeleeBouncerT2_blunt : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeGruntT2_fist : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeGruntT2_blunt : AnimalsHeavyMeleeBouncerT2_blunt
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeEliteT2_fist : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeEliteT2_blunt : AnimalsHeavyMeleeBouncerT2_blunt
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeBouncerT3 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+
+AnimalsHeavyMeleeEliteT3 : AnimalsDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.BluntModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.AnimalsClothing";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.SportsClothing";
+		}
+	];
+	lootItems += 
+	[
+		{
+			dropChance = 0.08;
+			itemID = "Items.BodySkill_Skillbook";
+		}
+	];
+}
+

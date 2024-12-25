@@ -155,11 +155,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     // Find weight of equiped clothing
     clothModWeight = 0.0;
 
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.OuterChest);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.InnerChest);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Head);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Face);  
-    clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Outfit);  
+    clothModWeight += this.getEquipmentSlotMods();  
+    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.OuterChest);  
+    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.InnerChest);  
+    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Head);  
+    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Face);  
+    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Outfit);  
 
     if (this.debugON) {
       // this.showDebugMessage("::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
@@ -168,7 +169,138 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     return clothModWeight;
   }
 
-  // Check mods on item
+  public func getEquipmentSlotMods() -> Float { 
+    let i: Int32;
+    let slots: array<wref<AttachmentSlot_Record>>; 
+    let slotName: String;
+    let equipmentSystem: ref<EquipmentSystem>;
+    let playerData: ref<EquipmentSystemPlayerData>; 
+
+    let m_transactionSystem: wref<TransactionSystem>;
+    let itemObj: ref<ItemObject>;
+    let itemData: ref<gameItemData>;
+    let currentItemTweakID: TweakDBID;
+    let currentItemEntityName: CName;
+    let currentItemFriendlyName: String;
+
+    let clothSlotBonus: Float;
+    let clothSlotMod: Float; 
+
+    m_transactionSystem = GameInstance.GetTransactionSystem(this.player.GetGame());
+ 
+    clothSlotBonus = 0.0;
+    clothSlotMod = 0.0;
+
+    TweakDBInterface.GetCharacterRecord(this.player.GetRecordID()).AttachmentSlots(slots);
+    i = 0;
+    while i < ArraySize(slots) {
+      slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
+
+      // Attempt at looking at all slots for outfit systems / equipment-EX
+
+      // let itemObject = this.m_transactionSystem.GetItemInSlot(this.m_player, slotID);
+      // if IsDefined(itemObject) {
+      //     let previewID = itemObject.GetItemID();
+            
+      itemObj = m_transactionSystem.GetItemInSlot(this.player, slots[i].GetID()); 
+      if IsDefined(itemObj) {
+        currentItemTweakID = ItemID.GetTDBID(itemObj.GetItemID());
+        // itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, itemObj.GetItemID());
+        // currentItemTweakID = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).GetID(); // ItemID.GetTDBID(itemData.GetID()); 
+        currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).AppearanceName();
+        currentItemFriendlyName = s"\(currentItemEntityName)";
+
+
+        if (this.debugON) {
+          this.showDebugMessage("::: getEquipmentSlotMods  - slot name: " + currentItemFriendlyName );
+        }
+
+        // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
+        // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
+
+
+        // ----
+        // Generic backpack and bag detection 
+        // Lara Croft Unified Outfit (Archive XL - FemV) - https://www.nexusmods.com/cyberpunk2077/mods/12452
+
+        if StrContains(currentItemFriendlyName,"backpack") {
+          clothSlotMod = 30.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"bag") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+          }
+        }
+                
+        // ----
+        // spawn0 - TRUE BAGS AND BACKPACKS - https://www.nexusmods.com/cyberpunk2077/mods/6616
+        // Kabuki Bags and Backpacks - TweakXL ArchiveXL addon - https://www.nexusmods.com/cyberpunk2077/mods/11658?tab=description
+
+        if StrContains(currentItemFriendlyName,"milbackpack") {
+          clothSlotMod = 80.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"zenitex_backpack") {
+          clothSlotMod = 80.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"fashbackpack") {
+          clothSlotMod = 30.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"bandoleer") {
+          clothSlotMod = 20.0 ;
+
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"waistbag") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+          }
+        }
+
+        // ----
+        // OneSlowZZ Tactical Backpack - https://www.nexusmods.com/cyberpunk2077/mods/12031?tab=description
+
+        if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
+          clothSlotMod = 20.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+          }
+        }
+
+
+        clothSlotBonus = clothSlotBonus + clothSlotMod;
+
+      }
+
+ 
+      i += 1;
+    };
+
+    return clothSlotBonus;
+  }
+
+
+// DEPRECATED
   public func GetClothSlotMods(slotArea: gamedataEquipmentArea) -> Float {
       let equipmentSystem: ref<EquipmentSystem>; 
       let currentItem: ItemID;
@@ -257,11 +389,11 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         // currentItemFriendlyName = GetLocalizedItemNameByCName(currentItemEntityName);
 
         if (this.debugON) {
-          // // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
-          // // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
-          // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
-          // this.showDebugMessage("::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
-          // // this.showDebugMessage("::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
+          // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
+          // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
+          this.showDebugMessage("::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
+          this.showDebugMessage("::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
+          // this.showDebugMessage("::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
         }
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
@@ -291,7 +423,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         // Kabuki Bags and Backpacks - TweakXL ArchiveXL addon - https://www.nexusmods.com/cyberpunk2077/mods/11658?tab=description
 
         if StrContains(currentItemFriendlyName,"milbackpack") {
-          clothSlotMod = 100.0 ;
+          clothSlotMod = 80.0 ;
+          if (this.debugON) {
+            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"zenitex_backpack") {
+          clothSlotMod = 80.0 ;
           if (this.debugON) {
             // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
           }
@@ -330,7 +469,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         }
 
 
-        clothSlotBonus = clothSlotBonus + clothSlotMod;
+        clothSlotBonus += clothSlotBonus + clothSlotMod;
 
       } else {         
         // // this.showDebugMessage("::: GetClothSlotMods  - Item undefined " );
@@ -338,6 +477,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
       return clothSlotBonus;
   }
+//-----
+
 
   public func calculatePlayerEquipmentWeights() -> Float {
     let i: Int32;
@@ -415,14 +556,15 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     return equipmentWeight;
   }
 
-  public func calculatePlayerEquipmentBonus() -> Float {
+
+  public func calculatePlayerEquipmentBonus() -> Float { 
     let i: Int32;
     let slots: array<wref<AttachmentSlot_Record>>; 
     let slotName: String;
     let equipmentSystem: ref<EquipmentSystem>;
     let playerData: ref<EquipmentSystemPlayerData>;
     let equipmentWeight: Float;
-    let slotBonus: Float;
+    let slotBonus: Float; 
 
     // Find weight of equiped clothing
     equipmentWeight = 0.0;
@@ -432,8 +574,6 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     i = 0;
     while i < ArraySize(slots) {
       slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
-        
-      // // this.showDebugMessage("::: calculatePlayerInventoryWeights  - slot name: " + slotName + " - weight: " + slotWeight);
 
       if ( StrCmp(slotName, "Chest") == 0 ) {
         slotBonus += 2.0;

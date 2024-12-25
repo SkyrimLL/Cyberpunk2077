@@ -4,3 +4,5 @@ localization:
     pt-br: base\localization\pt-br\onscreens\LiveALittle.json
     de-de: base\localization\de-de\onscreens\LiveALittle.json
     ru-ru: base\localization\ru-ru\onscreens\LiveALittle.json
+    es-es: base\localization\es-es\onscreens\LiveALittle.json
+    es-mx: base\localization\es-mx\onscreens\LiveALittle.json

@@ -1184,7 +1184,7 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   }
 
   private func showDebugMessage(debugMessage: String) {
-    LogChannel(n"DEBUG", debugMessage ); 
+    //// LogChannel(n"DEBUG", debugMessage ); 
   }
 } 
 

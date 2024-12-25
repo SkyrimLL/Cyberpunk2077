@@ -26,7 +26,7 @@
       GameInstance.GetVehicleSystem(this.m_Player.GetGame()).GetPlayerUnlockedVehicles(vehiclesList);
 
       if (playerOwner.m_claimedVehicleTracking.warningsON) {
-        // LogChannel(n"DEBUG", " ");
+        // // LogChannel(n"DEBUG", " ");
         // LogChannel(n"DEBUG", "----- ");
         // LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  Removing model '" +StrLower(vehicleModel) + "'");
         playerOwner.SetWarningMessage(ClaimVehiclesText.REMOVING() + "'"+vehicleModel+"'"); 

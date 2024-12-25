@@ -1,0 +1,57 @@
+package Loot
+using RTDB
+
+TraumaTeamDrop : LootTable
+{
+	minItemsToLoot = 0;
+	maxItemsToLoot = 1;
+	queries = 
+	[ 
+		{
+			dropChance = 0.5;
+			query = "Query.MilitechClothing";
+		} 
+	];
+	lootItems = 
+	[
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelNormalTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 50;
+			dropCountMax = 100;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelRareTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 100;
+			dropCountMax = 200;
+			itemID = "Items.money";
+		}, 
+		{
+			playerPrereqID = "LootPrereqs.PlayerLevelEliteTierPrereq";
+			dropChance = 0.1;
+			dropCountMin = 200;
+			dropCountMax = 400;
+			itemID = "Items.money";
+		}
+	];
+}
+
+TraumaTeamGenericRangedSoldierT2 : TraumaTeamDrop
+{
+	minItemsToLoot = 1;
+	maxItemsToLoot = 2;
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.HandgunModsQuery";
+		},
+		{
+			dropChance = 0.5;
+			query = "Query.MilitechClothing";
+		} 
+	];
+}
+
