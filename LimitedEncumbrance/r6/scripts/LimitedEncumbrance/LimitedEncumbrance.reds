@@ -150,23 +150,15 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   }
 
   public func calculatePlayerClothMod() -> Float {
-    let clothModWeight: Float;
+    let clothMod: Float; 
 
-    // Find weight of equiped clothing
-    clothModWeight = 0.0;
-
-    clothModWeight += this.getEquipmentSlotMods();  
-    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.OuterChest);  
-    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.InnerChest);  
-    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Head);  
-    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Face);  
-    // clothModWeight += this.GetClothSlotMods(gamedataEquipmentArea.Outfit);  
+    clothMod = this.getEquipmentSlotMods();   
 
     if (this.debugON) {
-      // this.showDebugMessage("::: calculatePlayerClothMod  - clothModWeight: " + clothModWeight);
+      this.showDebugMessage("::: calculatePlayerClothMod  - clothMod: " + clothMod);
     }
 
-    return clothModWeight;
+    return clothMod;
   }
 
   public func getEquipmentSlotMods() -> Float { 
@@ -189,12 +181,16 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     m_transactionSystem = GameInstance.GetTransactionSystem(this.player.GetGame());
  
     clothSlotBonus = 0.0;
-    clothSlotMod = 0.0;
+
+    if (this.debugON) {
+      this.showDebugMessage("::: getEquipmentSlotMods - inventory check --------------- " );
+    }
 
     TweakDBInterface.GetCharacterRecord(this.player.GetRecordID()).AttachmentSlots(slots);
     i = 0;
     while i < ArraySize(slots) {
       slotName = TweakDBInterface.GetAttachmentSlotRecord(slots[i].GetID()).EntitySlotName(); 
+      clothSlotMod = 0.0;
 
       // Attempt at looking at all slots for outfit systems / equipment-EX
 
@@ -212,7 +208,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
 
         if (this.debugON) {
-          this.showDebugMessage("::: getEquipmentSlotMods  - slot name: " + currentItemFriendlyName );
+          this.showDebugMessage("::: getEquipmentSlotMods - SLOT NAME: " + currentItemFriendlyName );
         }
 
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
@@ -226,14 +222,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         if StrContains(currentItemFriendlyName,"backpack") {
           clothSlotMod = 30.0 ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    full backpack bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"bag") {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
           }
         }
                 
@@ -244,21 +240,21 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         if StrContains(currentItemFriendlyName,"milbackpack") {
           clothSlotMod = 80.0 ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    military backpack bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"zenitex_backpack") {
           clothSlotMod = 80.0 ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    zenitex_backpack backpack bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"fashbackpack") {
           clothSlotMod = 30.0 ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    fashion backpack bonus : " + clothSlotMod);
           }
         }
 
@@ -266,14 +262,21 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           clothSlotMod = 20.0 ;
 
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    bandoleer bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"tacticalbelt") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tacticalbelt bonus : " + clothSlotMod);
           }
         }
 
         if StrContains(currentItemFriendlyName,"waistbag") {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
           }
         }
 
@@ -283,201 +286,26 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
           clothSlotMod = 20.0 ;
           if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    fashion backpack bonus : " + clothSlotMod);
           }
         }
 
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
-
+        if (this.debugON) {
+          this.showDebugMessage("::: getEquipmentSlotMods  - clothSlotBonus : " + clothSlotBonus);
+        }
       }
 
  
       i += 1;
     };
 
+    if (this.debugON) {
+      this.showDebugMessage("::: getEquipmentSlotMods  - FINAL clothSlotBonus : " + clothSlotBonus);
+    }
     return clothSlotBonus;
   }
-
-
-// DEPRECATED
-  public func GetClothSlotMods(slotArea: gamedataEquipmentArea) -> Float {
-      let equipmentSystem: ref<EquipmentSystem>; 
-      let currentItem: ItemID;
-      let currentItemTweakID: TweakDBID;
-      let playerData: ref<EquipmentSystemPlayerData>;
-      let itemData: ref<gameItemData>;
-      let inventoryManager: wref<InventoryDataManagerV2>;
-      let inventoryItem: InventoryItemData;
-
-      let innerPart: InnerItemData;
-      let innerPartID: ItemID;
-      let innerPartTweakID: TweakDBID;
-      let innerPartData: ref<gameItemData>;
-      let innerPartEntityName: CName;
-      let innerPartFriendlyName: String;
-
-      let clothFriendlyName: String;
-
-      let currentItemEntityName: CName;
-      let currentItemFriendlyName: String;
-      let clothModQuality: wref<Quality_Record>;
-      let clothModQualityName: String;
-      let clothModQualityValue: Int32;
-
-      let clothSlotBonus: Float;
-      let clothSlotMod: Float;
-
-      let i: Int32;
-
-      let clothMod: ItemID;
-      let clothSlots: array<TweakDBID>;
-
-      let equipmentData = EquipmentSystem.GetData(this.player);
-      currentItem = equipmentData.GetActiveItem(slotArea);
- 
-      clothSlotBonus = 0.0;
-      clothSlotMod = 0.0;
-
-      // Improvements to research
-      // - Detect multiple items are on the same slot
-      // - Detect transmogrify outfit system is used
-       
-      // --
-      // Alternate ways of getting the equiped item on that slot
-
-      // equipmentSystem = EquipmentSystem.GetInstance(this.player);
-      // currentItem = equipmentSystem.GetItemInEquipSlot(this.player, slotArea, 0);
-
-      // --
-      // playerData = equipmentSystem.GetPlayerData(this.player);
-      // currentItem = playerData.GetItemInEquipSlot(slotArea, 0);
-
-
-      itemData = RPGManager.GetItemData(this.player.GetGame(), this.player, currentItem);
-      if IsDefined(itemData) {
-
-        // --
-        // friendlyName through inventoryManager comes up empty
-      
-        // inventoryManager = equipmentSystem.GetInventoryManager(this.player);
-        // inventoryItem = inventoryManager.GetInventoryItemData(itemData);
-
-        // friendlyName = InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString();
-        // localizedName = InventoryItemData.GetName(inventoryItem);
-        // itemID = InventoryItemData.GetID(inventoryItem);
-        // quality = InventoryItemData.GetComparedQuality(inventoryItem);
-        // itemType = InventoryItemData.GetItemType(inventoryItem);
-        // itemLevel = InventoryItemData.GetItemLevel(inventoryItem);
-        // iconic = InventoryItemData.GetGameItemData(inventoryItem).GetStatValueByType(gamedataStatType.IsItemIconic) > 0.00;
-
-        currentItemTweakID = ItemID.GetTDBID(itemData.GetID()); 
-        currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).AppearanceName();
-        currentItemFriendlyName = s"\(currentItemEntityName)";
-
-        // --
-        // GetName, FriendlNames come up empty for some reason ??!
-        // currentItemFriendlyName = TweakDBInterface.GetItemRecord(currentItemTweakID).FriendlyName();
-
-        // --
-        // TDBID.ToStringDEBUG() is meant for debug and shouldn't be used this way
-        // currentItemFriendlyName = TDBID.ToStringDEBUG(currentItemTweakID);
-
-        // --
-        // Record -> Entity name returns a generic name without possibility of distinction between types of backpacks
-        // currentItemEntityName = TweakDBInterface.GetItemRecord(currentItemTweakID).EntityName();
-        // currentItemFriendlyName = GetLocalizedItemNameByCName(currentItemEntityName);
-
-        if (this.debugON) {
-          // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + InventoryItemData.GetGameItemData(inventoryItem).GetNameAsString() );
-          // this.showDebugMessage("::: GetClothSlotMods  - checking item : " + itemData.GetNameAsString());
-          this.showDebugMessage("::: GetClothSlotMods  - checking item : " + currentItemFriendlyName);  
-          this.showDebugMessage("::: GetClothSlotMods  - item type : " + ToString(itemData.GetItemType()));
-          // this.showDebugMessage("::: GetClothSlotMods  - item weight : " + ToString(itemData.GetStatValueByType(gamedataStatType.Weight)) );
-        }
-
-        // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
-        // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
-
-
-        // ----
-        // Generic backpack and bag detection 
-        // Lara Croft Unified Outfit (Archive XL - FemV) - https://www.nexusmods.com/cyberpunk2077/mods/12452
-
-        if StrContains(currentItemFriendlyName,"backpack") {
-          clothSlotMod = 30.0 ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"bag") {
-          clothSlotMod = 5.0  ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
-          }
-        }
-                
-        // ----
-        // spawn0 - TRUE BAGS AND BACKPACKS - https://www.nexusmods.com/cyberpunk2077/mods/6616
-        // Kabuki Bags and Backpacks - TweakXL ArchiveXL addon - https://www.nexusmods.com/cyberpunk2077/mods/11658?tab=description
-
-        if StrContains(currentItemFriendlyName,"milbackpack") {
-          clothSlotMod = 80.0 ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"zenitex_backpack") {
-          clothSlotMod = 80.0 ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - military backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"fashbackpack") {
-          clothSlotMod = 30.0 ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"bandoleer") {
-          clothSlotMod = 20.0 ;
-
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - bandoleer bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"waistbag") {
-          clothSlotMod = 5.0  ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - waistbag bonus : " + clothSlotMod);
-          }
-        }
-
-        // ----
-        // OneSlowZZ Tactical Backpack - https://www.nexusmods.com/cyberpunk2077/mods/12031?tab=description
-
-        if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
-          clothSlotMod = 20.0 ;
-          if (this.debugON) {
-            // this.showDebugMessage("::: GetClothSlotMods  - fashion backpack bonus : " + clothSlotMod);
-          }
-        }
-
-
-        clothSlotBonus += clothSlotBonus + clothSlotMod;
-
-      } else {         
-        // // this.showDebugMessage("::: GetClothSlotMods  - Item undefined " );
-      };
-
-      return clothSlotBonus;
-  }
-//-----
 
 
   public func calculatePlayerEquipmentWeights() -> Float {
@@ -748,12 +576,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     } 
 
     if (this.debugON) {
-    /*           
       this.showDebugMessage("::: calculateLimitedEncumbrance - hasCarryCapacityBoosterEffect: " + ToString(hasCarryCapacityBoosterEffect)); 
       this.showDebugMessage("::: calculateLimitedEncumbrance - playerLikeaFeatherLevel: " + ToString(playerLikeaFeatherLevel));
       this.showDebugMessage("::: calculateLimitedEncumbrance - playerJuggernautLevel: " + ToString(playerJuggernautLevel));
       this.showDebugMessage("::: calculateLimitedEncumbrance - playerUnstoppableForceLevel: " + ToString(playerUnstoppableForceLevel));
       this.showDebugMessage("::: calculateLimitedEncumbrance - carryCapacityOverride: '"+ this.carryCapacityOverride+"'"  );
+         
 
       if (this.carryCapacityOverride > 0.0) {
         this.showDebugMessage("::: calculateLimitedEncumbrance - simple mode"  ); 
@@ -786,7 +614,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
 
       this.showDebugMessage(":::     <= carryCapacityCapMod: '"+this.carryCapacityCapMod+"'"  );
-*/
+
 
     }
 
