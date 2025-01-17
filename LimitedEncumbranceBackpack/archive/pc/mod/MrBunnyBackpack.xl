@@ -1,0 +1,5 @@
+factories:
+  - base\caibro\items\caibro_bunny_pack.csv
+localization:
+  onscreens:
+    en-us: base\caibro\localization\caibro_bunny_pack.json

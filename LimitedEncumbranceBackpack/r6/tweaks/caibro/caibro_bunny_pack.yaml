@@ -1,0 +1,58 @@
+
+# bunny backpack (default): Game.AddToInventory("Items.caibro_bunny_default",1)
+Items.caibro_bunny_default:
+  $base: Items.GenericOuterChestClothing
+  entityName: caibro_bunny_pack
+  appearanceName: caibro_bunny_default_
+  appearanceSuffixes:
+    - !remove itemsFactoryAppearanceSuffix.Camera
+  displayName: caibro_bunny_default_name
+  localizedDescription: caibro_bunny_default_desc
+  quality: Quality.Random
+  placementSlots: 
+    - !append OutfitSlots.Back
+  icon: UIIcon.caibro_bunny_default
+  iconPath: caibro_bunny_default
+UIIcon.caibro_bunny_default:
+  $base: UIIcon.ItemIcon
+  atlasResourcePath: base\icon\mrbunnywhite_icon.inkatlas
+  atlasPartName: icon_part
+  
+# bunny 2 test: Game.AddToInventory("Items.caibro_bunny_default2",1)
+Items.caibro_bunny_default2:
+  $base: Items.GenericOuterChestClothing
+  entityName: caibro_bunny_pack
+  appearanceName: caibro_bunny_default2_
+  appearanceSuffixes:
+    - !remove itemsFactoryAppearanceSuffix.Camera
+  displayName: caibro_bunny_default2_name
+  localizedDescription: caibro_bunny_default2_desc
+  quality: Quality.Random
+  placementSlots: 
+    - !append OutfitSlots.Back
+  icon: UIIcon.caibro_bunny_default2
+  iconPath: caibro_bunny_default2
+UIIcon.caibro_bunny_default2:
+  $base: UIIcon.ItemIcon
+  atlasResourcePath: base\icon\mrbunny_icon.inkatlas
+  atlasPartName: icon_part
+  
+# bunny 3 test: Game.AddToInventory("Items.caibro_bunny_default3",1)
+Items.caibro_bunny_default3:
+  $base: Items.Outfit
+  entityName: caibro_bunny_pack
+  appearanceName: caibro_bunny_default_
+  appearanceSuffixes:
+    - !remove itemsFactoryAppearanceSuffix.Camera
+  displayName: caibro_bunny_default3_name
+  localizedDescription: caibro_bunny_default3_desc
+  quality: Quality.Random 
+  placementSlots: 
+    - !append OutfitSlots.Back
+  icon: UIIcon.caibro_bunny_default
+  iconPath: caibro_bunny_default
+UIIcon.caibro_bunny_default:
+  $base: UIIcon.ItemIcon
+  atlasResourcePath: base\icon\mrbunnywhite_icon.inkatlas
+  atlasPartName: icon_part
+  
