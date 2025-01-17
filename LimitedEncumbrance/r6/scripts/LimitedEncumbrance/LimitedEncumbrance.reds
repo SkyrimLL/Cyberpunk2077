@@ -258,11 +258,42 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        if StrContains(currentItemFriendlyName,"caibro_bunny") {
+          clothSlotMod = 20.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    bunny bag bonus : " + clothSlotMod);
+          }
+        }
+        
+        if StrContains(currentItemFriendlyName,"aquelyras_travel_bag") {
+          clothSlotMod = 10.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    aquelyras_travel_bag bonus : " + clothSlotMod);
+          }
+        }
+
         if StrContains(currentItemFriendlyName,"bandoleer") {
-          clothSlotMod = 20.0 ;
+          clothSlotMod = 15.0 ;
 
           if (this.debugON) {
             this.showDebugMessage("::: getEquipmentSlotMods  -    bandoleer bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"yv_claires_bag") {
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    yv_claires_bag bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"fanny_") {
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    fanny_ bonus : " + clothSlotMod);
           }
         }
 
@@ -273,10 +304,38 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        if StrContains(currentItemFriendlyName,"t2_vest_08") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tacticalbelt bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"pouch") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    pouch bonus : " + clothSlotMod);
+          }
+        }
+
         if StrContains(currentItemFriendlyName,"waistbag") {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
             this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"harness") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    harness bonus : " + clothSlotMod);
+          }
+        }
+
+        if StrContains(currentItemFriendlyName,"yv_bag_top_large") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    large bag bonus : " + clothSlotMod);
           }
         }
 
