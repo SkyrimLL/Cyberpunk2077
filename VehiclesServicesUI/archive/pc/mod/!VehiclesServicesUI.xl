@@ -1,0 +1,4 @@
+localization:
+  onscreens:
+    en-us: base\localization\en-us\vehicleFastTravel\onscreens.json
+    fr-fr: base\localization\fr-fr\vehicleFastTravel\onscreens.json
