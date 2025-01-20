@@ -56,3 +56,22 @@ UIIcon.caibro_bunny_default:
   atlasResourcePath: base\icon\mrbunnywhite_icon.inkatlas
   atlasPartName: icon_part
   
+# bunny 4 test: Game.AddToInventory("Items.caibro_courrier_default",1)
+Items.caibro_courrier_default:
+  $base: Items.Outfit
+  entityName: caibro_courrier_pack
+  appearanceName: caibro_courrier_default_
+  appearanceSuffixes:
+    - !remove itemsFactoryAppearanceSuffix.Camera
+  displayName: caibro_courrier_default_name
+  localizedDescription: caibro_courrier_default_desc
+  quality: Quality.Random 
+  placementSlots: 
+    - !append OutfitSlots.Back
+  icon: UIIcon.caibro_bunny_default
+  iconPath: caibro_bunny_default
+UIIcon.caibro_bunny_default:
+  $base: UIIcon.ItemIcon
+  atlasResourcePath: base\icon\mrbunnywhite_icon.inkatlas
+  atlasPartName: icon_part
+  

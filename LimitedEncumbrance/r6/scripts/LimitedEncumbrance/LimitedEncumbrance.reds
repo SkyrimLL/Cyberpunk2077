@@ -214,11 +214,11 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         // Detection of Backpacks cloth items from mods - ex: Items.sp0backpack0305
         // Assign larger values to backpack to compensate for influence of perks modifiers (multiplication by several factors lower than 1)
 
-
         // ----
-        // Generic backpack and bag detection 
-        // Lara Croft Unified Outfit (Archive XL - FemV) - https://www.nexusmods.com/cyberpunk2077/mods/12452
+        // Generic names - placed first to avoid conflicts
+        // ----
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/12452?tab=description
         if StrContains(currentItemFriendlyName,"backpack") {
           clothSlotMod = 30.0 ;
           if (this.debugON) {
@@ -229,85 +229,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         if StrContains(currentItemFriendlyName,"bag") {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
-          }
-        }
-                
-        // ----
-        // spawn0 - TRUE BAGS AND BACKPACKS - https://www.nexusmods.com/cyberpunk2077/mods/6616
-        // Kabuki Bags and Backpacks - TweakXL ArchiveXL addon - https://www.nexusmods.com/cyberpunk2077/mods/11658?tab=description
-
-        if StrContains(currentItemFriendlyName,"milbackpack") {
-          clothSlotMod = 80.0 ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    military backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"zenitex_backpack") {
-          clothSlotMod = 80.0 ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    zenitex_backpack backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"fashbackpack") {
-          clothSlotMod = 30.0 ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    fashion backpack bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"caibro_bunny") {
-          clothSlotMod = 20.0  ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    bunny bag bonus : " + clothSlotMod);
-          }
-        }
-        
-        if StrContains(currentItemFriendlyName,"aquelyras_travel_bag") {
-          clothSlotMod = 10.0 ;
-
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    aquelyras_travel_bag bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"bandoleer") {
-          clothSlotMod = 15.0 ;
-
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    bandoleer bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"yv_claires_bag") {
-          clothSlotMod = 15.0 ;
-
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    yv_claires_bag bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"fanny_") {
-          clothSlotMod = 15.0 ;
-
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    fanny_ bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"tacticalbelt") {
-          clothSlotMod = 10.0  ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    tacticalbelt bonus : " + clothSlotMod);
-          }
-        }
-
-        if StrContains(currentItemFriendlyName,"t2_vest_08") {
-          clothSlotMod = 10.0  ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    tacticalbelt bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    bag bonus : " + clothSlotMod);
           }
         }
 
@@ -318,13 +240,6 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
-        if StrContains(currentItemFriendlyName,"waistbag") {
-          clothSlotMod = 5.0  ;
-          if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
-          }
-        }
-
         if StrContains(currentItemFriendlyName,"harness") {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
@@ -332,23 +247,202 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
-        if StrContains(currentItemFriendlyName,"yv_bag_top_large") {
-          clothSlotMod = 10.0  ;
+        if StrContains(currentItemFriendlyName,"pockets") {
+          clothSlotMod = 5.0  ;
           if (this.debugON) {
-            this.showDebugMessage("::: getEquipmentSlotMods  -    large bag bonus : " + clothSlotMod);
+            this.showDebugMessage("::: getEquipmentSlotMods  -    pockets bonus : " + clothSlotMod);
+          }
+        }
+        // ----
+        // Heavy Backpacks
+        // ----
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/6616?tab=description
+        if StrContains(currentItemFriendlyName,"milbackpack") {
+          clothSlotMod = 80.0 ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    military backpack bonus : " + clothSlotMod);
           }
         }
 
-        // ----
-        // OneSlowZZ Tactical Backpack - https://www.nexusmods.com/cyberpunk2077/mods/12031?tab=description
+        // https://www.nexusmods.com/cyberpunk2077/mods/18152
+        if StrContains(currentItemFriendlyName,"zenitex_backpack") {
+          clothSlotMod = 80.0 ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    zenitex_backpack backpack bonus : " + clothSlotMod);
+          }
+        }
 
-        if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
-          clothSlotMod = 20.0 ;
+        // https://www.nexusmods.com/cyberpunk2077/mods/14797?tab=description
+        if StrContains(currentItemFriendlyName,"bvault33") {
+          clothSlotMod = 50.0 ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    dusty_backpack_vault33 backpack bonus : " + clothSlotMod);
+          }
+        }
+
+
+        // ----
+        // Medium Backpacks
+        // ----
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/12452?tab=description
+        if StrContains(currentItemFriendlyName,"fashbackpack") {
+          clothSlotMod = 30.0 ;
           if (this.debugON) {
             this.showDebugMessage("::: getEquipmentSlotMods  -    fashion backpack bonus : " + clothSlotMod);
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/12031?tab=description
+        if  (Equals(currentItemFriendlyName,"oneslowzz_zz_default_") || Equals(currentItemFriendlyName,"oneslowzz_zz_militech_") || Equals(currentItemFriendlyName,"oneslowzz_zz_arasaka_") || Equals(currentItemFriendlyName,"oneslowzz_zz_brown_") || Equals(currentItemFriendlyName,"oneslowzz_zz_gray_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_") || Equals(currentItemFriendlyName,"oneslowzz_zz_carbon_fiber_backpack_juice_")) {
+          clothSlotMod = 20.0 ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    oneslowzz tactical backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        // ----
+        // Small Backpacks
+        // ----
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/3964
+        if StrContains(currentItemFriendlyName,"caibro_bunny") {
+          clothSlotMod = 20.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    bunny backpack bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/16288
+        if StrContains(currentItemFriendlyName,"aquelyras_travel_bag") {
+          clothSlotMod = 10.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    aquelyras travel hip bag bonus : " + clothSlotMod);
+          }
+        }
+
+        // ----
+        // Tactical belts
+        // ----
+ 
+        if StrContains(currentItemFriendlyName,"tacticalbelt") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tactical belt bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/16348/?tab=files
+        if StrContains(currentItemFriendlyName,"modular_harness") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    modular harness bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/16497?tab=posts&BH=0
+        if StrContains(currentItemFriendlyName,"tact_harness") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tactical harness bonus : " + clothSlotMod);
+          }
+        }
+        
+        // https://www.nexusmods.com/cyberpunk2077/mods/14221
+        if StrContains(currentItemFriendlyName,"avs_plate_carrier") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    avs_plate_carrier bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/11597
+        if StrContains(currentItemFriendlyName,"t2_vest_08") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tactical vest bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/11386?tab=files
+        if StrContains(currentItemFriendlyName,"BeltHolster") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    Belt Holster vest bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/11528?tab=files
+        if StrContains(currentItemFriendlyName,"caibro_kang_tao_belt") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    battle belts bonus : " + clothSlotMod);
+          }
+        }
+
+
+
+        // ----
+        // Bandoleers
+        // ----
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/12452?tab=description
+        if StrContains(currentItemFriendlyName,"bandoleer") {
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    bandoleer bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/15812
+        if StrContains(currentItemFriendlyName,"yv_claires_bag") {
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    claires bag bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/8985?tab=files
+        if StrContains(currentItemFriendlyName,"fanny_") {
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    fanny bag bonus : " + clothSlotMod);
+          }
+        }
+
+        // ----
+        // Pouches
+        // ----
+
+        if StrContains(currentItemFriendlyName,"waistbag") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    waistbag bonus : " + clothSlotMod);
+          }
+        }
+
+
+        if StrContains(currentItemFriendlyName,"yv_bag_top_large") {
+          clothSlotMod = 8.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    large bag bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/3964
+        if StrContains(currentItemFriendlyName,"pants_pockets") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    pants side pockets bonus : " + clothSlotMod);
+          }
+        }
+
+        // ----
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
         if (this.debugON) {

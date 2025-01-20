@@ -5,5 +5,7 @@ QuestRewards.mq019_06_body_dispossed_inline1.value: 50000
 
 # Miltech credit chip for the Flathead
 EconomicAssignment.q003_flathead_payment.overrideValue: 50000
-Price.Flathead.value: 51000.0
+Price.Flathead.value: 50000
+EconomicAssignment.q003_flathead_payment.value: 50000
 Items.q003_chip_cracked_inline0.value: 50000
+Items.q003_chip_cracked_funds.value: 50000
