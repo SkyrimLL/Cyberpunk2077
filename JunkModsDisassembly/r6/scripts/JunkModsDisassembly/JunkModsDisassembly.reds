@@ -335,13 +335,16 @@ public class RepeatDisassemblyTracking extends ScriptedPuppetPS {
       } 
 
       if (_playerPuppetPS.m_repeatDisassemblyTracking.disassembleJunkON) {
-        // Disassemble Junk
+        // Disassemble Junk but always keep one junk to allow disassembly of weapon mods
         i = 0;
-        limit = ArraySize(this.m_junkItems);
-        while i < limit {
-          ItemActionsHelper.DisassembleItem(this.m_player, this.m_junkItems[i].GetID(), this.m_junkItems[i].GetQuantity());
-          i += 1;
-        };
+        limit = ArraySize(this.m_junkItems) - 1;
+        if (limit>1) {
+          while i < limit {
+            ItemActionsHelper.DisassembleItem(this.m_player, this.m_junkItems[i].GetID(), this.m_junkItems[i].GetQuantity());
+            i += 1;
+          };          
+        }
+
       }
 
 

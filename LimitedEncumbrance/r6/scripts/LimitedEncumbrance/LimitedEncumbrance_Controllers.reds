@@ -60,7 +60,7 @@ public let m_player: wref<PlayerPuppet>;
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_player.GetPS();
        
     if (_playerPuppetPS.m_limitedEncumbranceTracking.modON) {
-      _playerPuppetPS.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
+      _playerPuppetPS.m_limitedEncumbranceTracking.applyWeightEffects();  
 
       inkTextRef.SetText(this.m_weightValue, _playerPuppetPS.m_limitedEncumbranceTracking.printEncumbrance(value));
 
@@ -70,8 +70,7 @@ public let m_player: wref<PlayerPuppet>;
       inkTextRef.SetText(this.m_weightValue, ToString(Cast<Int32>(value)) + "/" + ToString(maxWeight));
     }
       
-    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_onpress");
-    GameObject.PlaySoundEvent(this.m_player, n"ui_menu_item_consumable_generic");
+    // GameObject.PlaySoundEvent(this.m_player, n"ui_menu_item_consumable_generic");
  
   }
 
@@ -81,7 +80,7 @@ public let m_player: wref<PlayerPuppet>;
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_player.GetPS();
 
     if (_playerPuppetPS.m_limitedEncumbranceTracking.modON) { 
-      _playerPuppetPS.m_limitedEncumbranceTracking.calculateLimitedEncumbrance(); 
+      _playerPuppetPS.m_limitedEncumbranceTracking.applyWeightEffects(); 
 
       inkTextRef.SetText(this.m_weightValue, _playerPuppetPS.m_limitedEncumbranceTracking.printEncumbrance(curInventoryWeight));
     } else {
@@ -92,23 +91,35 @@ public let m_player: wref<PlayerPuppet>;
     }
   }
 
-
 // public class VendorHubMenuGameController extends gameuiMenuGameController {
 @replaceMethod(VendorHubMenuGameController)
-
   protected cb func OnPlayerWeightUpdated(value: Float) -> Bool {
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_player.GetPS();
     let gameInstance: GameInstance = this.m_player.GetGame();
     let carryCapacity: Int32 = Cast<Int32>(GameInstance.GetStatsSystem(gameInstance).GetStatValue(Cast<StatsObjectID>(this.m_player.GetEntityID()), gamedataStatType.CarryCapacity));
 
     if (_playerPuppetPS.m_limitedEncumbranceTracking.modON) {
-      _playerPuppetPS.m_limitedEncumbranceTracking.calculateLimitedEncumbrance();
+      _playerPuppetPS.m_limitedEncumbranceTracking.applyWeightEffects();
 
       inkTextRef.SetText(this.m_playerWeightValue, _playerPuppetPS.m_limitedEncumbranceTracking.printEncumbrance(this.m_player.m_curInventoryWeight));
     } else {
       // Vanilla code
-
       inkTextRef.SetText(this.m_playerWeightValue, IntToString(RoundF(this.m_player.m_curInventoryWeight)) + " / " + carryCapacity);
 
     }
+  }
+
+// public native class AttachmentSlotsScriptCallback extends IScriptable {
+@addField(AttachmentSlotsScriptCallback)
+public let m_player: wref<PlayerPuppet>;
+
+@wrapMethod(AttachmentSlotsScriptCallback)
+  public func OnItemEquipped(slot: TweakDBID, item: ItemID) -> Void { 
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_player.GetPS(); 
+
+    if (_playerPuppetPS.m_limitedEncumbranceTracking.modON) {
+      _playerPuppetPS.m_limitedEncumbranceTracking.applyWeightEffects();  
+    }
+    
+    wrappedMethod(slot, item);
   }

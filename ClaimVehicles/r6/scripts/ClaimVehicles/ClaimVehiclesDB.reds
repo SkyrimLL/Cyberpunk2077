@@ -32,14 +32,14 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   public persistent let vehiclesUnlockStateDB: array<ref<VehicleUnlockState>>;
 
   public func lookupVehicle(_id: TweakDBID) -> ref<VehicleProperties> {
-    // this.showDebugMessage(">>> ClaimVehicleDB: lookupVehicle()..." );
-    // this.showDebugMessage(">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id)); 
+    this.showDebugMessage(">>> ClaimVehicleDB: lookupVehicle()..." );
+    this.showDebugMessage(">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id)); 
 
     for thisVehicle in this.vehiclesDB { 
       // this.showDebugMessage(">>>>>> ClaimVehicleDB: comparing :" + TDBID.ToStringDEBUG(thisVehicle.vehicleRecordID) + " and " + TDBID.ToStringDEBUG(_id));
 
       if (Equals(thisVehicle.vehicleRecordID, _id)) {
-        // this.showDebugMessage(">>>>>> ClaimVehicleDB: entry found!"); 
+        this.showDebugMessage(">>>>>> ClaimVehicleDB: entry found!"); 
 
         return thisVehicle;
       }  
@@ -1184,7 +1184,7 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   }
 
   private func showDebugMessage(debugMessage: String) {
-    //// LogChannel(n"DEBUG", debugMessage ); 
+    // LogChannel(n"DEBUG", debugMessage ); 
   }
 } 
 

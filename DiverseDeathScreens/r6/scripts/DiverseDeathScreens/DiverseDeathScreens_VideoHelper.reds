@@ -101,20 +101,23 @@ public class FullScreenDeathSequenceController  {
   }
 
   private final func isPlayerImpersonatingJohnny() -> Bool {
-    let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
-    let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-    let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
-    let isImpersonating: Bool = false;
+    // let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    // let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+    // let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
+    // let isImpersonating: Bool = false;
 
-    switch controlledObjRecordID {
-      case t"Character.johnny_replacer":
-        isImpersonating=true;
-        break;
-      default:
-        isImpersonating=false;
-    };
+    // switch controlledObjRecordID {
+    //   case t"Character.johnny_replacer":
+    //     isImpersonating=true;
+    //     break;
+    //   default:
+    //     isImpersonating=false;
+    // };
 
-    return isImpersonating;
+    // return isImpersonating;
+
+    return this.player.IsJohnnyReplacer();
+
   }
 
   public  func PlayVideoSequence() -> Void {
@@ -127,7 +130,12 @@ public class FullScreenDeathSequenceController  {
       }
 
       // Comment out once callbacks are working properly for a sequence
-   
+
+  // FXRebootOpticsGrenade:NewFX('Reboot'   ,'FXRebootOpticsGrenade_Reboot'   ,'base\\fx\\player\\p_reboot_glitch\\p_reboot_glitch.effect')
+  // FXRebootOpticsGrenade:NewFX('Burnout'  ,'FXRebootOpticsGrenade_Burnout'  ,'base\\fx\\player\\p_burnout_glitch\\p_burnout_glitch.effect')
+  // FXRebootOpticsGrenade:NewFX('Blackwall','FXRebootOpticsGrenade_Blackwall','ep1\\fx\\quest\\q303\\voodoo_boys\\blackwall\\onscreen\\q303_blackwall_onscreen_contact.effect')
+  // FXRebootOpticsGrenade:NewFX('Relic'    ,'FXRebootOpticsGrenade_Johnny'   ,'base\\fx\\player\\p_johnny_sickness_symptoms\\p_johnny_sickness_symptoms_blackout_short.effect')
+     
       // this.Fade(0.00, 1.00, n"OnFadeInEnd"); 
       // this.Fade(0.00, 1.00, n"OnFadeOutEnd"); 
 
@@ -196,8 +204,9 @@ public class FullScreenDeathSequenceController  {
           this.PlayVideoFile(r"base\\movies\\fullscreen\\q101\\broken-ui.bk2", 0.7, false, n"None");
 
         } else {
-          this.m_video_sequence = 2;
-          this.PlayVideoFile(r"base\\movies\\misc\\generic_noise_white.bk2", 0.9, false, n"None");
+          // this.m_video_sequence = 2;
+          // this.PlayVideoFile(r"base\\movies\\misc\\generic_noise_white.bk2", 0.9, false, n"None");
+          GameObjectEffectHelper.StartEffectEvent(this.player, n"p_songbird_sickness.effect", false);
 
         }
 

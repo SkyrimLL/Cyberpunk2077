@@ -10,6 +10,9 @@ For redscript mod developers
 public class SantaMuerteTracking 
 */  
 
+import GameInstance
+import gameuiGenericNotificationType
+ 
 public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>; 
 
@@ -26,8 +29,10 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let capResurrectionsOverride: Int32;
   public let deathLandingProtectionON: Bool;
   public let skipTimeON: Bool;
+  public let minSkippedTime: Float;
   public let maxSkippedTime: Float;
   public let blackoutON: Bool;
+  public let maxBlackoutTime: Float;
   public let teleportON: Bool;
   public let blackoutTeleportChance: Int32;
   public let blackoutSafeTeleportON: Bool;   
@@ -96,7 +101,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.deathLandingProtectionON = this.config.deathLandingProtectionON;
     this.skipTimeON = this.config.skipTimeON;
     this.blackoutON = this.config.blackoutON;
+    this.maxBlackoutTime = this.config.maxBlackoutTime;
     this.teleportON = this.config.teleportON;
+    this.minSkippedTime = this.config.minSkippedTime;
     this.maxSkippedTime = this.config.maxSkippedTime;
     this.blackoutTeleportChance = this.config.blackoutTeleportChance;
     this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON; 
@@ -113,6 +120,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
+ 
   } 
 
   public func updateResurrections(isSecondHeartInstalled: Bool) -> Void {    
@@ -133,32 +141,23 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.santaMuerteRelicDifficulty = this.santaMuerteLoreDifficulty;
     }
 
+    this.incrementResurrections();
+    this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going UP " );
+
     switch this.santaMuerteRelicDifficulty {
       case santaMuerteRelicMode.Low:
         if (RandRange(0,100) < (relicMetaquestContribution * 10)) {
+
           // Relic check successful, keep resurrection count level or add chance for a rebate
           if (RandRange(0,100) >= (100 - (4 * (relicMetaquestContribution)))) {
             this.decrementResurrections();
+            this.decrementResurrections();
             this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going DOWN! " );
 
-          } else {
-            // this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount unchanged " );
-
           }
-
-        } else {
-          // Relic check failed - increase resurrection count towards Max value
-          this.incrementResurrections();
-          this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going UP " );
-
-        }
-        break;
-      case santaMuerteRelicMode.Medium:
-        this.incrementResurrections();
-        break;
-      case santaMuerteRelicMode.High:
-        this.incrementResurrections(); 
-
+        } 
+        break; 
+      case santaMuerteRelicMode.High: 
         if (RandRange(0,100) < (relicMetaquestContribution * 10)) {
           // Relic check successful, add chance for an extra removal of points
           if (RandRange(0,100) >= (100 - (4 * (relicMetaquestContribution)))) {
@@ -169,7 +168,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         break;
     }
 
-    
+    // Safety reset in case of bad counter from previous versions
+    if (this.resurrectCount < 0) {
+      this.resurrectCount = this.resurrectCountMax;
+    }
+
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount = " + ToString(this.resurrectCount) );
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
 
@@ -195,15 +198,25 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   } 
 
   public func maxResurrectionReached(isSecondHeartInstalled: Bool) -> Bool {    
+
     if (this.unlimitedResurrectON) || (isSecondHeartInstalled) { 
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: unlimitedResurrectON = " + ToString(this.unlimitedResurrectON) );
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: isSecondHeartInstalled = " + ToString(isSecondHeartInstalled) );
       return false;
     }
 
-    if (!this.deathWhenImpersonatingJohnnyON) || (this.isPlayerImpersonatingJohnny()) {
+    if (!this.deathWhenImpersonatingJohnnyON) && (this.isPlayerImpersonatingJohnny())  {
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: Johnny cannot die ");
       return false;
     }
 
-    return (this.resurrectCount >= this.resurrectCountMax);  
+    if (this.resurrectCount <= this.resurrectCountMax) {
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: resurrectCountMax NOT reached ");
+      return false;
+    }
+
+    this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: resurrectCountMax reached ");
+    return true;
   } 
 
   public func getMaxResurrectionPercent() -> Float {    
@@ -211,7 +224,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       return 100.0;
     }
 
-    return (Cast<Float>(this.resurrectCount) * 100.0) / Cast<Float>(this.resurrectCountMax) ;  
+    if (this.resurrectCountMax != 0) {
+      return (Cast<Float>(this.resurrectCount) * 100.0) / Cast<Float>(this.resurrectCountMax) ;  
+    } else {
+      return 100.0;
+    }
+
+    
   } 
 
   public func updateMaxResurrections() -> Void {    
@@ -263,13 +282,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     return memoryConsumed;
   }
 
-/*
+  /*
 
-https://github.com/DoctorPresto/Cyberpunk-File-Types/blob/main/questphase.txt
- 
-sq018_03_padre_onspot 
+  https://github.com/DoctorPresto/Cyberpunk-File-Types/blob/main/questphase.txt
+   
+  sq018_03_padre_onspot 
 
-*/
+  */
 
 
   public func isRelicInstalled() -> Bool {  
@@ -428,8 +447,12 @@ sq018_03_padre_onspot
     let teleportSuccessful: Bool = false;
     let canBeTeleported: Bool = this.canBeTeleported();
 
-    if ( RandRange(1,100) <= this.blackoutTeleportChance ) && (canBeTeleported)  && (this.teleportON) {
+    if (this.blackoutON) && (skipHoursAmount >= this.maxBlackoutTime) {
+      // Apply blackout only after certain amount of time
       this.applyBlackout();
+    }
+
+    if ( RandRange(1,100) <= this.blackoutTeleportChance ) && (canBeTeleported)  && (this.teleportON) {
       // Test Detour teleports first
       if (this.blackoutDetourTeleportON) && (RandRange(1,100) <= this.blackoutDetourTeleportChance) {
           teleportSuccessful = this.tryResurrectionDetourTeleport();           
@@ -441,6 +464,9 @@ sq018_03_padre_onspot
       }     
 
       if (teleportSuccessful) {
+        // Force blackout on teleport
+        this.applyBlackout();
+
         this.applyLoadingScreen();
 
         // Add 6 to 12 hours to account for transportation and healing
@@ -460,9 +486,10 @@ sq018_03_padre_onspot
   } 
 
   public func applyLoadingScreen() -> Void {
+    this.showDebugMessage( ">>> Santa Muerte: applyLoadingScreen" );
     globalApplyLoadingScreen();
 
-    this.clearBlackout();
+    // this.clearBlackout();
   }
 
   // @if(ModuleExists("DiverseDeathScreens.OnDeathEvent"))
@@ -495,9 +522,14 @@ sq018_03_padre_onspot
       timeSystem.SetGameTimeBySeconds(Cast<Int32>(newTimeStamp));
       GameTimeUtils.FastForwardPlayerState(this.player);
 
-      this.clearBlackout();
+      // this.clearBlackout();
  
   } 
+
+  // FXRebootOpticsGrenade:NewFX('Reboot'   ,'FXRebootOpticsGrenade_Reboot'   ,'base\\fx\\player\\p_reboot_glitch\\p_reboot_glitch.effect')
+  // FXRebootOpticsGrenade:NewFX('Burnout'  ,'FXRebootOpticsGrenade_Burnout'  ,'base\\fx\\player\\p_burnout_glitch\\p_burnout_glitch.effect')
+  // FXRebootOpticsGrenade:NewFX('Blackwall','FXRebootOpticsGrenade_Blackwall','ep1\\fx\\quest\\q303\\voodoo_boys\\blackwall\\onscreen\\q303_blackwall_onscreen_contact.effect')
+  // FXRebootOpticsGrenade:NewFX('Relic'    ,'FXRebootOpticsGrenade_Johnny'   ,'base\\fx\\player\\p_johnny_sickness_symptoms\\p_johnny_sickness_symptoms_blackout_short.effect')
 
   public func applyJohnnySickness() -> Void {
     let maxResurrectionPercent: Float;
@@ -513,8 +545,16 @@ sq018_03_padre_onspot
       StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessLow", this.player.GetEntityID(), 0.00, sicknessDuration);
     }
 
-    if (maxResurrectionPercent > 25.0) && (maxResurrectionPercent < 85.0) {
+    if (maxResurrectionPercent > 25.0) && (maxResurrectionPercent < 45.0) {
       StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessMedium", this.player.GetEntityID(), 0.00, sicknessDuration);
+    }
+
+    if (maxResurrectionPercent > 45.0) && (maxResurrectionPercent < 65.0) {
+      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessHeavy", this.player.GetEntityID(), 0.00, sicknessDuration);
+    }
+
+    if (maxResurrectionPercent > 65.0) && (maxResurrectionPercent < 85.0) {
+      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessHeavy", this.player.GetEntityID(), 0.00, sicknessDuration);
     }
 
     if (maxResurrectionPercent >= 85.0) {
@@ -525,6 +565,9 @@ sq018_03_padre_onspot
     if (this.santaMuerteWidgetON) {
       this.resurrectionCostsMemory();      
     }
+
+    // Remove blackwall effect in case it was added by Death Screens
+    GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"p_songbird_sickness.effect");
 
     // Attempt at removing second heart effect icon 
     // Commenting out because of hard crash when used here.
@@ -578,7 +621,7 @@ sq018_03_padre_onspot
       GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
       
       // 2024-12-07 - Testing shut down combat
-      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);
+      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);   
       this.player.m_combatController.SendAnimFeatureData(false);
       PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
       // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
@@ -1412,9 +1455,9 @@ sq018_03_padre_onspot
   }
 
   private final func isPlayerImpersonating() -> Bool {
-    let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
-    let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-    let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
+    // let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    // let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+    let controlledObjRecordID: TweakDBID = this.player.GetRecord().GetID() ; // controlledObj.GetRecordID();
     let isImpersonating: Bool = false;
 
     switch controlledObjRecordID {
@@ -1445,20 +1488,7 @@ sq018_03_padre_onspot
 
 
   private final func isPlayerImpersonatingJohnny() -> Bool {
-    let mainObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
-    let controlledObj: wref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.player.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-    let controlledObjRecordID: TweakDBID = controlledObj.GetRecordID();
-    let isImpersonating: Bool = false;
-
-    switch controlledObjRecordID {
-      case t"Character.johnny_replacer":
-        isImpersonating=true;
-        break;
-      default:
-        isImpersonating=false;
-    };
-
-    return isImpersonating;
+    return this.player.IsJohnnyReplacer();
   }
 
 
@@ -1480,6 +1510,7 @@ sq018_03_padre_onspot
     unequipSetRequest.owner = this.player;
     equipmentSystem.QueueRequest(unequipSetRequest);
 
+    // Equipped items
     i = 0;
     while i < ArraySize(slotList) {
       id = equipmentData.GetActiveItem(slotList[i]);
@@ -1582,6 +1613,11 @@ sq018_03_padre_onspot
       isValid = false;
     }
 
+    // Exclude inhalers and injectors
+    if Equals(itemType, gamedataItemType.Con_Inhaler) || Equals(itemType, gamedataItemType.Con_Injector) {
+      isValid = false;
+    }
+
     // return IsDefined(itemRecord);
     return isValid;
   }
@@ -1637,10 +1673,51 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
   PERMADEATH TEST
 */
 
-  public func markGameForPermaDeath() -> Void {
+  public func markGameForPermaDeath() -> Void { 
+    // let SavedGamesController: ref<LoadGameMenuGameController> = new LoadGameMenuGameController();
+    // SavedGamesController.setGameForPermaDeath();
+
+    if ((!this.isRelicInstalled()) || (!this.modON) ) {
+      this.showDebugMessage( ">>> Santa Muerte: markGameForPermaDeath: skipped: mod is not active" );
+      return;
+    }
+
+    // Guardrails to avoid setting permadeath when it is not needed
+    if (this.unlimitedResurrectON) {
+      this.showDebugMessage( ">>> Santa Muerte: markGameForPermaDeath: skipped: unlimitedResurrectON [" + ToString(this.unlimitedResurrectON) + "]" );
+      return;
+    }
+
+    if (!this.deathWhenImpersonatingJohnnyON) && (this.isPlayerImpersonatingJohnny()) {
+      this.showDebugMessage( ">>> Santa Muerte: markGameForPermaDeath: skipped: deathWhenImpersonatingJohnnyON [" + ToString(this.deathWhenImpersonatingJohnnyON) + "] - isPlayerImpersonatingJohnny [" + ToString(this.isPlayerImpersonatingJohnny()) + "]" );
+      return; 
+    }
+
+    // Send signal to CET to write flag
+    GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("MarkPermadeath", 1);
+
     this.showDebugMessage( ">>> Santa Muerte: Final Death" ); 
-    this.forceBlackout();
+    // this.tryPermadeathExit();
   }
+
+
+  public func tryPermadeathExit() -> Void {
+    let game = this.player.GetGame();
+    let factValue = GameInstance.GetQuestsSystem(game).GetFactStr("PermadeathTriggered");
+    let m_statusEffectSystem: wref<StatusEffectSystem>;
+    m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+ 
+    let message: String = SantaMuerteText.PERMADEATH();
+
+    this.player.SetWarningMessage(message, SimpleMessageType.Relic);  
+
+    // Show death overlay
+
+    m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
+    m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.ForceKill");
+
+  }
+
 
 /* 
   SHOWMESSAGE OVERRIDE FOR DEBUGGING
@@ -1648,13 +1725,8 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
   private func showDebugMessage(debugMessage: String) {
     // LogChannel(n"DEBUG", debugMessage ); 
   }
-
-
-
-
-
+ 
 }
-
 
 // Moving this code here for compatibility with Codeware
 @if(ModuleExists("Codeware"))

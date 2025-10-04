@@ -171,13 +171,16 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
               // LogChannel(n"DEBUG", "::: OnExit - isVehicleHackable: "+ToString(isVehicleHackable)  );
               // LogChannel(n"DEBUG", "::: OnExit - matchVehicleUnlocked: "+ToString(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked)  );
             }
-     
+
+
             if (isVehicleHackable){ 
               _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);   
 
             }  else {
 
-              if (_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked) {
+              // check if vehicle is already owned in both old and new lists
+              if (_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked) || (_playerPuppetPS.m_claimedVehicleTracking.checkVehicleInSavedGarage(vehicle.GetRecordID())){
+                // Vehicle is already unlocked
               } else {
                 _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
 

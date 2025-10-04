@@ -1,6 +1,9 @@
 // public native class healthbarWidgetGameController extends inkHUDGameController {
 
 /* 
+    this.m_buffWidget = this.SpawnFromExternal(inkWidgetRef.Get(this.m_buffsHolder), r"base\\gameplay\\gui\\widgets\\healthbar\\playerbuffbar.inkwidget", n"VertRoot");
+*/
+
 @replaceMethod(healthbarWidgetGameController)
   private final func UpdateCurrentHealthText() -> Void {
     let player: wref<PlayerPuppet>;
@@ -9,17 +12,28 @@
 
     _playerPuppetPS.m_santaMuerteTracking.refreshConfig();
 
-    if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (player.IsInCombat())  && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON)  {
-        // Custom Health Display
-        inkWidgetRef.SetState(this.m_healthTextPath, this.m_currentOvershieldValue > 0 ? n"Overshield" : n"Default");
-        inkTextRef.SetText(this.m_healthTextPath, "R::" +  ToString(_playerPuppetPS.m_santaMuerteTracking.resurrectCountMax - _playerPuppetPS.m_santaMuerteTracking.resurrectCount) );
-      } else {
-        // Default health display
-        inkWidgetRef.SetState(this.m_healthTextPath, this.m_currentOvershieldValue > 0 ? n"Overshield" : n"Default");
-        inkTextRef.SetText(this.m_healthTextPath, IntToString(this.m_currentHealth + this.m_currentOvershieldValue));        
+    if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (player.IsInCombat())  && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) {
+
+      if !(this.IsCyberdeckEquipped()) {
+        inkWidgetRef.SetVisible(this.m_quickhacksContainer, true);        
       }
+
+    }
+    
+    // Default health display
+    inkWidgetRef.SetState(this.m_healthTextPath, this.m_currentOvershieldValue > 0 ? n"Overshield" : n"Default");
+    inkTextRef.SetText(this.m_healthTextPath, IntToString(this.m_currentHealth + this.m_currentOvershieldValue));        
+
   }
-*/
+
+@wrapMethod(healthbarWidgetGameController)
+  protected cb func OnUpdateHealthBarVisibility() -> Bool {
+    wrappedMethod();
+
+    // force RAM widget regardless of cyberdeck equipped or not
+    //inkWidgetRef.SetVisible(this.m_quickhacksContainer, this.IsCyberdeckEquipped());
+    inkWidgetRef.SetVisible(this.m_quickhacksContainer, true); 
+  }
 
 @wrapMethod(healthbarWidgetGameController)
   protected cb func OnInitialize() -> Bool {
@@ -31,7 +45,8 @@
 
     _playerPuppetPS.m_santaMuerteTracking.refreshConfig();
 
-    if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCompatibilityON) {   
+    if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCompatibilityON) {  
+      // LogChannel(n"DEBUG", ">>> Santa Muerte: healthbarWidgetGameController - init informativeHUDCompatibilityON" );   
 
       //grabbing the root widget
       let root = this.GetRootCompoundWidget() as inkCompoundWidget;
@@ -43,9 +58,39 @@
     }
   }
 
-@wrapMethod(healthbarWidgetGameController)
+@replaceMethod(healthbarWidgetGameController)
   private final func UpdateMemoryBarData() -> Void {
-    wrappedMethod();
+    let quickhackBar: wref<inkWidget>;
+    let quickhackBarController: wref<QuickhackBarController>;
+    let fillCellsInt: Int32 = FloorF(this.m_memoryFillCells);
+    let i: Int32 = 0;
+
+    if (this.IsCyberdeckEquipped()) {
+        while i < ArraySize(this.m_quickhackBarArray) {
+          if i >= this.m_memoryMaxCells {
+            this.m_quickhackBarArray[i].SetVisible(false);
+          } else {
+            quickhackBar = this.m_quickhackBarArray[i];
+            quickhackBarController = quickhackBar.GetController() as QuickhackBarController;
+            if fillCellsInt < this.m_memoryMaxCells {
+              if i < fillCellsInt {
+                quickhackBarController.SetStatus(1.00);
+              } else {
+                if i == fillCellsInt {
+                  quickhackBarController.SetStatus(this.m_memoryFillCells - Cast<Float>(fillCellsInt));
+                } else {
+                  quickhackBarController.SetStatus(0.00);
+                };
+              };
+            } else {
+              quickhackBarController.SetStatus(1.00);
+            };
+            quickhackBar.SetVisible(true);
+          };
+          i += 1;
+        };
+        this.RequestHealthBarVisibilityUpdate();
+    }
 
     let player: wref<PlayerPuppet>;
     player = this.m_playerObject as PlayerPuppet;
@@ -66,19 +111,28 @@
     hPanel.RemoveChildByName(n"santaMuerteRAM");
     canvas.Reparent(hPanel);
 
+    // Display RAM bars only if Cyberdeck is installed
     if (_playerPuppetPS.m_santaMuerteTracking.informativeHUDCompatibilityON) {
+      // LogChannel(n"DEBUG", ">>> Santa Muerte: healthbarWidgetGameController - draw" );   
+
       let numbers = new inkText();
-      numbers.SetText("  " + ToString(FloorF(this.m_memoryFillCells)) + "/" + ToString(this.m_memoryMaxCells));
+
+      if (this.IsCyberdeckEquipped()) {
+        numbers.SetText("  " + ToString(FloorF(this.m_memoryFillCells)) + "/" + ToString(this.m_memoryMaxCells));
+        numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
+        } else {
+        numbers.SetText("  N/A");
+        numbers.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
+        }
       numbers.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
       numbers.SetFontStyle(n"Regular");
       numbers.SetFontSize(20);
-      //numbers.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
-      numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
       numbers.SetAnchor(inkEAnchor.CenterFillHorizontaly);
       numbers.SetAnchorPoint(0.0, 0.5);
       numbers.Reparent(canvas);        
     }
 
+    // Display relic resurrections
     if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) {   
     // if (player.IsInCombat()) 
     // {

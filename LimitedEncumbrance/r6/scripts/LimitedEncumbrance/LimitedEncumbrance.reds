@@ -58,7 +58,10 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let encumbranceEquipmentBonus: Float;
   public let carryCapacityCapMod: Float;
 
+  public let currentInventoryWeight: Float; 
   public let lastInventoryWeight: Float; 
+  public let currentCarryCapacity: Float; 
+  public let lastCarryCapacity: Float; 
 
 
   public func init(player: wref<PlayerPuppet>) -> Void {
@@ -159,6 +162,17 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     }
 
     return clothMod;
+  }
+
+  public func countEquipmentSlotMods() -> Int32 { 
+    let slots: array<wref<AttachmentSlot_Record>>; 
+    TweakDBInterface.GetCharacterRecord(this.player.GetRecordID()).AttachmentSlots(slots); 
+
+    if (this.debugON) {
+      this.showDebugMessage("::: countEquipmentSlotMods - " + ArraySize(slots));
+    }
+
+    return ArraySize(slots);
   }
 
   public func getEquipmentSlotMods() -> Float { 
@@ -281,6 +295,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/23097?tab=description
+        if StrContains(currentItemFriendlyName,"breezy_travelers_backpack") {
+          clothSlotMod = 40.0 ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    breezy_travelers_backpack backpack bonus : " + clothSlotMod);
+          }
+        }
+
 
         // ----
         // Medium Backpacks
@@ -334,6 +356,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/24766
+        if StrContains(currentItemFriendlyName,"sneaksuitfv") {
+          clothSlotMod = 8.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    Snake Sneaking Suit FV bonus : " + clothSlotMod);
+          }
+        }
+
         // https://www.nexusmods.com/cyberpunk2077/mods/16348/?tab=files
         if StrContains(currentItemFriendlyName,"modular_harness") {
           clothSlotMod = 5.0  ;
@@ -366,6 +396,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // vanilla?
+        if StrContains(currentItemFriendlyName,"t2_vest_23_old_01_") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    tactical vest with panel bonus : " + clothSlotMod);
+          }
+        }
+
         // https://www.nexusmods.com/cyberpunk2077/mods/11386?tab=files
         if StrContains(currentItemFriendlyName,"BeltHolster") {
           clothSlotMod = 10.0  ;
@@ -382,7 +420,29 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/20548?tab=description
+        if StrContains(currentItemFriendlyName,"707xtq_avs_plate_carrier") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    707xtq_avs_plate_carrier bonus : " + clothSlotMod);
+          }
+        }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/20475?tab=description
+        if StrContains(currentItemFriendlyName,"mana_military_belt") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    mana_military_belt bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/15548?tab=description
+        if StrContains(currentItemFriendlyName,"ucbelt") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    ucbelt bonus : " + clothSlotMod);
+          }
+        }
 
         // ----
         // Bandoleers
@@ -407,6 +467,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         }
 
         // https://www.nexusmods.com/cyberpunk2077/mods/8985?tab=files
+        // https://www.nexusmods.com/cyberpunk2077/mods/21607?tab=description
         if StrContains(currentItemFriendlyName,"fanny_") {
           clothSlotMod = 15.0 ;
 
@@ -442,6 +503,13 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/19399?tab=description
+        if StrContains(currentItemFriendlyName,"techtbag") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    techtbag bonus : " + clothSlotMod);
+          }
+        }
         // ----
 
         clothSlotBonus = clothSlotBonus + clothSlotMod;
@@ -531,7 +599,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     }
 
     if (this.debugON) {
-      // this.showDebugMessage("::: calculatePlayerEquipmentWeights  - equipmentWeight: " + equipmentWeight);
+      this.showDebugMessage("::: calculatePlayerEquipmentWeights  - equipmentWeight: " + equipmentWeight);
     }
 
     return equipmentWeight;
@@ -720,7 +788,9 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
       // Dynamic mode - Base capacity + Backpacks + buffs from perks, cyberware and equipment weight
 
 
-      this.limitedCarryCapacity = this.carryCapacityBase + ( originalCarryCapacity * this.carryCapacityContribution) + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus + playerClothSlot ) * (playerPerks + playerPerksBonus ) * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
+      // this.limitedCarryCapacity = this.carryCapacityBase + ( originalCarryCapacity * this.carryCapacityContribution) + this.carryCapacityBackpack + ((this.carryCapacityBackpack + playerEquipmentBonus + playerClothSlot ) * (playerPerks + playerPerksBonus ) * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
+
+      this.limitedCarryCapacity = this.carryCapacityBase + ( originalCarryCapacity * this.carryCapacityContribution) + this.carryCapacityBackpack + (playerEquipmentBonus * (playerPerks + playerPerksBonus ) * this.playerPerkMod) + (playerLevel * this.playerLevelMod) + playerClothSlot + ( playerEquipmentWeight * this.encumbranceEquipmentBonus );
 
     }
 
@@ -741,6 +811,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         this.showDebugMessage(":::     (carryCapacityOverride: '"+this.carryCapacityOverride+"'"  ); 
         this.showDebugMessage(":::       + playerClothSlot: '"+ playerClothSlot+"'"  ); 
         this.showDebugMessage(":::       ) ");
+        this.showDebugMessage(":::     = limitedCarryCapacity: '"+this.limitedCarryCapacity+"'"  );          
+
       } else {
         this.showDebugMessage("::: calculateLimitedEncumbrance - dynamic mode"  ); 
         this.showDebugMessage(":::     (carryCapacityBase: '"+this.carryCapacityBase+"')"  ); 
@@ -792,6 +864,108 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
       } else {
       return IntToString(Cast<Int32>(playerWeight)) + " / " + IntToString(Cast<Int32>(carryCapacity)); 
       }
+
+  }
+
+
+  public func applyWeightEffects(opt isLootBroken: Bool) { 
+    let carryCapacityDelta: Int32; 
+    let hasExhaustedEffect: Bool;
+    let hasEncumbranceEffect: Bool;
+    let isApplyingRestricted: Bool; 
+    let ses: ref<StatusEffectSystem>; 
+
+    this.currentInventoryWeight = this.player.m_curInventoryWeight;
+
+    if this.currentInventoryWeight < 0.00 {
+      this.currentInventoryWeight = 0.00;
+    };
+
+    this.calculateLimitedEncumbrance();
+    this.currentCarryCapacity = this.getCarryCapacity(); 
+
+    ses = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+    hasExhaustedEffect = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerExhausted");
+    hasEncumbranceEffect = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
+    isApplyingRestricted = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoEncumbrance");
+
+    // If current weight is the same but carry capacity changes, add or remove effect 
+
+    // if (this.currentInventoryWeight!=this.lastInventoryWeight) || (this.currentCarryCapacity!=this.lastCarryCapacity) {
+
+      // Only calculate effect if inventory weight actually changed
+
+      // Testing removal by default + reapplied if necessary 
+      // Trying to fix issues with detection and toggle of status effect
+      // ses.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
+
+      if (this.debugON) { 
+        this.showDebugMessage("EvaluateEncumbrance: Current weight:" + FloatToString(this.currentInventoryWeight) ); 
+        this.showDebugMessage("EvaluateEncumbrance: Last weight:" + FloatToString(this.lastInventoryWeight) ); 
+        this.showDebugMessage("EvaluateEncumbrance: Current Carry capacity:" + FloatToString(this.currentCarryCapacity) ); 
+        this.showDebugMessage("EvaluateEncumbrance: Last Carry capacity:" + FloatToString(this.lastCarryCapacity) ); 
+        this.showDebugMessage("EvaluateEncumbrance: hasExhaustedEffect: " + hasExhaustedEffect); 
+        this.showDebugMessage("EvaluateEncumbrance: hasEncumbranceEffect: " + hasEncumbranceEffect);  
+        this.showDebugMessage("EvaluateEncumbrance: isApplyingRestricted: " +  isApplyingRestricted); 
+      }
+
+      if this.currentInventoryWeight > this.currentCarryCapacity && !isApplyingRestricted {
+        // this.player.SetWarningMessage(GetLocalizedText("UI-Notifications-Overburden"));
+
+      } else { 
+        // if (this.currentInventoryWeight >= this.carryCapacityBase) {
+        carryCapacityDelta = Cast<Int32>(this.currentCarryCapacity) - Cast<Int32>(this.currentInventoryWeight);
+
+        if ((carryCapacityDelta <= this.carryCapacityAlertTheshold) && (this.currentInventoryWeight!=this.lastInventoryWeight) ){
+          if (this.warningsON) { 
+            let message: String = StrReplace(LimitedEncumbranceText.HEAVY(), "%VAL%", ToString(carryCapacityDelta));
+  
+            this.player.SetWarningMessage(message); 
+          }
+        } 
+      }
+
+      if (hasEncumbranceEffect) {
+        // if (this.debugON) { 
+        //   this.showDebugMessage("EvaluateEncumbrance: hasEncumbranceEffect ON"  ); 
+        // }
+
+        if (this.currentInventoryWeight!=this.lastInventoryWeight) {
+          if (this.debugON) { 
+            this.player.SetWarningMessage("Current weight:" + FloatToString(this.currentInventoryWeight) + " - " + "Carry capacity:" + FloatToString(this.currentCarryCapacity) + " - " + "hasEncumbranceEffect ON"); 
+          }
+        }
+
+        if this.currentInventoryWeight <= this.currentCarryCapacity  {
+          if (this.debugON) { this.player.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
+          ses.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
+          this.showDebugMessage("EvaluateEncumbrance: REMOVING EncumbranceEffect"  ); 
+
+        };
+      } else {
+          // if (debugON) { this.player.SetWarningMessage("hasEncumbranceEffect OFF"); }
+        if (this.currentInventoryWeight > this.currentCarryCapacity) && !isApplyingRestricted && !isLootBroken   { // && !hasEncumbranceEffect
+          if (this.warningsON) { this.player.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
+          ses.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
+          this.showDebugMessage("EvaluateEncumbrance: APPLYING EncumbranceEffect"  ); 
+
+        } else {
+          if this.currentInventoryWeight <= this.currentCarryCapacity && hasEncumbranceEffect && isApplyingRestricted && !isLootBroken  {
+            if (this.debugON) { this.player.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
+            // ses.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
+          };
+        };
+      }
+
+      // This works to display new inventory weight
+      GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().UI_PlayerStats).SetFloat(GetAllBlackboardDefs().UI_PlayerStats.currentInventoryWeight, this.currentInventoryWeight, true);
+
+      this.lastInventoryWeight = this.currentInventoryWeight;
+      this.lastCarryCapacity = this.currentCarryCapacity;
+
+    // }    
+
+
 
   }
 

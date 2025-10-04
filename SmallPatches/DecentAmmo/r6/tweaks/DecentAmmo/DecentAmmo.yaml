@@ -1,0 +1,33 @@
+Ammo.HandgunAmmo_inline0:
+    value: 9880.0
+Ammo.RifleAmmo_inline0:
+    value: 9880.0
+Ammo.ShotgunAmmo_inline0:
+    value: 9880.0
+Ammo.SniperRifleAmmo_inline0:
+    value: 9900.0
+Ammo.HandicapHandgunAmmoPreset.handicapLimit:
+    30
+Ammo.HandicapHandgunAmmoPreset.handicapMaxQty:
+    30
+Ammo.HandicapHandgunAmmoPreset.handicapMinQty:
+    10
+Ammo.HandicapRifleAmmoPreset.handicapLimit:
+    0
+Ammo.HandicapRifleAmmoPreset.handicapMaxQty:
+    0
+Ammo.HandicapRifleAmmoPreset.handicapMinQty:
+    0
+Ammo.HandicapShotgunAmmoPreset.handicapLimit:
+    0
+Ammo.HandicapShotgunAmmoPreset.handicapMaxQty:
+    0
+Ammo.HandicapShotgunAmmoPreset.handicapMinQty:
+    0
+Ammo.HandicapSniperRifleAmmoPreset.handicapLimit:
+    0
+Ammo.HandicapSniperRifleAmmoPreset.handicapMaxQty:
+    0
+Ammo.HandicapSniperRifleAmmoPreset.handicapMinQty:
+    0
+ 

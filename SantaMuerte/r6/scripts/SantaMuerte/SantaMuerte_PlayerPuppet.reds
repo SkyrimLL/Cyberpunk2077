@@ -20,14 +20,21 @@ public persistent let m_santaMuerteTracking: ref<SantaMuerteTracking>;
 
 // Bridge between PlayerPuppet and PlayerPuppetPS - Set up Player Puppet Persistent State when game loads (player is attached)
 @wrapMethod(PlayerPuppet)
-  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
+  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {  
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+    let handler = GameInstance.GetSystemRequestsHandler();
+    let savedGamesCount = handler.RequestSavesCountSync();
 
-    _playerPuppetPS.InitSantaMuerteSystem(playerPuppet);
+    GameInstance.GetQuestsSystem(this.GetGame()).SetFactStr("CheckSavedGamesCount", 1);
+    GameInstance.GetQuestsSystem(this.GetGame()).SetFactStr("SavedGamesCount", savedGamesCount);
+
+    _playerPuppetPS.InitSantaMuerteSystem(playerPuppet); 
+   
+    // Check Permadeath flag with CET
+    GameInstance.GetQuestsSystem(playerPuppet.GetGame()).SetFactStr("CheckPermadeath", 1); 
 
     wrappedMethod(playerPuppet);
 }
-
 
 /*
 
@@ -39,5 +46,6 @@ public persistent let m_santaMuerteTracking: ref<SantaMuerteTracking>;
     };
   }
 */
+
 
 

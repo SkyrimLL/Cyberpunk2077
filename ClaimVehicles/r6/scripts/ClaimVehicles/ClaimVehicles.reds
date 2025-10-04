@@ -382,6 +382,15 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
     };
 
+    // check if vehicle is already owned in both old and new lists
+    if this.checkVehicleInSavedGarage(this.matchVehicleRecordID) {
+      if (this.debugON) {
+        this.showDebugMessage(":: tryClaimVehicle - vehicle already in SavedGarage: ");
+        claimVehicle = false;
+      }
+    }
+
+
     // // showDebugMessage(":: tryClaimVehicle - claimVehicle: " + ToString(claimVehicle));
     if (claimVehicle) && ( (isVictorHUDInstalled) || (isPhantomLiberyStandalone)) {
 
@@ -648,6 +657,26 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
       i += 1;
     }; 
 
+  }
+
+  // ACheck if vehicle is in virtual garage list
+  public func checkVehicleInSavedGarage(_id: TweakDBID) -> Bool { 
+    let m_vehicleSystem: ref<VehicleSystem>  = GameInstance.GetVehicleSystem(this.player.GetGame());
+    let vehiclesList: array<PlayerVehicle> ;
+    let i = 0;
+    let bVehicleFound: Bool = false;
+
+    m_vehicleSystem.GetPlayerUnlockedVehicles(vehiclesList);  
+
+    while i < ArraySize(vehiclesList) {     
+      if (vehiclesList[i].recordID == _id) {
+        bVehicleFound = true;
+      }
+
+      i += 1;
+    }; 
+
+    return bVehicleFound;
   }
 
   // Add vehicle record to saved garage to register new claimed vehicles

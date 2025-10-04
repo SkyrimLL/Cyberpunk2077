@@ -60,6 +60,8 @@
     let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
     let playerOnStealTrigger: Int32 = Cast<Int32>(100.0 - _playerPuppetPS.m_claimedVehicleTracking.chanceOnSteal);
     let chanceHack: Int32 = RandRange(0,99);
+    let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(_playerPuppet.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
+    let playerGearheadLevel = playerDevSystem.GetPerkLevel(_playerPuppet, gamedataNewPerkType.Tech_Right_Milestone_1);
 
     // set up tracker if it doesn't exist
     /*
@@ -72,12 +74,18 @@
     */
 
     if (_playerPuppetPS.m_claimedVehicleTracking.modON) {
-      if (_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) {
-        if (chanceHack  > playerOnStealTrigger) {
-          _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
+      // GearHead perk + Scanner mode (easy mode ON) = 100% chance of stealing vehicle
+      if ((_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) && (playerGearheadLevel>=1)) {
+        _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
         } else {
-          _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
-        }
+          // Else, normal chance if RemoteControl quickhack is ON
+          if ((_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) ){
+            if (chanceHack  > playerOnStealTrigger) {
+              _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
+            } else {
+              _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+            }
+          }
       }
     }
 
@@ -105,6 +113,8 @@
   protected cb func OnForceBrakesQuickhackEvent(evt: ref<VehicleForceBrakesQuickhackEvent>) -> Bool {
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
     let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
+    let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(_playerPuppet.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
+    let playerGearheadLevel = playerDevSystem.GetPerkLevel(_playerPuppet, gamedataNewPerkType.Tech_Right_Milestone_1);
 
     // set up tracker if it doesn't exist
     /*
@@ -118,7 +128,7 @@
 
     // TO DO: Add method to remove a vehicle from Manager List
     if (_playerPuppetPS.m_claimedVehicleTracking.modON)  {
-      if (_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) {
+      if ((_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) && (playerGearheadLevel>=1)) {
         _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
       }
     }

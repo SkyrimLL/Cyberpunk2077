@@ -53,13 +53,6 @@
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Resurrection Options")
   @runtimeProperty("ModSettings.category.order", "20")
-  @runtimeProperty("ModSettings.displayName", "Unlimited Resurrect")
-  @runtimeProperty("ModSettings.description", "Bypass the maximum number of resurrections")
-  let unlimitedResurrectON: Bool = false; 
-
-  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
-  @runtimeProperty("ModSettings.category", "Resurrection Options")
-  @runtimeProperty("ModSettings.category.order", "21")
   @runtimeProperty("ModSettings.displayName", "Resurrections Scale Modifier")
   @runtimeProperty("ModSettings.description", "Extends the range of number of resurrections allowed from 1 (Default) to 10 times default value)")
   @runtimeProperty("ModSettings.step", "0.1")
@@ -69,13 +62,20 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Resurrection Options")
-  @runtimeProperty("ModSettings.category.order", "22")
+  @runtimeProperty("ModSettings.category.order", "21")
   @runtimeProperty("ModSettings.displayName", "Resurrections Cap")
   @runtimeProperty("ModSettings.description", "Overrides the default value with a maximum number of allowed resurrections (use 0 to use the default dynamic limit).")
   @runtimeProperty("ModSettings.step", "1")
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "200")
   let capResurrectionsOverride: Int32 = 0;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Resurrection Options")
+  @runtimeProperty("ModSettings.category.order", "22")
+  @runtimeProperty("ModSettings.displayName", "Unlimited Resurrect")
+  @runtimeProperty("ModSettings.description", "Bypass the maximum number of resurrections")
+  let unlimitedResurrectON: Bool = false; 
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Skip Time")
@@ -85,21 +85,41 @@
   let skipTimeON: Bool = false;  
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
-  @runtimeProperty("ModSettings.category", "Skip Time")
+  @runtimeProperty("ModSettings.category", "Min Skip Time")
   @runtimeProperty("ModSettings.category.order", "26")
-  @runtimeProperty("ModSettings.displayName", "Maximum hours of lost time")
-  @runtimeProperty("ModSettings.description", "Sets the maximum amount of time (hours) skipped after a black out (picked at random).")
+  @runtimeProperty("ModSettings.displayName", "Minimum hours of lost time")
+  @runtimeProperty("ModSettings.description", "Sets the minimum amount of time (hours) skipped after a resurrection (picked at random).")
   @runtimeProperty("ModSettings.step", "0.1")
   @runtimeProperty("ModSettings.min", "0.1")
   @runtimeProperty("ModSettings.max", "5.0")
-  let maxSkippedTime: Float = 0.1;
+  let minSkippedTime: Float = 0.5;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Max Skip Time")
+  @runtimeProperty("ModSettings.category.order", "27")
+  @runtimeProperty("ModSettings.displayName", "Maximum hours of lost time")
+  @runtimeProperty("ModSettings.description", "Sets the maximum amount of time (hours) skipped after a resurrection (picked at random).")
+  @runtimeProperty("ModSettings.step", "0.1")
+  @runtimeProperty("ModSettings.min", "0.1")
+  @runtimeProperty("ModSettings.max", "5.0")
+  let maxSkippedTime: Float = 2.0;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Blackout")
   @runtimeProperty("ModSettings.category.order", "28")
   @runtimeProperty("ModSettings.displayName", "Enable Blackout Effect")
-  @runtimeProperty("ModSettings.description", "If ON, a blackout effect will kick in when skip time goes over one hour.")
+  @runtimeProperty("ModSettings.description", "If ON, a blackout effect will kick in when resurrecting.")
   let blackoutON: Bool = false;  
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Blackout")
+  @runtimeProperty("ModSettings.category.order", "29")
+  @runtimeProperty("ModSettings.displayName", "Blackout trigger")
+  @runtimeProperty("ModSettings.description", "Sets the amount of time (hours) after which a resurrection triggers a blackout (Skip time needs to be ON for this option).")
+  @runtimeProperty("ModSettings.step", "0.1")
+  @runtimeProperty("ModSettings.min", "0.1")
+  @runtimeProperty("ModSettings.max", "5.0")
+  let maxBlackoutTime: Float = 1.0;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
