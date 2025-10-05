@@ -29,7 +29,7 @@ public let m_playerPuppet: ref<PlayerPuppet>;
         _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
 
         if (!_playerPuppetPS.m_vehicleFasTravelTracking.modON) {
-          this.SpawnVehiclesManagerPopup();
+          this.SpawnVehiclesManagerPopupBlocking();
 
         } else {
           // LogChannel(n"DEBUG", ">>> vehicleFasTravel : enableVehicleMenuKeyON: " + this.m_vehicleFasTravelTracking.enableVehicleMenuKeyON  );
@@ -41,7 +41,7 @@ public let m_playerPuppet: ref<PlayerPuppet>;
               this.SpawnVehicleRadioPopup();
               // m_player.SetWarningMessage("Hailing network out of range. Please use your nearest transport terminal.");  
           } else {
-              this.SpawnVehiclesManagerPopup();
+              this.SpawnVehiclesManagerPopupBlocking();
               
           }          
         }
@@ -61,6 +61,18 @@ public let m_playerPuppet: ref<PlayerPuppet>;
   } 
 
 @addMethod(PopupsManager)
+  private final func SpawnVehiclesManagerPopupBlocking() -> Void {
+    this.m_isBlockingPopupOpened = true;
+    let data: ref<inkGameNotificationData> = new inkGameNotificationData();
+    data.notificationName = n"base\\gameplay\\gui\\widgets\\vehicle_control\\vehicles_manager.inkwidget";
+    data.queueName = n"VehiclesManager";
+    data.isBlocking = true;   // Prevents player input during menu
+    data.useCursor = true;    // Enables cursor for better UX
+    this.m_vehiclesManagerToken = this.ShowGameNotification(data);
+    this.m_vehiclesManagerToken.RegisterListener(this, n"OnVehiclesManagerCloseRequest");
+  }
+
+@addMethod(PopupsManager)
 
   protected cb func OnTriggeredVehicleManagerEvent(evt: ref<TriggeredVehicleManagerEvent>) -> Bool {
     // Event is triggered by custom code on Data Terminals used for Fast Travel
@@ -69,7 +81,7 @@ public let m_playerPuppet: ref<PlayerPuppet>;
     _playerPuppetPS.m_vehicleFasTravelTracking.refreshConfig();
 
     if (!this.MalwareAttack()) {
-      this.SpawnVehiclesManagerPopup();
+      this.SpawnVehiclesManagerPopupBlocking();
     } else {
       // Reset 'data term open' flag to allow activation again
       _playerPuppetPS.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      

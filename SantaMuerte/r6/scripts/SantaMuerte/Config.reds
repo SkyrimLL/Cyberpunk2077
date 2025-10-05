@@ -78,6 +78,13 @@
   let unlimitedResurrectON: Bool = false; 
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Resurrection Options")
+  @runtimeProperty("ModSettings.category.order", "23")
+  @runtimeProperty("ModSettings.displayName", "Dark Future Compatibility")
+  @runtimeProperty("ModSettings.description", "Resurrections will impact your energy and nerve.")
+  let darkFutureEffectON: Bool = false; 
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Skip Time")
   @runtimeProperty("ModSettings.category.order", "25")
   @runtimeProperty("ModSettings.displayName", "Enable Skip Time")
@@ -85,9 +92,9 @@
   let skipTimeON: Bool = false;  
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
-  @runtimeProperty("ModSettings.category", "Min Skip Time")
+  @runtimeProperty("ModSettings.category", "Skip Time")
   @runtimeProperty("ModSettings.category.order", "26")
-  @runtimeProperty("ModSettings.displayName", "Minimum hours of lost time")
+  @runtimeProperty("ModSettings.displayName", "Min Skip Time")
   @runtimeProperty("ModSettings.description", "Sets the minimum amount of time (hours) skipped after a resurrection (picked at random).")
   @runtimeProperty("ModSettings.step", "0.1")
   @runtimeProperty("ModSettings.min", "0.1")
@@ -95,9 +102,9 @@
   let minSkippedTime: Float = 0.5;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
-  @runtimeProperty("ModSettings.category", "Max Skip Time")
+  @runtimeProperty("ModSettings.category", "Skip Time")
   @runtimeProperty("ModSettings.category.order", "27")
-  @runtimeProperty("ModSettings.displayName", "Maximum hours of lost time")
+  @runtimeProperty("ModSettings.displayName", "Max Skip Time")
   @runtimeProperty("ModSettings.description", "Sets the maximum amount of time (hours) skipped after a resurrection (picked at random).")
   @runtimeProperty("ModSettings.step", "0.1")
   @runtimeProperty("ModSettings.min", "0.1")
@@ -148,13 +155,23 @@
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
   @runtimeProperty("ModSettings.category.order", "33")
+  @runtimeProperty("ModSettings.displayName", "Safe Teleport Fee")
+  @runtimeProperty("ModSettings.description", "Amount of money removed for a safe teleport. Not enough money cancels the teleport. use 0 to disable.")
+  @runtimeProperty("ModSettings.step", "1000")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "100000")
+  let safeTeleportFee: Int32 = 0;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
+  @runtimeProperty("ModSettings.category.order", "34")
   @runtimeProperty("ModSettings.displayName", "Enable Detour Teleport")
   @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Detour location (unique spots, some dangerous)")
   let blackoutDetourTeleportON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
-  @runtimeProperty("ModSettings.category.order", "34")
+  @runtimeProperty("ModSettings.category.order", "35")
   @runtimeProperty("ModSettings.displayName", "Chance of Detour Teleport")
   @runtimeProperty("ModSettings.description", "Sets the random chance of a teleport to an unexpected destination")
   @runtimeProperty("ModSettings.step", "1")
@@ -164,14 +181,14 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "35")
+  @runtimeProperty("ModSettings.category.order", "40")
   @runtimeProperty("ModSettings.displayName", "Death Teleport Hardcore mode")
   @runtimeProperty("ModSettings.description", "If ON, when teleported to an unsafe destination (Detour), V will be robbed from most inventory items (WARNING: Quest items should be safe. There is no way to recover stolen items).")
   let hardcoreDetourRobbedON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "36")
+  @runtimeProperty("ModSettings.category.order", "41")
   @runtimeProperty("ModSettings.displayName", "Chance of being robbed")
   @runtimeProperty("ModSettings.description", "Sets the random chance of stolen items from V's inventory after waking up in an unsafe destination.")
   @runtimeProperty("ModSettings.step", "1")
@@ -181,14 +198,14 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "37")
+  @runtimeProperty("ModSettings.category.order", "42")
   @runtimeProperty("ModSettings.displayName", "Always steal equipped items")
   @runtimeProperty("ModSettings.description", "If ON, equipped items will be stolen no matter what. If OFF, equipped items will be subjected to the chance of being robbed defined above.")
   let hardcoreStealEquippedON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "38")
+  @runtimeProperty("ModSettings.category.order", "43")
   @runtimeProperty("ModSettings.displayName", "Chance of losing items when robbed")
   @runtimeProperty("ModSettings.description", "Sets the random chance of stolen items items from V's inventory after waking up in an unsafe destination.")
   @runtimeProperty("ModSettings.step", "1")
@@ -198,7 +215,7 @@
   
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "39")
+  @runtimeProperty("ModSettings.category.order", "44")
   @runtimeProperty("ModSettings.displayName", "Percent of lost money when robbed")
   @runtimeProperty("ModSettings.description", "Sets percentage of money robbed after waking up in an unsafe destination (set to 0 to disable)")
   @runtimeProperty("ModSettings.step", "1")
@@ -208,28 +225,28 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Safeguards")
-  @runtimeProperty("ModSettings.category.order", "40")
+  @runtimeProperty("ModSettings.category.order", "50")
   @runtimeProperty("ModSettings.displayName", "Protection from Death Landings")
   @runtimeProperty("ModSettings.description", "Turn ON for safeguard against getting stuck in unreachable areas.")
   let deathLandingProtectionON: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Safeguards")
-  @runtimeProperty("ModSettings.category.order", "41")
+  @runtimeProperty("ModSettings.category.order", "51")
   @runtimeProperty("ModSettings.displayName", "Allow death when V is Johnny")
   @runtimeProperty("ModSettings.description", "Turn OFF for infinite resurrection (but no teleport) when V is Johnny.")
   let deathWhenImpersonatingJohnnyON: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "HUD")
-  @runtimeProperty("ModSettings.category.order", "50")
+  @runtimeProperty("ModSettings.category.order", "60")
   @runtimeProperty("ModSettings.displayName", "Display Resurrections in HUD")
   @runtimeProperty("ModSettings.description", "Turn ON to display the number of Resurrections left in the Health bar (needs a reload of the gameto take effect).")
   let santaMuerteWidgetON: Bool = true;
  
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "HUD")
-  @runtimeProperty("ModSettings.category.order", "51")
+  @runtimeProperty("ModSettings.category.order", "61")
   @runtimeProperty("ModSettings.displayName", "Compatibility Informative HUD")
   @runtimeProperty("ModSettings.description", "Turn ON for compatibility with Informative HUD Quickhacks Memory Counter.")
   let informativeHUDCompatibilityON: Bool = false;

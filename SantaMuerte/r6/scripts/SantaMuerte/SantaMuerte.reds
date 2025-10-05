@@ -31,11 +31,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let skipTimeON: Bool;
   public let minSkippedTime: Float;
   public let maxSkippedTime: Float;
+  public let darkFutureEffectON: Bool;
   public let blackoutON: Bool;
   public let maxBlackoutTime: Float;
   public let teleportON: Bool;
   public let blackoutTeleportChance: Int32;
   public let blackoutSafeTeleportON: Bool;   
+  public let safeTeleportFee: Int32;
   public let blackoutDetourTeleportON: Bool;  
   public let blackoutDetourTeleportChance: Int32;
   public let santaMuerteWidgetON: Bool;
@@ -101,12 +103,14 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.deathLandingProtectionON = this.config.deathLandingProtectionON;
     this.skipTimeON = this.config.skipTimeON;
     this.blackoutON = this.config.blackoutON;
+    this.darkFutureEffectON = this.config.darkFutureEffectON; 
     this.maxBlackoutTime = this.config.maxBlackoutTime;
     this.teleportON = this.config.teleportON;
     this.minSkippedTime = this.config.minSkippedTime;
     this.maxSkippedTime = this.config.maxSkippedTime;
     this.blackoutTeleportChance = this.config.blackoutTeleportChance;
     this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON; 
+    this.safeTeleportFee = this.config.safeTeleportFee; 
     this.blackoutDetourTeleportON = this.config.blackoutDetourTeleportON;
     this.blackoutDetourTeleportChance = this.config.blackoutDetourTeleportChance;
     this.santaMuerteWidgetON = this.config.santaMuerteWidgetON;
@@ -460,7 +464,24 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       // If Detour teleport failed, test safe teleports
       if (!teleportSuccessful) && (this.blackoutSafeTeleportON) {
-          teleportSuccessful = this.tryResurrectionSafeTeleport();           
+          if (this.safeTeleportFee>0) {
+            if ( this.GetPlayerMoney() > this.safeTeleportFee ) {
+              teleportSuccessful = this.tryResurrectionSafeTeleport();
+              if (teleportSuccessful) {
+                this.RemovePlayerMoney(this.safeTeleportFee);
+
+                let message: String = StrReplace(SantaMuerteText.SAFETELEPORTFEE(), "%VAL%",  ToString(this.safeTeleportFee));
+ 
+                this.player.SetWarningMessage(message);  
+               }
+            } else { 
+              teleportSuccessful = false; 
+            }
+
+          } else {
+            teleportSuccessful = this.tryResurrectionSafeTeleport(); 
+          }
+         
       }     
 
       if (teleportSuccessful) {
@@ -573,6 +594,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // Commenting out because of hard crash when used here.
     // StatusEffectHelper.RemoveStatusEffect(this.player, t"BaseStatusEffect.SecondHeart");
 
+    // Clear DarkFuture effect
+    GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
   }
  
   public func applyBlackout() -> Void {
@@ -1508,7 +1531,6 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let unequipSetRequest: ref<QuestDisableWardrobeSetRequest> = new QuestDisableWardrobeSetRequest();
     equipmentSystem = EquipmentSystem.GetInstance(this.player);
     unequipSetRequest.owner = this.player;
-    equipmentSystem.QueueRequest(unequipSetRequest);
 
     // Equipped items
     i = 0;
@@ -1526,6 +1548,14 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       i += 1;
     };
 
+
+    // Steal all equipped items
+    if (this.hardcoreStealEquippedON) {
+      for itemID in itemList { 
+           GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
+      }      
+    }
+    
     // Note: Hardcore mode - stripped items are lost forever
     //        Maybe extend to a safe locker at some point
     if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
@@ -1534,9 +1564,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       // Remove percent of player money
       // Set up Mod Settings later
       if (this.hardcoreDetourRobbedMoneyPercent > 0) {
-        this.RemovePlayerMoney(this.hardcoreDetourRobbedMoneyPercent);
+        this.RemovePlayerMoneyPercent(this.hardcoreDetourRobbedMoneyPercent);
       }
     }
+
+    equipmentSystem.QueueRequest(unequipSetRequest);
 
   }
 
@@ -1569,13 +1601,6 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let i: Int32; 
     let item: ItemModParams;
     let m_inventoryManager: wref<InventoryDataManagerV2> = EquipmentSystem.GetData(this.player).GetInventoryManager();
-
-    // Steal all equipped items
-    if (this.hardcoreStealEquippedON) {
-      for itemID in itemList { 
-           GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
-      }      
-    }
 
     // Add chance of rest of inventory being stolen
     for itemData in m_inventoryManager.GetPlayerInventoryData() { 
@@ -1623,12 +1648,28 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   }
 
 
-  private final func RemovePlayerMoney(percentAmount: Int32) -> Bool {
+  private final func RemovePlayerMoneyPercent(percentAmount: Int32) -> Bool {
     let gi: GameInstance = this.player.GetGame(); 
     let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(gi);
     let currentPlayerAmount = transactionSystem.GetItemQuantity(this.player, MarketSystem.Money());
 
     return transactionSystem.RemoveItem(this.player, MarketSystem.Money(), (currentPlayerAmount / 100) * percentAmount );
+  }
+
+  private final func RemovePlayerMoney(removeAmount: Int32) -> Bool {
+    let gi: GameInstance = this.player.GetGame(); 
+    let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(gi);
+    let currentPlayerAmount = transactionSystem.GetItemQuantity(this.player, MarketSystem.Money());
+
+    return transactionSystem.RemoveItem(this.player, MarketSystem.Money(), removeAmount );
+  }
+
+  private final func GetPlayerMoney() -> Int32 {
+    let gi: GameInstance = this.player.GetGame(); 
+    let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(gi);
+    let currentPlayerAmount = transactionSystem.GetItemQuantity(this.player, MarketSystem.Money());
+
+    return currentPlayerAmount;
   }
 /* 
 let currentValue: Float = itemData.GetStatValueByType(this.m_statType);
@@ -1693,8 +1734,21 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
       return; 
     }
 
-    // Send signal to CET to write flag
-    GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("MarkPermadeath", 1);
+    if this.maxResurrectionReached(false) {
+      // Send signal to CET to write flag
+      GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("MarkPermadeath", 1);
+    } else {
+      if this.darkFutureEffectON {
+        if (this.getMaxResurrectionPercent() < 50.0) {
+            // Resurrections are punishing at first
+            GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 2);
+
+          } else {
+            // With less than 50% resurrections left, resurrections have a healing effect
+            GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 1);
+          }
+      }
+    }
 
     this.showDebugMessage( ">>> Santa Muerte: Final Death" ); 
     // this.tryPermadeathExit();

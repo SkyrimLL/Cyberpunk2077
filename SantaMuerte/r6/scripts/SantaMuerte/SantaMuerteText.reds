@@ -11,4 +11,6 @@ public class SantaMuerteText {
 
   public static func PERMADEATH() -> String { return "The Santa Muerte welcomes you: CORRUPTED ::FATAL ERROR::"; } 
 
+  public static func SAFETELEPORTFEE() -> String { return "Safety Extraction Processing Fee: %VAL%"; } 
+
 }
