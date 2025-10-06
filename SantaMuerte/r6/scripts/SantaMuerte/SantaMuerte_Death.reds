@@ -167,42 +167,5 @@ Original code from active camo escape:
     enableVisibilityEvt = new EnablePlayerVisibilityEvent();
     GameInstance.GetDelaySystem(this.GetGame()).DelayEvent(this, enableVisibilityEvt, enableVisiblityDelay);
   };
-
-
-public class ResurrectEvents extends HighLevelTransition {
-
-  protected func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
-    StatusEffectHelper.ApplyStatusEffect(scriptInterface.owner, t"BaseStatusEffect.SecondHeart");
-    this.ForceFreeze(stateContext);
-    this.SetBlackboardIntVariable(scriptInterface, GetAllBlackboardDefs().PlayerStateMachine.HighLevel, 1);
-    this.SetBlackboardIntVariable(scriptInterface, GetAllBlackboardDefs().PlayerStateMachine.Vitals, 2);
-    this.SetPlayerVitalsAnimFeatureData(stateContext, scriptInterface, 2, 2.00);
-    scriptInterface.PushAnimationEvent(n"PlayerResurrect");
-    super.OnEnter(stateContext, scriptInterface);
-  }
-
-  protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
-    let playerPuppet: ref<PlayerPuppet>;
-    this.SendResurrectEvent(scriptInterface);
-    this.ForceTemporaryUnequip(stateContext, false);
-    scriptInterface.PushAnimationEvent(n"PlayerResurrected");
-    playerPuppet = scriptInterface.executionOwner as PlayerPuppet;
-    if playerPuppet.IsControlledByLocalPeer() {
-      GameInstance.GetDebugVisualizerSystem(scriptInterface.GetGame()).ClearAll();
-    };
-    if Equals(this.GetDeathType(stateContext, scriptInterface), EDeathType.Swimming) {
-      this.StopStatPoolDecayAndRegenerate(scriptInterface, gamedataStatPoolType.Oxygen);
-    };
-    super.OnExit(stateContext, scriptInterface);
-  }
-
-  private final func SendResurrectEvent(scriptInterface: ref<StateGameScriptInterface>) -> Void {
-    let player: ref<PlayerPuppet> = scriptInterface.executionOwner as PlayerPuppet;
-    let resurrectEvent: ref<ResurrectEvent> = new ResurrectEvent();
-    player.QueueEvent(resurrectEvent);
-  }
-}
-
-
-  
 */
+

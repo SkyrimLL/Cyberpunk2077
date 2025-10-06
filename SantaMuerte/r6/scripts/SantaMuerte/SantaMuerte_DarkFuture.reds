@@ -11,9 +11,13 @@
 
 module SantaMuerte.Compatibility
 
+@if(ModuleExists("DarkFuture"))
 import DarkFuture.Needs.DFNerveSystem
+
+@if(ModuleExists("DarkFuture"))
 import DarkFuture.Needs.DFEnergySystem
 
+@if(ModuleExists("DarkFuture"))
 public class SantaMuerteCompatibility_DarkFuture extends ScriptableSystem {
 	private let questsSystem: wref<QuestsSystem>;
 	private let dfNerveSystem: ref<DFNerveSystem>;

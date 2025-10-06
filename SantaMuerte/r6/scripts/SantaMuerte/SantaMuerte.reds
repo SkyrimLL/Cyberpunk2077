@@ -634,8 +634,40 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS();
     let currentTime: Float = EngineTime.ToFloat(GameInstance.GetSimTime(this.player.GetGame()));
 
+    let j: Int32;
+    let enableVisibilityEvt: ref<EnablePlayerVisibilityEvent>;
+    let enableVisiblityDelay: Float;
+    let exitCombatDelay: Float;
+    let vanishEvt: ref<ExitCombatOnOpticalCamoActivatedEvent>;
+    let hostileTarget: wref<GameObject>;
+    let hostileTargetPuppet: wref<ScriptedPuppet>;
+    let hostileTargets: array<TrackedLocation>;
+
     if this.player.IsInCombat() {
       this.showDebugMessage( ">>> Santa Muerte: forceCombatExit: Combat state detected." ); 
+
+      // Apply code from Player -> ApplyStatusEffect
+      exitCombatDelay = TweakDBInterface.GetFloat(t"Items.AdvancedOpticalCamoCommon.exitCombatDelay", 1.50);
+      this.player.PromoteOpticalCamoEffectorToCompletelyBlocking(); 
+      enableVisiblityDelay = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.OpticalCamoDuration);
+      this.player.SetInvisible(true);
+      hostileTargets = this.player.GetTargetTrackerComponent().GetHostileThreats(false);
+      j = 0;
+      while j < ArraySize(hostileTargets) {
+        hostileTarget = hostileTargets[j].entity as GameObject;
+        hostileTargetPuppet = hostileTarget as ScriptedPuppet;
+        if IsDefined(hostileTargetPuppet) {
+          hostileTargetPuppet.GetTargetTrackerComponent().DeactivateThreat(this.player);
+        };
+        vanishEvt = new ExitCombatOnOpticalCamoActivatedEvent();
+        vanishEvt.npc = hostileTarget;
+        GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, vanishEvt, exitCombatDelay);
+        j += 1;
+      };
+      enableVisibilityEvt = new EnablePlayerVisibilityEvent();
+      GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, enableVisibilityEvt, enableVisiblityDelay);
+  
+
       let invalidateEvent: ref<PlayerCombatControllerInvalidateEvent> = new PlayerCombatControllerInvalidateEvent();
       invalidateEvent.m_state = PlayerCombatState.OutOfCombat;
       this.player.QueueEvent(invalidateEvent);
@@ -656,6 +688,36 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     this.clearBlackout();
   }
+
+
+/*
+  Didn't work to fix the stuck combat mode after resurrection:
+  
+    _playerPuppetPS.SetCombatExitTimestamp(currentTime);
+    this.player.m_inCombat = false;
+    this.player.SetIsBeingRevealed(false);
+    this.player.m_hasBeenDetected = false;
+    this.player.UpdateSecondaryVisibilityOffset(false);
+    this.player.EnableCombatVisibilityDistances(false);
+    this.player.UpdateVisibility();
+
+    this.player.EnableInteraction(n"Revive", false);
+*/
+
+/*
+    this.Revive(50.0);
+    this.SetSlowMo(0.5, 2.0);
+
+    this.showDebugMessage( "V is dead"  ); 
+
+    this.OnResurrected();
+    this.EnableInteraction(n"Revive", false);
+    this.m_incapacitated = false;
+    this.RefreshCPOVisionAppearance();
+    this.CreateVendettaTimeDelayEvent();
+    this.SetSenseObjectType(gamedataSenseObjectType.Player);
+*/
+
   
   public func forceCameraReset() -> Void {
     let playerForward: Vector4 = this.player.GetWorldForward();
@@ -1555,7 +1617,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
            GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
       }      
     }
-    
+
     // Note: Hardcore mode - stripped items are lost forever
     //        Maybe extend to a safe locker at some point
     if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
@@ -1800,32 +1862,5 @@ public func globalApplyLoadingScreen() -> Void {
 }
  
 
-/*
-  Didn't work to fix the stuck combat mode after resurrection:
-  
-    _playerPuppetPS.SetCombatExitTimestamp(currentTime);
-    this.player.m_inCombat = false;
-    this.player.SetIsBeingRevealed(false);
-    this.player.m_hasBeenDetected = false;
-    this.player.UpdateSecondaryVisibilityOffset(false);
-    this.player.EnableCombatVisibilityDistances(false);
-    this.player.UpdateVisibility();
-
-    this.player.EnableInteraction(n"Revive", false);
-*/
-
-/*
-    this.Revive(50.0);
-    this.SetSlowMo(0.5, 2.0);
-
-    this.showDebugMessage( "V is dead"  ); 
-
-    this.OnResurrected();
-    this.EnableInteraction(n"Revive", false);
-    this.m_incapacitated = false;
-    this.RefreshCPOVisionAppearance();
-    this.CreateVendettaTimeDelayEvent();
-    this.SetSenseObjectType(gamedataSenseObjectType.Player);
-*/
 
 
