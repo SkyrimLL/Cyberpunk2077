@@ -37,6 +37,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let teleportON: Bool;
   public let blackoutTeleportChance: Int32;
   public let blackoutSafeTeleportON: Bool;   
+  public let blackoutSafeTeleportHospitalON: Bool;   
   public let safeTeleportFee: Int32;
   public let blackoutDetourTeleportON: Bool;  
   public let blackoutDetourTeleportChance: Int32;
@@ -82,6 +83,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public func refreshConfig() -> Void {
     this.config = new SantaMuerteConfig(); 
     this.invalidateCurrentState();
+
+    // Checks if stuck combat and clears it
+    this.clearCombatIfStuck();
   }
 
   public func invalidateCurrentState() -> Void {    
@@ -110,6 +114,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.maxSkippedTime = this.config.maxSkippedTime;
     this.blackoutTeleportChance = this.config.blackoutTeleportChance;
     this.blackoutSafeTeleportON = this.config.blackoutSafeTeleportON; 
+    this.blackoutSafeTeleportHospitalON = this.config.blackoutSafeTeleportHospitalON; 
     this.safeTeleportFee = this.config.safeTeleportFee; 
     this.blackoutDetourTeleportON = this.config.blackoutDetourTeleportON;
     this.blackoutDetourTeleportChance = this.config.blackoutDetourTeleportChance;
@@ -145,6 +150,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.santaMuerteRelicDifficulty = this.santaMuerteLoreDifficulty;
     }
 
+    this.updateMaxResurrections();
     this.incrementResurrections();
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount going UP " );
 
@@ -175,7 +181,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // Safety reset in case of bad counter from previous versions
     if (this.resurrectCount < 0) {
       this.resurrectCount = this.resurrectCountMax;
-    }
+    }    
 
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount = " + ToString(this.resurrectCount) );
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
@@ -190,6 +196,10 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public func incrementResurrections() -> Void {    
 
     this.resurrectCount += 1;  
+
+    if (this.resurrectCount > this.resurrectCountMax) {
+      this.resurrectCount = this.resurrectCountMax;
+    }
   } 
 
   public func decrementResurrections() -> Void {    
@@ -202,6 +212,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   } 
 
   public func maxResurrectionReached(isSecondHeartInstalled: Bool) -> Bool {    
+    this.updateMaxResurrections();
 
     if (this.unlimitedResurrectON) || (isSecondHeartInstalled) { 
       this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: unlimitedResurrectON = " + ToString(this.unlimitedResurrectON) );
@@ -451,6 +462,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let teleportSuccessful: Bool = false;
     let canBeTeleported: Bool = this.canBeTeleported();
 
+    this.forceCombatExit();
+
     if (this.blackoutON) && (skipHoursAmount >= this.maxBlackoutTime) {
       // Apply blackout only after certain amount of time
       this.applyBlackout();
@@ -463,7 +476,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       }  
 
       // If Detour teleport failed, test safe teleports
-      if (!teleportSuccessful) && (this.blackoutSafeTeleportON) {
+      if (!teleportSuccessful) && ((this.blackoutSafeTeleportON) || (this.blackoutSafeTeleportHospitalON) ){
           if (this.safeTeleportFee>0) {
             if ( this.GetPlayerMoney() > this.safeTeleportFee ) {
               teleportSuccessful = this.tryResurrectionSafeTeleport();
@@ -579,7 +592,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     }
 
     if (maxResurrectionPercent >= 85.0) {
-      StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessHeavy", this.player.GetEntityID(), 0.00, sicknessDuration);
+      // StatusEffectHelper.ApplyStatusEffectForTimeWindow(this.player, t"BaseStatusEffect.JohnnySicknessHeavy", this.player.GetEntityID(), 0.00, sicknessDuration);
+      GameObjectEffectHelper.StartEffectEvent(this.player, n"p_songbird_sickness.effect", false);
     }
 
     // Trying to consumer 1 RAM to force a refresh of counter
@@ -588,14 +602,14 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     }
 
     // Remove blackwall effect in case it was added by Death Screens
-    GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"p_songbird_sickness.effect");
+    // GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"p_songbird_sickness.effect");
 
     // Attempt at removing second heart effect icon 
     // Commenting out because of hard crash when used here.
     // StatusEffectHelper.RemoveStatusEffect(this.player, t"BaseStatusEffect.SecondHeart");
 
     // Clear DarkFuture effect
-    GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
+    // GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
   }
  
   public func applyBlackout() -> Void {
@@ -628,6 +642,18 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
 
   } 
+
+  public func clearCombatIfStuck() -> Void {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS();
+    let hostileTargets: array<TrackedLocation>;
+
+    hostileTargets = this.player.GetTargetTrackerComponent().GetHostileThreats(false);
+
+    if ((this.player.IsInCombat()) && (ArraySize(hostileTargets)==0)) {
+      this.showDebugMessage( ">>> Santa Muerte: clearCombatIfStuck: Stuck combat detected." ); 
+      this.forceCombatExit() ;
+    }
+  }
  
 
   public func forceCombatExit() -> Void {
@@ -668,6 +694,19 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, enableVisibilityEvt, enableVisiblityDelay);
   
 
+      // this.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);
+      // this.SendAnimFeatureData(false);
+      // PlayerPuppet.ReevaluateAllBreathingEffects(this.m_owner as PlayerPuppet);
+      // if !IsMultiplayer() && ScriptedPuppet.IsActive(this.m_owner) {
+      //   GameInstance.GetStatPoolsSystem(this.m_owner.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.m_owner.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
+      // };
+      // ChatterHelper.TryPlayLeaveCombatChatter(this.m_owner);
+      // GameInstance.GetAudioSystem(this.m_owner.GetGame()).NotifyGameTone(n"LeaveCombat");
+      // GameInstance.GetAudioSystem(this.m_owner.GetGame()).HandleOutOfCombatMix(this.m_owner);
+      // FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.m_owner.GetGame());
+      // GameObjectEffectHelper.BreakEffectLoopEvent(this.m_owner, n"stealth_mode");
+
+
       let invalidateEvent: ref<PlayerCombatControllerInvalidateEvent> = new PlayerCombatControllerInvalidateEvent();
       invalidateEvent.m_state = PlayerCombatState.OutOfCombat;
       this.player.QueueEvent(invalidateEvent);
@@ -681,6 +720,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
       // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
       ChatterHelper.TryPlayLeaveCombatChatter(this.player);
+      GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
+      GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
+
       FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.player.GetGame());
       GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"stealth_mode");   
  
@@ -737,20 +779,23 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     randNum = RandRange(0,100);
 
-    if (randNum >= 90) && (!(this.isInDogtown())) {
-      this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
-      teleportSuccessful = this.tryTeleportMedicalCenter();
+    if (this.blackoutSafeTeleportHospitalON)  {
+      if (randNum >= 30) && (!(this.isInDogtown())) {
+        this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
+        teleportSuccessful = this.tryTeleportMedicalCenter();
+      }      
+      if (randNum < 30) {
+        this.showDebugMessage( ">>> Santa Muerte: Viktor only" ); 
+        teleportSuccessful = this.tryTeleportViktor();
+      }
     }
 
-    if (randNum < 90) && (randNum > 0) {
-      this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
-      teleportSuccessful = this.tryTeleportRipperDoc();
-    }
-
-    // if (randNum <= 20) {
-    //   this.showDebugMessage( ">>> Santa Muerte: Viktor only" ); 
-    //   teleportSuccessful = this.tryTeleportViktor();
-    // }
+    if (this.blackoutSafeTeleportON)  {
+      if (randNum < 90) && (randNum > 0) {
+        this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
+        teleportSuccessful = this.tryTeleportRipperDoc();
+      }
+    } 
 
     return teleportSuccessful;
 
@@ -1021,7 +1066,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     switch currentDistrict {
       case gamedataDistrict.Watson:
         // Back of Hospital
-        position = new Vector4(-1279.890, 1858.963, 18.163, 1.000000);
+        position = new Vector4(-1409.463, 1857.142, 18.150, 1.000000);
         rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
@@ -1317,7 +1362,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       if (this.hardcoreDetourRobbedON) {
         this.robPlayer();
       }
-
+      this.showDebugMessage( ">>> Santa Muerte: Detour teleport" ); 
+      this.showDebugMessage( ToString(position) ); 
       GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);      
     }
 

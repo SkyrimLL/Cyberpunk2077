@@ -98,7 +98,7 @@
   @runtimeProperty("ModSettings.description", "Sets the minimum amount of time (hours) skipped after a resurrection (picked at random).")
   @runtimeProperty("ModSettings.step", "0.1")
   @runtimeProperty("ModSettings.min", "0.1")
-  @runtimeProperty("ModSettings.max", "5.0")
+  @runtimeProperty("ModSettings.max", "24.0")
   let minSkippedTime: Float = 0.5;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
@@ -108,7 +108,7 @@
   @runtimeProperty("ModSettings.description", "Sets the maximum amount of time (hours) skipped after a resurrection (picked at random).")
   @runtimeProperty("ModSettings.step", "0.1")
   @runtimeProperty("ModSettings.min", "0.1")
-  @runtimeProperty("ModSettings.max", "5.0")
+  @runtimeProperty("ModSettings.max", "24.0")
   let maxSkippedTime: Float = 2.0;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
@@ -148,13 +148,20 @@
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
   @runtimeProperty("ModSettings.category.order", "32")
-  @runtimeProperty("ModSettings.displayName", "Enable Teleport to Safe Havens")
-  @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Safe Haven location (Ripperdoc, Hospital, etc)")
-  let blackoutSafeTeleportON: Bool = false;   
+  @runtimeProperty("ModSettings.displayName", "Enable Teleport to Central Hospital or Viktor")
+  @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up outside a nearby Safe Haven location (Hospital or Viktor). This is a separate option for mods that block access to certain ripper docs like Take a Breather.")
+  let blackoutSafeTeleportHospitalON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
   @runtimeProperty("ModSettings.category.order", "33")
+  @runtimeProperty("ModSettings.displayName", "Enable Teleport to Ripper Docs")
+  @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Safe Haven location (Ripperdoc)")
+  let blackoutSafeTeleportON: Bool = false;   
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
+  @runtimeProperty("ModSettings.category.order", "34")
   @runtimeProperty("ModSettings.displayName", "Safe Teleport Fee")
   @runtimeProperty("ModSettings.description", "Amount of money removed for a safe teleport. Not enough money cancels the teleport. use 0 to disable.")
   @runtimeProperty("ModSettings.step", "1000")
@@ -164,14 +171,14 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
-  @runtimeProperty("ModSettings.category.order", "34")
+  @runtimeProperty("ModSettings.category.order", "35")
   @runtimeProperty("ModSettings.displayName", "Enable Detour Teleport")
   @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Detour location (unique spots, some dangerous)")
   let blackoutDetourTeleportON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
-  @runtimeProperty("ModSettings.category.order", "35")
+  @runtimeProperty("ModSettings.category.order", "36")
   @runtimeProperty("ModSettings.displayName", "Chance of Detour Teleport")
   @runtimeProperty("ModSettings.description", "Sets the random chance of a teleport to an unexpected destination")
   @runtimeProperty("ModSettings.step", "1")
