@@ -150,14 +150,14 @@
   @runtimeProperty("ModSettings.category.order", "32")
   @runtimeProperty("ModSettings.displayName", "Enable Teleport to Central Hospital or Viktor")
   @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up outside a nearby Safe Haven location (Hospital or Viktor). This is a separate option for mods that block access to certain ripper docs like Take a Breather.")
-  let blackoutSafeTeleportHospitalON: Bool = false;   
+  let blackoutSafeTeleportHospitalON: Bool = true;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")
   @runtimeProperty("ModSettings.category.order", "33")
   @runtimeProperty("ModSettings.displayName", "Enable Teleport to Ripper Docs")
   @runtimeProperty("ModSettings.description", "If ON, V will get a random chance to wake up at a nearby Safe Haven location (Ripperdoc)")
-  let blackoutSafeTeleportON: Bool = false;   
+  let blackoutSafeTeleportON: Bool = true;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Death Teleport Scenarios")

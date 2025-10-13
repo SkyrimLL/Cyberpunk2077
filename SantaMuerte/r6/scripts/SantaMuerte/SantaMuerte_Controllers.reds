@@ -148,8 +148,8 @@
       resurrections.SetFontSize(20);
       resurrections.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
       //numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
-      resurrections.SetAnchor(inkEAnchor.CenterFillHorizontaly);
-      resurrections.SetAnchorPoint(0.0, 0.5);
+      // resurrections.SetAnchor(inkEAnchor.CenterFillHorizontaly);
+      resurrections.SetAnchorPoint(0.0, 0.9);
       resurrections.Reparent(canvas);        
     // }
 
@@ -157,3 +157,37 @@
   }
 
 
+// public final native class DamageSystem extends IDamageSystem {
+@wrapMethod(DamageSystem)
+  private final func ProcessLocalizedDamage(hitEvent: ref<gameHitEvent>) -> Void {
+    wrappedMethod(hitEvent);
+
+    let playerAsTarget: wref<PlayerPuppet> = hitEvent.target as PlayerPuppet; 
+    let instigator: wref<GameObject> = hitEvent.attackData.GetInstigator() ;
+    let instigatorPuppet: wref<NPCPuppet> = hitEvent.attackData.GetInstigator() as NPCPuppet;
+    let attackData: ref<AttackData> = hitEvent.attackData; 
+    
+    if (IsDefined(playerAsTarget) && instigator.IsNPC()) {
+      let _playerPuppetPS: ref<PlayerPuppetPS> = playerAsTarget.GetPS();
+      _playerPuppetPS.m_santaMuerteTracking.lastInstigatorFaction = "Unknown";
+      _playerPuppetPS.m_santaMuerteTracking.lastInstigatorName = "Unknown Source";
+      // Check if the instigator is an NPC and retrieve its faction 
+      if IsDefined(instigatorPuppet) {
+          let affiliation: wref<Affiliation_Record> = TweakDBInterface.GetCharacterRecord(instigatorPuppet.GetRecordID()).Affiliation();   
+          let characterRecord: ref<Character_Record> = TweakDBInterface.GetCharacterRecord(instigatorPuppet.GetRecordID());
+
+          if IsDefined(affiliation) {       
+            // _playerPuppetPS.m_santaMuerteTracking.lastInstigatorFaction = LocKeyToString(characterRecord.Affiliation().LocalizedName());
+            _playerPuppetPS.m_santaMuerteTracking.lastInstigatorFaction = ToString(characterRecord.Affiliation().EnumName());
+
+            if IsNameValid(characterRecord.DisplayName()) {
+              // _playerPuppetPS.m_santaMuerteTracking.lastInstigatorName = LocKeyToString(characterRecord.DisplayName());
+              _playerPuppetPS.m_santaMuerteTracking.lastInstigatorName = ToString(characterRecord.DisplayName());
+            } else {
+              _playerPuppetPS.m_santaMuerteTracking.lastInstigatorName = instigatorPuppet.GetDisplayName();
+            };
+          }
+      }      
+    }
+
+  }

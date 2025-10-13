@@ -19,6 +19,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public persistent let resurrectCount:  Int32;
   public persistent let m_storedItems: array<ItemID>; 
 
+  public let lastInstigatorFaction: String;
+  public let lastInstigatorName: String;
+
   public let newDeathAnimationON: Bool; 
   public let randomDeathAnimationON: Bool; 
   public let santaMuerteRelicDifficulty: santaMuerteRelicMode;
@@ -461,6 +464,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public func skipTimeWithBlackout(skipHoursAmount: Float) -> Void {
     let teleportSuccessful: Bool = false;
     let canBeTeleported: Bool = this.canBeTeleported();
+
+    this.showDebugMessage( ">>> Santa Muerte: skipTime: lastInstigatorName = " + this.lastInstigatorName ); 
+    this.showDebugMessage( ">>> Santa Muerte: skipTime: lastInstigatorFaction = " + this.lastInstigatorFaction ); 
 
     this.forceCombatExit();
 
@@ -1047,8 +1053,16 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let teleportSuccessful: Bool = false;
 
     // TO DO: Add more scenarios for 'detours'
+    // this.showDebugMessage( ">>> Santa Muerte: skipTime: lastInstigatorName = " + this.lastInstigatorName ); 
+    // this.showDebugMessage( ">>> Santa Muerte: skipTime: lastInstigatorFaction = " + this.lastInstigatorFaction ); 
 
-    teleportSuccessful = this.tryTeleportDetourByDistrict();
+    if ( !Equals( this.lastInstigatorFaction, "" ) && !Equals( this.lastInstigatorFaction, "Unknown" )) {
+      teleportSuccessful = this.tryTeleportDetourByFaction(this.lastInstigatorFaction);
+    }
+
+    if (!teleportSuccessful) {
+      teleportSuccessful = this.tryTeleportDetourByDistrict();
+    }
 
     return teleportSuccessful;
 
@@ -1062,13 +1076,25 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
     let randNum: Int32;
     let isDestinationFound: Bool = false;
+    let triggerRobPlayer: Bool = true;
 
     switch currentDistrict {
       case gamedataDistrict.Watson:
-        // Back of Hospital
-        position = new Vector4(-1409.463, 1857.142, 18.150, 1.000000);
-        rotation = playerForwardAngle;
-        isDestinationFound = true;
+        randNum = RandRange(0,100);
+
+        if (randNum >= 20) {       // Back of Hospital
+          position = new Vector4(-1409.463, 1857.142, 18.150, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+          triggerRobPlayer = false;
+        }
+        if (randNum <= 20) {
+          // Rooftop Misty
+          position = new Vector4(-1540.825, 1191.869, 57.000, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+          triggerRobPlayer = false;
+        }        
         break;
       case gamedataDistrict.LittleChina:
         // Trash pile south west of Little China
@@ -1084,6 +1110,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(-1164.046, 1765.699, 23.371, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          triggerRobPlayer = false;
         }
         if (randNum > 20) && (randNum < 80) {
           // Dark alley
@@ -1139,6 +1166,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         position = new Vector4(-40.149, -53.598, 7.180, 1.000000);
         rotation = playerForwardAngle;
         isDestinationFound = true;
+        triggerRobPlayer = false;
         break;
       case gamedataDistrict.CorpoPlaza:
         // Underwater - waterfront
@@ -1152,6 +1180,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         position = new Vector4(-1807.022, -1281.709, 21.885, 1.000000);
         rotation = playerForwardAngle;
         isDestinationFound = true;
+        triggerRobPlayer = false;
         break;
       case gamedataDistrict.Glen:
         // Trash pile in Reconciliation Park
@@ -1187,6 +1216,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         position = new Vector4(-2017.643, -2218.369, 19.741, 1.000000);
         rotation = playerForwardAngle;
         isDestinationFound = true;
+        triggerRobPlayer = false;
         break;
       case gamedataDistrict.WestWindEstate:
         // Beach Trash Pile
@@ -1221,6 +1251,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(449.555, -1686.285, 9.842, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          triggerRobPlayer = false;
         }
         if (randNum >= 40) && (randNum < 80)  {
           // Dump near new tower
@@ -1293,6 +1324,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(-1732.673, -2683.120, 78.083, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          triggerRobPlayer = false;
         }
         if (randNum >= 60) && (randNum < 80) {
           // Water hole
@@ -1319,6 +1351,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         position = new Vector4(1662.659, -791.086, 49.826, 1.000000);
         rotation = playerForwardAngle;
         isDestinationFound = true;
+        triggerRobPlayer = false;
         break;
       case gamedataDistrict.NorthBadlands:
         randNum = RandRange(0,100);
@@ -1328,6 +1361,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(2575.148, 0.298, 80.875, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          triggerRobPlayer = false;
         }
         if (randNum <= 20) {
           // Trash Dump
@@ -1344,6 +1378,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(131.666, -4679.567, 54.711, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          triggerRobPlayer = false;
         }
         if (randNum <= 20) {
           // Gas station with Wraiths
@@ -1358,17 +1393,333 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         break;
     }
 
-    if (isDestinationFound) {
+    if (isDestinationFound) && (triggerRobPlayer) {
       if (this.hardcoreDetourRobbedON) {
         this.robPlayer();
       }
-      this.showDebugMessage( ">>> Santa Muerte: Detour teleport" ); 
+      this.showDebugMessage( ">>> Santa Muerte: Detour teleport by district" ); 
       this.showDebugMessage( ToString(position) ); 
       GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);      
     }
 
     return isDestinationFound;
     
+  }
+
+
+// 1. Cops Arrest - Jail teleport - pay jail fees
+// 2. Killed in mission with friendly NPC - favorite Ripperdoc teleport - pay ripperdoc fees
+// 3. Cops/Civilians murder - Hospital teleport - pay hospital fees
+// 4. Gang murder - Alley way teleport - lose items with minor injuries
+// 5. Gang purge = in a basement/sewers/junkyard with cyberware stripped, lost items and with serious injuries (and force time skip)
+
+  private func tryTeleportDetourByFaction(faction: String) -> Bool{
+    let playerForward: Vector4 = this.player.GetWorldForward();
+    let playerForwardAngle: EulerAngles = Vector4.ToRotation(playerForward);
+    let rotation: EulerAngles;
+    let position: Vector4; 
+    let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
+    let randNum: Int32;
+    let isDestinationFound: Bool = false;
+
+    // Leave 20% chance of failure to switch to regular detour teleports
+    switch faction { 
+
+      case "Mox":
+        randNum = RandRange(0,100);
+        if (randNum >= 20) {
+          // Arasaka warehouse
+          position = new Vector4(-1122.185, 1641.365, -2.056, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+
+      case "Militech":
+        randNum = RandRange(0,100);
+        if (randNum >= 40) {
+          // Northside industrial
+          position = new Vector4(-1030.324, 2769.734, 20.062, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        } 
+        if (randNum >= 20) && (randNum < 40) {
+          // Militech warehouse
+          position = new Vector4(-1720.908, 1889.363, 18.150, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+
+      case "KangTao":
+        randNum = RandRange(0,100);
+        if (randNum >= 20) {
+          // Arasaka warehouse
+          position = new Vector4(-1669.258, 3433.807, -3.183, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+
+      case "Animals":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "Adelcaldos":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "Nomads":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "Netrunners":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "Netwatch":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "TraumaTeam":
+        randNum = RandRange(0,100);
+        // if (randNum >= 20) {
+        //   // Arasaka warehouse
+        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+        //   rotation = playerForwardAngle;
+        //   isDestinationFound = true;
+        // }
+        break; 
+
+      case "Scavengers":
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Creepy Scav BD shack 
+          position = new Vector4(-697.153, 956.792, 12.368, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if (randNum >= 40) && (randNum < 80) {
+          // Northside dock
+          position = new Vector4(-2114.406, 2692.709, 7.100, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        } 
+        if (randNum >= 20) && (randNum < 40) {
+          // Northside dock
+          position = new Vector4(-1142.092, 2804.941, 7.156, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        } 
+
+        break;
+
+      case "Maelstrom":
+        randNum = RandRange(0,100);
+
+        if (randNum >= 40) {
+          // Creepy Maelstrom BD shack 
+          position = new Vector4(-1006.454, 3378.892, 8.540, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        } 
+        if  (randNum >= 20) && (randNum < 40) {
+          // Northside warehouse
+          position = new Vector4(-1048.417, 3125.615, 7.118, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 40) {
+          // Trainyard cyber psycho
+          position = new Vector4(-1093.090, 2840.227, 7.135, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 40) {
+          // Northside containers
+          position = new Vector4(-1245.751, 2717.268, 7.294, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+
+        break;
+
+      case "Arasaka":
+        randNum = RandRange(0,100);
+        if (randNum >= 40) {
+          // Arasaka warehouse
+          position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if (randNum >= 20) && (randNum < 40) {
+          // Arasaka dock
+          position = new Vector4(-2262.508, 2885.318, -6.049, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+
+      case "NCPD":
+        randNum = RandRange(0,100);
+        if (randNum >= 20) {
+          // Underwater - waterfront
+          position = new Vector4(-1201.325, 685.873, -11.116, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break;
+  
+      case "Valentinos":
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Valentinos scrap yard
+          position = new Vector4(-506.051, -96.526, 7.770, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 80) {
+          // Trash burning pits
+          position = new Vector4(-2071.315, -1125.493, 10.963, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+ 
+      case "VoodooBoys":
+        randNum = RandRange(0,100);
+        if (randNum >= 20) {
+          // Butcher shop
+          position = new Vector4(-2286.622, -1931.526, 6.055, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break;
+
+      case "SixthStreet": 
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Hazardous waste dumping ground
+          position = new Vector4(-417.634, -2003.798, 6.860, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if (randNum >= 40) && (randNum < 80)  {
+          // Trash pile under overpass
+          position = new Vector4(157.737, -730.418, 4.276, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 40) {
+          // Warehouse
+          position = new Vector4(1080.595, -722.294, 22.271, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break; 
+
+      case "TigerClaws":
+        randNum = RandRange(0,100); 
+        if (randNum >= 40) {
+          // Tyger Claw's Cages Hideout
+          position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 40)  {
+          // Japantown reservoir
+          position = new Vector4(-445.489, 417.814, 131.998, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }  
+        break; 
+
+      case "Barghest":
+        // Additional safety to ensure this happens only in dogtown
+        if (Equals(currentDistrict, gamedataDistrict.Dogtown)) {
+          randNum = RandRange(0,100);
+   
+          if (randNum >= 60)  {
+            // Water hole
+            position = new Vector4(-1843.006, -2496.886, 25.165, 1.000000);
+            rotation = playerForwardAngle;
+            isDestinationFound = true;
+          }
+          if  (randNum >= 20) && (randNum < 60) {
+            // Dogtown wasteland
+            position = new Vector4(-1661.173, -2882.097, 79.999, 1.000000);
+            rotation = playerForwardAngle;
+            isDestinationFound = true;
+          } 
+          
+        }
+        break; 
+
+      case "Wraiths":
+        randNum = RandRange(0,100);
+
+        if (randNum > 40) {
+          // Gas station with Wraiths
+          position = new Vector4(-1705.800, -5016.451, 80.346, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum <= 40) {
+          // Trash Dump
+          position = new Vector4(2329.168, -1826.530, 79.302, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break;
+
+      default:
+       // ABORT - could be in a unique place/quest related
+        break;
+    }
+
+    if (isDestinationFound) {
+      if (this.hardcoreDetourRobbedON) {
+        this.robPlayer();
+      }
+      this.showDebugMessage( ">>> Santa Muerte: Detour teleport by faction" ); 
+      this.showDebugMessage( ToString(position) ); 
+      GameInstance.GetTeleportationFacility(this.player.GetGame()).Teleport(this.player, position, rotation);      
+    }
+
+    return isDestinationFound;
   }
 
   private func getCurrentDistrict() -> gamedataDistrict {
@@ -1559,7 +1910,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let carrying: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.Carrying);
     let lore_animation: Bool = bb.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInLoreAnimationScene);
 
-    if endgame || dogtown || isImpersonating || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation {
+    let training_bot: Bool = Equals(this.lastInstigatorName, "Training Bot");
+
+    if endgame || dogtown || isImpersonating || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation || training_bot {
       this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: ");
       this.showDebugMessage( s">>>    Endgame \(endgame)"); 
       this.showDebugMessage( s">>>    dogtown \(dogtown)"); 
@@ -1573,6 +1926,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.showDebugMessage( s">>>    swimming: \(swimming)");
       this.showDebugMessage( s">>>    carrying: \(carrying)");
       this.showDebugMessage( s">>>    lore_animation: \(lore_animation)");
+      this.showDebugMessage( s">>>    training_bot: \(training_bot)");
       return false;
     };
 
