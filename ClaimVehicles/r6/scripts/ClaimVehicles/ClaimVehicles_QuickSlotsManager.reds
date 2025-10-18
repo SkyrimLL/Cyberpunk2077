@@ -52,7 +52,7 @@
 
           if (StrCmp(playerOwner.m_claimedVehicleTracking.matchVehicleString, "")!=0) {
 
-            GameInstance.GetVehicleSystem(playerOwner.GetGame()).EnablePlayerVehicle( playerOwner.m_claimedVehicleTracking.matchVehicleString, false, false);
+            playerOwner.m_claimedVehicleTracking.enablePlayerVehicle( playerOwner.m_claimedVehicleTracking.matchVehicleRecordID, false, false);
           }
         }
 

@@ -147,9 +147,9 @@
       resurrections.SetFontStyle(n"Regular");
       resurrections.SetFontSize(20);
       resurrections.SetTintColor(new HDRColor(1.1761, 0.3809, 0.3476, 1.0)); //red version
-      //numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
+      // numbers.SetTintColor(new HDRColor(0.3686, 0.9647, 1.1888, 1.0)); //blue version
       // resurrections.SetAnchor(inkEAnchor.CenterFillHorizontaly);
-      resurrections.SetAnchorPoint(-1.0, 0.0);
+      resurrections.SetAnchorPoint(-0.5, 2.4); // Just above Health counter
       resurrections.Reparent(canvas);        
     // }
 

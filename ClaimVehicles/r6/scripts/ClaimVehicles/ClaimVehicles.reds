@@ -127,7 +127,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     this.matchVehicleUnlocked = false; 
 
     if (this.warningsON) {
-      // showDebugMessage("N.C.L.A.I.M: Reading Vehicle ID from Model: '"+claimedVehicleModel+"'"  );
+      // this.showDebugMessage("N.C.L.A.I.M: Reading Vehicle ID from Model: '"+claimedVehicleModel+"'"  );
     }
 
     // Universal vehicle detection
@@ -146,7 +146,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     //   Known vehicles are 'reclaimed' when using the alternate garage
 
     if (this.warningsON) {
-      // showDebugMessage("N.C.L.A.I.M: Vehicle ID found: '"+this.matchVehicleString+"'"  );
+      // this.showDebugMessage("N.C.L.A.I.M: Vehicle ID found: '"+this.matchVehicleString+"'"  );
     }
   }
 
@@ -163,11 +163,11 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let i = 0;
 
     if (this.warningsON) {
-      // showDebugMessage(" ");
-      // showDebugMessage("----- ");
-      // showDebugMessage(">>> N.C.L.A.I.M:  Scanning known vehicles for '" + this.matchVehicleModel + "'");
-      // showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehicleDB.vehiclesDB)) + " vehicles in full database.");
-      // showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehicleDB.vehiclesUnlockStateDB)) + " vehicles in history.");
+      // this.showDebugMessage(" ");
+      // this.showDebugMessage("----- ");
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  Scanning known vehicles for '" + this.matchVehicleModel + "'");
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehicleDB.vehiclesDB)) + " vehicles in full database.");
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehicleDB.vehiclesUnlockStateDB)) + " vehicles in history.");
     }
 
     // Refresh status of vehicles in case some vehicles were sold or removed by other means
@@ -177,6 +177,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
     if (Equals(targetVehicle.vehicleString, "")) {
       // Vehicle not found in database - Skip search
+      this.showDebugMessage(">>> isVehicleAvailable: Vehicle not found in database - Skip search");
 
     } else { 
 
@@ -186,9 +187,9 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
         if (this.warningsON) {
           if (vehiclesList[i].isUnlocked) {
-            // showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
+            // this.showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - isUnlocked: " + vehiclesList[i].isUnlocked);
           } else {
-            // showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"'");
+            // this.showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"'");
           }
           
         }
@@ -202,7 +203,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
           if (this.matchVehicleUnlocked) {
             if (this.warningsON) { 
-              // showDebugMessage(">>> Found matching vehicle record ID.");
+              // this.showDebugMessage(">>> Found matching vehicle record ID.");
             }
             matchFound = true;
           }
@@ -221,13 +222,13 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
             thisVehicleUnlockedState = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked;
 
             if (this.warningsON) {
-              // showDebugMessage("N.C.L.A.I.M: Checking claim history for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString  + " [Unlocked: " + ToString(thisVehicleUnlockedState) + "]");
+              // this.showDebugMessage("N.C.L.A.I.M: Checking claim history for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString  + " [Unlocked: " + ToString(thisVehicleUnlockedState) + "]");
             }
 
             // Matching internal vehicle strings - should be more reliable since player owned vehicles seem unique with stable lock status and random vehicles are not
             if ( Equals( thisVehicle.vehicleString, targetVehicle.vehicleString  ) ){
               if (this.warningsON) { 
-                // showDebugMessage(">>> Found matching vehicle record ID.");
+                // this.showDebugMessage(">>> Found matching vehicle record ID.");
               }
        
               this.matchVehicle.recordID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID; 
@@ -250,13 +251,13 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
             thisVehicleUnlockedState = true;
 
             if (this.warningsON) {
-              // showDebugMessage("N.C.L.A.I.M: Checking original garage for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString  + " [Unlocked: " + ToString(thisVehicleUnlockedState) + "]");
+              // this.showDebugMessage("N.C.L.A.I.M: Checking original garage for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString  + " [Unlocked: " + ToString(thisVehicleUnlockedState) + "]");
             }
 
             // Matching internal vehicle strings - should be more reliable since player owned vehicles seem unique with stable lock status and random vehicles are not
             if ( Equals( thisVehicle.vehicleString, targetVehicle.vehicleString  ) ){
               if (this.warningsON) { 
-                // showDebugMessage(">>> Found matching vehicle record ID.");
+                // this.showDebugMessage(">>> Found matching vehicle record ID.");
               }
        
               this.matchVehicle.recordID = this.originalGarage[i]; 
@@ -277,10 +278,10 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         i = 0;
         GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerVehicles(vehiclesList);
         if (this.warningsON) {
-          // showDebugMessage(" ");
-          // showDebugMessage("----- Fallback");
-          // showDebugMessage(">>> N.C.L.A.I.M:  Database online. " + ToString(ArraySize(vehiclesList)) + " records total");
-          // showDebugMessage(">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" + this.matchVehicleModel + "'");
+          // this.showDebugMessage(" ");
+          // this.showDebugMessage("----- Fallback");
+          // this.showDebugMessage(">>> N.C.L.A.I.M:  Database online. " + ToString(ArraySize(vehiclesList)) + " records total");
+          // this.showDebugMessage(">>> N.C.L.A.I.M:  Scanning Criminal Asset Forfeiture database for '" + this.matchVehicleModel + "'");
         }
 
         while (i < ArraySize(vehiclesList)) && (!matchFound) { 
@@ -290,16 +291,16 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           thisVehicleUnlockedState = this.vehicleDB.lookupVehicleUnlockState(vehiclesList[i].recordID); // vehiclesList[i].isUnlocked
 
           if (this.warningsON) {
-            // showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString);
+            // this.showDebugMessage("N.C.L.A.I.M: Checking database for '"+ _this_vehicleModel +"' - vehicle code: " + thisVehicle.vehicleString);
             if (thisVehicleUnlockedState) {
-              // showDebugMessage(">>> Vehicle unlocked: " + thisVehicleUnlockedState);
+              // this.showDebugMessage(">>> Vehicle unlocked: " + thisVehicleUnlockedState);
             } 
             
           }
           // if ( StrCmp(StrLower(_this_vehicleModel), StrLower(this.matchVehicleModel)) == 0 ) {
           if ( Equals( vehiclesList[i].recordID, this.matchVehicleRecordID  ) ){
             if (this.warningsON) { 
-              // showDebugMessage(">>> Found matching vehicle record ID.");
+              // this.showDebugMessage(">>> Found matching vehicle record ID.");
             }
 
             if (thisVehicleUnlockedState) {
@@ -308,7 +309,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
               this.matchVehicleUnlocked = thisVehicleUnlockedState;
 
               if (this.warningsON) { 
-                // showDebugMessage(">>> Vehicle is already unlocked");
+                // this.showDebugMessage(">>> Vehicle is already unlocked");
               }
               matchFound = true;
             }
@@ -320,7 +321,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     }
 
     if (this.warningsON) && (!matchFound) { 
-      // showDebugMessage(">>>  NO matching vehicle record ID.");
+      // this.showDebugMessage(">>>  NO matching vehicle record ID.");
     }
 
     return matchFound;
@@ -331,16 +332,16 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let chanceCrimeReportSuccess: Int32 = Cast<Int32>(this.chanceCrimeReportSuccess);
 
     if (crimeOnSuccess) {
-      // showDebugMessage("::: tryReportCrime - Claim succeeded - reporting a crime"  );
-      // showDebugMessage("::: tryReportCrime - chanceCrimeReportSuccess: " + ToString(chanceCrimeReportSuccess) );
+      // this.showDebugMessage("::: tryReportCrime - Claim succeeded - reporting a crime"  );
+      // this.showDebugMessage("::: tryReportCrime - chanceCrimeReportSuccess: " + ToString(chanceCrimeReportSuccess) );
       if (RandRange(1,100) <= chanceCrimeReportSuccess) {
         this.player.SetWarningMessage( ClaimVehiclesText.CRIME());   
         // playerOwner.GetPreventionSystem().HeatPipeline("PlayerStoleVehicle");
         this.player.GetPreventionSystem().HeatPipeline("CrimeWitness");
       }
     } else {
-      // showDebugMessage("::: tryReportCrime - Claim failed - reporting a crime"  );
-      // showDebugMessage("::: tryReportCrime - chanceCrimeReportFail: " + ToString(chanceCrimeReportFail) );
+      // this.showDebugMessage("::: tryReportCrime - Claim failed - reporting a crime"  );
+      // this.showDebugMessage("::: tryReportCrime - chanceCrimeReportFail: " + ToString(chanceCrimeReportFail) );
       if (RandRange(1,100) <= chanceCrimeReportFail) {
         this.player.SetWarningMessage( ClaimVehiclesText.CRIME());   
         // _playerPuppetPS.GetPreventionSystem().HeatPipeline("PlayerStoleVehicle");
@@ -362,8 +363,9 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     // let vehiclesList: array<PlayerVehicle>;
     // let vehicleModel: String = GetLocalizedItemNameByCName(vehicleRecord.DisplayName());
 
-    // // showDebugMessage(":: Entering tryClaimVehicle");
-    // // showDebugMessage(":: tryClaimVehicle - vehClassName: " + vehClassName);
+    this.showDebugMessage(":: Entering tryClaimVehicle");
+    this.showDebugMessage(":: tryClaimVehicle - vehClassName: " + vehClassName);
+    this.showDebugMessage(":: tryClaimVehicle - addVehicle: " + ToString(addVehicle));
 
     let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1;
     let isPhantomLiberyStandalone: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"ep1_standalone") >= 1;
@@ -382,21 +384,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
     };
 
-    // check if vehicle is already owned in both old and new lists
-    if this.checkVehicleInSavedGarage(this.matchVehicleRecordID) {
-      if (this.debugON) {
-        this.showDebugMessage(":: tryClaimVehicle - vehicle already in SavedGarage: ");
-        claimVehicle = false;
-      }
-    }
-
-
-    // // showDebugMessage(":: tryClaimVehicle - claimVehicle: " + ToString(claimVehicle));
-    if (claimVehicle) && ( (isVictorHUDInstalled) || (isPhantomLiberyStandalone)) {
+    // // this.showDebugMessage(":: tryClaimVehicle - claimVehicle: " + ToString(claimVehicle));
+    if ( (isVictorHUDInstalled) || (isPhantomLiberyStandalone)) {
 
       if (this.warningsON) {
-        // showDebugMessage(" ");
-        // showDebugMessage("N.C.L.A.I.M:  Registering Forfeit Vehicle - " + vehClassName);
+        // this.showDebugMessage(" ");
+        // this.showDebugMessage("N.C.L.A.I.M:  Registering Forfeit Vehicle - " + vehClassName);
       }
 
       // if (playerOwner.m_claimedVehicleTracking.debugON) {  playerOwner.SetWarningMessage("Warning: vehicle ownership updated."); }
@@ -410,8 +403,26 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
       thisPlayerVehicle.recordID = recordID; 
       thisPlayerVehicle.vehicleType = vehType;
       thisPlayerVehicle.isUnlocked = true;
+      let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(thisPlayerVehicle.recordID);
+      let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
 
-      if (addVehicle)
+      this.getVehicleStringFromModel(thisPlayerVehicle.recordID, claimedVehicleModel);  
+
+      // check if vehicle is already owned in both old and new lists
+      if this.checkVehicleInSavedGarage(this.matchVehicleRecordID) {
+        if (this.debugON) {
+          this.showDebugMessage(":: tryClaimVehicle - vehicle already in SavedGarage: ");
+        }
+        if (!addVehicle) {
+          claimVehicle = false;        
+        }
+      } else {
+        if (this.debugON) {
+          this.showDebugMessage(":: tryClaimVehicle - vehicle not found in SavedGarage: ");
+        }      
+      }
+
+      if (claimVehicle) && (addVehicle)
       {
         this.addClaimedVehicle(thisPlayerVehicle);
 
@@ -449,7 +460,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
      
     // Invalidate persistent history
     while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-      // showDebugMessage(">>> N.C.L.A.I.M:  Garage init " + _this_vehicleString + " with state " + ToString(_this_vehicleUnlockState));
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage init " + _this_vehicleString + " with state " + ToString(_this_vehicleUnlockState));
       this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
 
       i += 1;
@@ -458,10 +469,10 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     // Refresh history from current owned list
     i = 0;
 
-    // showDebugMessage(">>> N.C.L.A.I.M:  Garage list: " + ToString(ArraySize(vehiclesList)) + " vehicles currently registered.");
+    // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage list: " + ToString(ArraySize(vehiclesList)) + " vehicles currently registered.");
 
     while i < ArraySize(vehiclesList) {    
-      // showDebugMessage(">>> N.C.L.A.I.M:  Claimed vehicles state refresh: " + TDBID.ToStringDEBUG(vehiclesList[i].recordID)  );
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  Claimed vehicles state refresh: " + TDBID.ToStringDEBUG(vehiclesList[i].recordID)  );
  
       this.vehicleDB.setVehicleUnlockState(vehiclesList[i].recordID, true);
 
@@ -481,7 +492,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     switch (this.summonMode) {
       // Normal mode - enable all vehicles in Claim history
       case vehicleSummonMode.Normal:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Normal Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Normal Mode"   );
 
         if  (!this.useOriginalGarage) {
           this.loadGarage();
@@ -489,9 +500,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         }
         
         /*
-        while i < ArraySize(vehiclesList) {    
-          _this_vehicleString = this.vehicleDB.lookupVehicleString(vehiclesList[i].recordID);
-          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+        while i < ArraySize(vehiclesList) {     
+          this.enablePlayerVehicle( vehiclesList[i].recordID, true, false);
           this.vehicleDB.setVehicleUnlockState(vehiclesList[i].recordID, true);
 
           i += 1;
@@ -501,7 +511,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
       // Last mode - enable only last vehicle claimed 
       case vehicleSummonMode.Last:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Last Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Last Mode"   );
         
         if (!this.lastVehicleRecordID) {
           // Skip
@@ -518,12 +528,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
             _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
             // Disable all vehicles except the last one claimed
             if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID == this.lastVehicleRecordID) {
-                GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+                this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
                 this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
                 matchFound = true;
 
               } else {
-                GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
+                this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, false, false);
                 this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
               }
 
@@ -539,7 +549,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
       // Random mode - enable random known vehicle   
       case vehicleSummonMode.Random:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Random Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Random Mode"   );
         
         if  (this.useOriginalGarage) {
           this.saveGarage();
@@ -553,7 +563,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
       // Delamain mode - enable only Delamain models 
       case vehicleSummonMode.Delamain:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Delamain Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Delamain Mode"   );
         
         if  (this.useOriginalGarage) {
           this.saveGarage();
@@ -567,11 +577,11 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
           // Disable all vehicles except Delamains
           if (StrContains(_this_vehicleString, "delamain")) {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+              this.enablePlayerVehicle(  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
 
             } else {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
+              this.enablePlayerVehicle(  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, false, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
             }
 
@@ -581,7 +591,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
       // Favorite mode - enable only favorite vehicles [TBD]
       case vehicleSummonMode.Favorites:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Favorite Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: Favorite Mode"   );
         
         if  (this.useOriginalGarage) {
           this.saveGarage();
@@ -590,16 +600,15 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
         this.clearGarage();
 
-        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-          _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
+        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
           // Disable all vehicles except favorites
           if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleFavorite) {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+              this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
               matchFound = true;
 
             } else {
-              GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
+              this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, false, false);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
             }
 
@@ -614,7 +623,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         break;
       // Last mode - enable all known vehicles from claim history
       case vehicleSummonMode.All:
-        // showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: All Mode"   );
+        // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage refresh: All Mode"   );
         
         if  (this.useOriginalGarage) {
           this.saveGarage();
@@ -623,9 +632,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
         this.clearGarage();
 
-        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-          _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
-          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
+          this.enablePlayerVehicle(  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
 
           i += 1;
@@ -642,15 +650,14 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     i = 0;
     let randomNum: Int32 = RandRange(0,ArraySize(this.vehicleDB.vehiclesUnlockStateDB)-1);
 
-    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-      _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
+    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
       // Disable all vehicles except a random one
       if (i == randomNum) {
-          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+          this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
 
         } else {
-          GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false);
+          this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, false, false);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
         }
 
@@ -711,9 +718,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
     m_vehicleSystem.GetPlayerUnlockedVehicles(vehiclesList);  
 
-    while i < ArraySize(vehiclesList) {      
-      _this_vehicleString = this.vehicleDB.lookupVehicleString(vehiclesList[i].recordID);
-      GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, false, false); 
+    while i < ArraySize(vehiclesList) {       
+      this.enablePlayerVehicle( vehiclesList[i].recordID, false, false); 
 
       i += 1;
     }; 
@@ -741,9 +747,9 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let _this_vehicleString: String;
     let i = 0;
 
-    while i < ArraySize(this.originalGarage) {     
-      _this_vehicleString = this.vehicleDB.lookupVehicleString(this.originalGarage[i]);
-      GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, true, false);
+    while i < ArraySize(this.originalGarage) {      
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  loadGarage: " + TDBID.ToStringDEBUG(this.originalGarage[i] ) );
+      this.enablePlayerVehicle(  this.originalGarage[i], true, false);
       this.vehicleDB.setVehicleUnlockState(this.originalGarage[i], true);
 
       i += 1;
@@ -754,13 +760,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   public func refreshClaimedVehiclesOnLoad() -> Void {
     let i = 0;
 
-    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-      let _this_vehicleString: String = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
+    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
       let _this_vehicleUnlockState: Bool = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked;
 
-      // showDebugMessage(">>> N.C.L.A.I.M:  Garage init: " + _this_vehicleString + " with state " + ToString(_this_vehicleUnlockState));
+      // this.showDebugMessage(">>> N.C.L.A.I.M:  Garage init: " + _this_vehicleString + " with state " + ToString(_this_vehicleUnlockState));
 
-      GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, _this_vehicleUnlockState, false);
+      this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, _this_vehicleUnlockState, false);
 
       i += 1;
     };       
@@ -770,8 +775,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(claimedVehicle.recordID);
     let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
 
+    if (this.debugON) { 
+      this.showDebugMessage(">>> try addClaimedVehicle");
+    }  
+
     // Checking standard dealership database
-    this.getVehicleStringFromModel(claimedVehicle.recordID, claimedVehicleModel);  
+    // this.getVehicleStringFromModel(claimedVehicle.recordID, claimedVehicleModel);  
 
     if (!(StrCmp(this.matchVehicleString,"")==0)) { 
       // Vehicle is known to database
@@ -779,20 +788,20 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
       if (this.matchVehicleUnlocked) {
         if (this.debugON) { 
-          //// showDebugMessage(">>> Skipping registration - vehicle already unlocked");
+          //// this.showDebugMessage(">>> Skipping registration - vehicle already unlocked");
         }  
              
       } else {
 
         if (this.debugON) {
-          // showDebugMessage("N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'.");        
+          // this.showDebugMessage("N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'.");        
         }
 
         if (this.warningsON) {
-          // showDebugMessage("N.C.L.A.I.M: Vehicle code extracted: '"+this.matchVehicleString+"'"  );   
+          // this.showDebugMessage("N.C.L.A.I.M: Vehicle code extracted: '"+this.matchVehicleString+"'"  );   
         }
 
-        GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, true, false);
+        this.enablePlayerVehicle( this.matchVehicleRecordID, true, false);
 
         GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, true); 
 
@@ -817,8 +826,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     } 
 
     if (this.warningsON) && (StrCmp(this.matchVehicleString,"") == 0) {     
-      //  this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
-      // showDebugMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      this.showDebugMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
     }       
    
   }
@@ -828,8 +837,12 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(claimedVehicle.recordID);
     let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
 
+    if (this.debugON) { 
+      this.showDebugMessage(">>> try removeClaimedVehicle");
+    } 
+
     // Checking standard dealership database
-    this.getVehicleStringFromModel(claimedVehicle.recordID, claimedVehicleModel);  
+    // this.getVehicleStringFromModel(claimedVehicle.recordID, claimedVehicleModel);  
 
 
     if (!(StrCmp(this.matchVehicleString,"")==0)) { 
@@ -839,16 +852,16 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
  
 
         if (this.debugON) {
-          // showDebugMessage("N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'.");        
+          // this.showDebugMessage("N.C.L.A.I.M: Scanning Criminal Asset Forfeiture database for '"+claimedVehicleModel+"'.");        
         }
 
         if (this.warningsON) {
-          // showDebugMessage("N.C.L.A.I.M: Vehicle code extracted: '"+this.matchVehicleString+"'"  );   
+          // this.showDebugMessage("N.C.L.A.I.M: Vehicle code extracted: '"+this.matchVehicleString+"'"  );   
         }
 
         GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicle.recordID), this.matchVehicle.vehicleType, false);  
 
-        GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( this.matchVehicleString, false, false);
+        this.enablePlayerVehicle( this.matchVehicleRecordID, false, false);
 
         this.vehicleDB.setVehicleUnlockState(this.matchVehicleRecordID, false);
  
@@ -858,7 +871,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
              
       } else {
         if (this.debugON) { 
-          // showDebugMessage(">>> Skipping removal - vehicle not owned");
+          // this.showDebugMessage(">>> Skipping removal - vehicle not owned");
         } 
 
 
@@ -869,11 +882,24 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     } 
 
     if (this.warningsON) && (StrCmp(this.matchVehicleString,"") == 0) {     
-      //  this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
-      // showDebugMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      this.player.SetWarningMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
+      this.showDebugMessage("N.C.L.A.I.M: ALERT: Field Asset Forfeiture database corrupted. No match found for '"+claimedVehicleModel+"'");   
     }       
    
   }
+
+@if(!ModuleExists("Codeware"))
+  public func enablePlayerVehicle(_vehicleId: TweakDBID, _enable: Bool, _despawnIfDisabling: Bool) -> Void {
+      let _this_vehicleString: String = this.vehicleDB.lookupVehicleString(_vehicleId);
+      GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, _enable, _despawnIfDisabling );
+}
+
+@if(ModuleExists("Codeware"))
+  public func enablePlayerVehicle(_vehicleId: TweakDBID, _enable: Bool, _despawnIfDisabling: Bool) -> Void { 
+      this.showDebugMessage(">>> enablePlayerVehicle: codeware version");   
+      let vehicleSystem = GameInstance.GetVehicleSystem(GetGameInstance());
+      vehicleSystem.EnablePlayerVehicleID(_vehicleId, _enable, _despawnIfDisabling);
+}
 
   private func checkPlayerFunds(price: Int32) -> Bool {
     let playerMoney: Int32; 

@@ -1,22 +1,16 @@
 
 
  // public class VehicleComponent extends ScriptableDeviceComponent {
-@replaceMethod(VehicleComponent) 
+@wrapMethod(VehicleComponent) 
 
-  private final func StealVehicle(opt slotID: MountingSlotId) -> Void {
-    let stealEvent: ref<StealVehicleEvent>;
-    let vehicleHijackEvent: ref<VehicleHijackEvent>;
+  private final func StealVehicle(opt slotID: MountingSlotId) -> Void { 
     let vehicle: wref<VehicleObject> = this.GetVehicle();
     if !IsDefined(vehicle) {
       return;
     };
-    if IsNameValid(slotID.id) {
-      vehicleHijackEvent = new VehicleHijackEvent();
-      vehicleHijackEvent.driverAllowedToGetAggressive = Equals(slotID.id, n"seat_front_left");
-      VehicleComponent.QueueEventToPassenger(vehicle.GetGame(), vehicle, slotID, vehicleHijackEvent);
-    };
-    stealEvent = new StealVehicleEvent();
-    vehicle.QueueEvent(stealEvent);
+
+    wrappedMethod(slotID);
+
 
     // LogChannel(n"DEBUG", "Player is stealing a vehicle");
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
@@ -53,7 +47,7 @@
   }
 
 // public class VehicleComponent extends ScriptableDeviceComponent {
-@replaceMethod(VehicleComponent)
+@wrapMethod(VehicleComponent)
 
   protected cb func OnRemoteControlEvent(evt: ref<VehicleRemoteControlEvent>) -> Bool {
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
@@ -71,9 +65,13 @@
     } else { 
       playerPuppet.m_claimedVehicleTracking.reset(playerPuppet);
     };
-    */
+    */ 
+    
+    if ((_playerPuppetPS.m_claimedVehicleTracking.modON) && (evt.remoteControl)) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: OnRemoteControlEvent: ");
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: scannerModeON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.scannerModeON));
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: playerGearheadLevel: " + ToString(playerGearheadLevel));
 
-    if (_playerPuppetPS.m_claimedVehicleTracking.modON) {
       // GearHead perk + Scanner mode (easy mode ON) = 100% chance of stealing vehicle
       if ((_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) && (playerGearheadLevel>=1)) {
         _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
@@ -89,26 +87,10 @@
       }
     }
 
-    let vehicleQuestEvent: ref<VehicleQuestChangeDoorStateEvent> = new VehicleQuestChangeDoorStateEvent();
-    let maxDelayToUnseatPassengers: Float = 5.00;
-    if evt.shouldModifyInteractionState {
-      if evt.remoteControl {
-        vehicleQuestEvent.newState = EQuestVehicleDoorState.DisableAllInteractions;
-      } else {
-        vehicleQuestEvent.newState = EQuestVehicleDoorState.ResetInteractions;
-      };
-      GameInstance.GetPersistencySystem(this.GetVehicle().GetGame()).QueuePSEvent(this.GetPS().GetID(), this.GetPS().GetClassName(), vehicleQuestEvent);
-    };
-    if evt.shouldUnseatPassengers {
-      this.GetVehicle().TriggerExitBehavior(maxDelayToUnseatPassengers);
-    };
-    if !evt.remoteControl {
-      this.GetPS().EndStimsOnVehicleQuickhack();
-    };
-    this.PushVehicleNPCDataToAllPassengers(this.GetVehicle().GetGame(), this.GetVehicle().GetEntityID());
+    wrappedMethod(evt);
   }
 
-@replaceMethod(VehicleComponent)
+@wrapMethod(VehicleComponent)
 
   protected cb func OnForceBrakesQuickhackEvent(evt: ref<VehicleForceBrakesQuickhackEvent>) -> Bool {
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
@@ -128,14 +110,15 @@
 
     // TO DO: Add method to remove a vehicle from Manager List
     if (_playerPuppetPS.m_claimedVehicleTracking.modON)  {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: OnForceBrakesQuickhackEvent: ");
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: forceBrakesQuickhackON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON));
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: playerGearheadLevel: " + ToString(playerGearheadLevel));
+
       if ((_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) && (playerGearheadLevel>=1)) {
         _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
       }
     }
 
-    if evt.active {
-      this.SetDelayDisableCarAlarm(evt.alarmDuration);
-    };
-    this.PushVehicleNPCDataToAllPassengers(this.GetVehicle().GetGame(), this.GetVehicle().GetEntityID());
+    wrappedMethod(evt);
   }
  

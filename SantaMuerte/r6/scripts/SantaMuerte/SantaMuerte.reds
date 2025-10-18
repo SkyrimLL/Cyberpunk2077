@@ -645,6 +645,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let m_statusEffectSystem: wref<StatusEffectSystem>;
     m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
 
+    this.showDebugMessage( ">>> Santa Muerte: forceBlackout" ); 
     m_statusEffectSystem.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
 
   } 
@@ -1427,7 +1428,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       case "Mox":
         randNum = RandRange(0,100);
-        if (randNum >= 20) {
+        if (randNum >= 40) {
+          // JigJig Street
+          position = new Vector4(-701.322, 827.524, 19.449, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if (randNum >= 20) && (randNum < 40)  {
           // Arasaka warehouse
           position = new Vector4(-1122.185, 1641.365, -2.056, 1.000000);
           rotation = playerForwardAngle;
@@ -1653,15 +1660,21 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       case "TigerClaws":
         randNum = RandRange(0,100); 
-        if (randNum >= 40) {
+        if (randNum >= 90) {
+          // Tyger Claw's Trash Dump
+          position = new Vector4(-458.519, 858.722, -4.567, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 90)  {
           // Tyger Claw's Cages Hideout
           position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
-        }
+        }  
         if  (randNum >= 20) && (randNum < 40)  {
           // Japantown reservoir
-          position = new Vector4(-445.489, 417.814, 131.998, 1.000000);
+          position = new Vector4(-576.191, 994.016, 11.908, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }  
