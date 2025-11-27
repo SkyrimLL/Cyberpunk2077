@@ -17,3 +17,5 @@ Mods for Cyberpunk 2077.
 - A few Quality of Life and experimental scripts
 - Adaptive sliders -  [Nexus link](https://www.nexusmods.com/cyberpunk2077/mods/5036/)
 - Vehicle Fast Travel - Nexus link
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K7183FEX)
