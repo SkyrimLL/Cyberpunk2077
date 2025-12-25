@@ -7,3 +7,4 @@ localization:
     es-es: base\localization\es-es\onscreens\LiveALittle.json
     es-mx: base\localization\es-mx\onscreens\LiveALittle.json
     cz-cz: base\localization\cz-cz\onscreens\LiveALittle.json
+    kr-kr: base\localization\kr-kr\onscreens\LiveALittle.json

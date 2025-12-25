@@ -49,6 +49,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let deathWhenImpersonatingJohnnyON: Bool;
   public let hardcoreDetourRobbedON: Bool; 
   public let hardcoreStealEquippedON: Bool;
+  public let hardcoreStealCyberwareON: Bool;
   public let hardcoreDetourRobbedChance: Int32;
   public let hardcoreDetourRobbedClothingChance: Int32;
   public let hardcoreDetourRobbedMoneyPercent: Int32;
@@ -129,6 +130,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.hardcoreDetourRobbedClothingChance = this.config.hardcoreDetourRobbedClothingChance;
     this.hardcoreDetourRobbedMoneyPercent = this.config.hardcoreDetourRobbedMoneyPercent;
     this.hardcoreStealEquippedON = this.config.hardcoreStealEquippedON;
+    this.hardcoreStealCyberwareON = this.config.hardcoreStealCyberwareON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  
@@ -1078,6 +1080,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let randNum: Int32;
     let isDestinationFound: Bool = false;
     let triggerRobPlayer: Bool = true;
+    let stripCyberware: Bool = false;
 
     switch currentDistrict {
       case gamedataDistrict.Watson:
@@ -1396,7 +1399,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     if (isDestinationFound) && (triggerRobPlayer) {
       if (this.hardcoreDetourRobbedON) {
-        this.robPlayer();
+        this.robPlayer(stripCyberware);
       }
       this.showDebugMessage( ">>> Santa Muerte: Detour teleport by district" ); 
       this.showDebugMessage( ToString(position) ); 
@@ -1422,6 +1425,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let currentDistrict: gamedataDistrict = this.getCurrentDistrict();
     let randNum: Int32;
     let isDestinationFound: Bool = false;
+    let triggerRobPlayer: Bool = true;
+    let stripCyberware: Bool = false;
 
     // Leave 20% chance of failure to switch to regular detour teleports
     switch faction { 
@@ -1435,11 +1440,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           isDestinationFound = true;
         }
         if (randNum >= 20) && (randNum < 40)  {
-          // Arasaka warehouse
+          // Chinatown ditch
           position = new Vector4(-1122.185, 1641.365, -2.056, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
+        triggerRobPlayer = false;
         break; 
 
       case "Militech":
@@ -1460,8 +1466,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       case "KangTao":
         randNum = RandRange(0,100);
-        if (randNum >= 20) {
-          // Arasaka warehouse
+        if (randNum >= 20)  {
+          // Canal outside KangTao
           position = new Vector4(-1669.258, 3433.807, -3.183, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
@@ -1470,12 +1476,19 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       case "Animals":
         randNum = RandRange(0,100);
-        // if (randNum >= 20) {
-        //   // Arasaka warehouse
-        //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
-        //   rotation = playerForwardAngle;
-        //   isDestinationFound = true;
-        // }
+        if (randNum >= 40) {
+          // Pacifica - NCART station
+          position = new Vector4(-2414.558, -2566.531, 23.114, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        } 
+        if (randNum >= 20) && (randNum < 40) {
+          // Dump site near Gym
+          position = new Vector4(-418.379, -1974.841, 6.398, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        stripCyberware = true;
         break; 
 
       case "Adelcaldos":
@@ -1486,6 +1499,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         //   rotation = playerForwardAngle;
         //   isDestinationFound = true;
         // }
+        triggerRobPlayer = false; 
         break; 
 
       case "Nomads":
@@ -1525,7 +1539,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         //   position = new Vector4(-1257.382, 429.609, 4.330, 1.000000);
         //   rotation = playerForwardAngle;
         //   isDestinationFound = true;
-        // }
+        // } 
+        stripCyberware = true;
         break; 
 
       case "Scavengers":
@@ -1547,9 +1562,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           // Northside dock
           position = new Vector4(-1142.092, 2804.941, 7.156, 1.000000);
           rotation = playerForwardAngle;
+          stripCyberware = true;
           isDestinationFound = true;
         } 
-
         break;
 
       case "Maelstrom":
@@ -1572,6 +1587,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(-1093.090, 2840.227, 7.135, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          stripCyberware = true;
         }
         if  (randNum >= 20) && (randNum < 40) {
           // Northside containers
@@ -1579,7 +1595,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
-
+ 
+        stripCyberware = true;
         break;
 
       case "Arasaka":
@@ -1596,6 +1613,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
+        triggerRobPlayer = false; 
         break; 
 
       case "NCPD":
@@ -1606,6 +1624,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
+        triggerRobPlayer = false; 
         break;
   
       case "Valentinos":
@@ -1617,7 +1636,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
-        if  (randNum >= 20) && (randNum < 80) {
+        if (randNum >= 40) && (randNum < 80) {
+          // Heywood Dump site
+          position = new Vector4(-1450.448, -1229.858, 26.665, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        if  (randNum >= 20) && (randNum < 40) {
           // Trash burning pits
           position = new Vector4(-2071.315, -1125.493, 10.963, 1.000000);
           rotation = playerForwardAngle;
@@ -1632,7 +1657,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(-2286.622, -1931.526, 6.055, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
-        }
+          stripCyberware = true;
+        } 
         break;
 
       case "SixthStreet": 
@@ -1649,6 +1675,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(157.737, -730.418, 4.276, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          stripCyberware = true;
         }
         if  (randNum >= 20) && (randNum < 40) {
           // Warehouse
@@ -1665,6 +1692,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(-458.519, 858.722, -4.567, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          stripCyberware = true;
         }
         if  (randNum >= 20) && (randNum < 90)  {
           // Tyger Claw's Cages Hideout
@@ -1690,6 +1718,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
             position = new Vector4(-1843.006, -2496.886, 25.165, 1.000000);
             rotation = playerForwardAngle;
             isDestinationFound = true;
+            stripCyberware = true;
           }
           if  (randNum >= 20) && (randNum < 60) {
             // Dogtown wasteland
@@ -1715,6 +1744,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           position = new Vector4(2329.168, -1826.530, 79.302, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
+          stripCyberware = true;
         }
         break;
 
@@ -1725,7 +1755,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     if (isDestinationFound) {
       if (this.hardcoreDetourRobbedON) {
-        this.robPlayer();
+        this.robPlayer(stripCyberware);
       }
       this.showDebugMessage( ">>> Santa Muerte: Detour teleport by faction" ); 
       this.showDebugMessage( ToString(position) ); 
@@ -1995,7 +2025,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 */
 // From: public class InvisibleSceneStash extends Device {
 
-  protected cb func robPlayer() -> Bool {
+  protected cb func robPlayer(stripCyberware: Bool) -> Bool {
     let i: Int32;
     let id: ItemID;
     let itemList: array<ItemID>;
@@ -2034,7 +2064,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // Note: Hardcore mode - stripped items are lost forever
     //        Maybe extend to a safe locker at some point
     if (RandRange(1,100) <= this.hardcoreDetourRobbedChance) {
-      this.disposeItems(itemList);
+      this.disposeItems(itemList, stripCyberware);
 
       // Remove percent of player money
       // Set up Mod Settings later
@@ -2072,7 +2102,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     return unequipRequest;
   }
 
-  public final func disposeItems(itemList: array<ItemID>) -> Void {
+  public final func disposeItems(itemList: array<ItemID>, stripCyberware: Bool) -> Void {
     let i: Int32; 
     let item: ItemModParams;
     let m_inventoryManager: wref<InventoryDataManagerV2> = EquipmentSystem.GetData(this.player).GetInventoryManager();
@@ -2081,7 +2111,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     for itemData in m_inventoryManager.GetPlayerInventoryData() { 
       let itemID = itemData.ID;
 
-      if this.IsValidItem(itemData) {
+      if this.IsValidItem(itemData, stripCyberware) {
         if (RandRange(1,100) <= this.hardcoreDetourRobbedClothingChance) {
           // Tentative solution to record list of lost items
           // ArrayPush(this.m_storedItems, itemID);
@@ -2095,7 +2125,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
  
   }
 
-  public func IsValidItem(itemData: InventoryItemData) -> Bool { 
+  public func IsValidItem(itemData: InventoryItemData, stripCyberware: Bool) -> Bool { 
     let itemRecordId = ItemID.GetTDBID(itemData.ID);
     let itemCategory: gamedataItemCategory = RPGManager.GetItemCategory(itemData.ID);
     let itemType: gamedataItemType = InventoryItemData.GetGameItemData(itemData).GetItemType();
@@ -2110,7 +2140,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     // Exclude equipped cyberware 
     if (RPGManager.IsItemCyberware(itemData.ID)) || (RPGManager.IsItemTypeCyberwareWeapon(itemType)) {
-      isValid = false;
+      if ((stripCyberware) && (this.hardcoreStealCyberwareON)) {
+        isValid = true;
+      } else {
+        isValid = false;
+      }
+      
     }
 
     // Exclude inhalers and injectors

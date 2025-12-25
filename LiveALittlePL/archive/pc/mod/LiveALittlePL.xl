@@ -8,3 +8,4 @@ localization:
     es-mx: base\localization\es-mx\onscreens\LiveALittlePL.json 
     pt-br: base\localization\pt-br\onscreens\LiveALittlePL.json 
     cz-cz: base\localization\cz-cz\onscreens\LiveALittlePL.json 
+    kr-kr: base\localization\kr-kr\onscreens\LiveALittlePL.json 

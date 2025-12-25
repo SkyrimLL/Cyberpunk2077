@@ -59,8 +59,8 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   }
 
   public func lookupVehicleString(_id: TweakDBID) -> String {
-    LogChannel(n"DEBUG",">>> ClaimVehicleDB: lookupVehicleString()..." );
-    LogChannel(n"DEBUG",">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id));
+    this.showDebugMessage(">>> ClaimVehicleDB: lookupVehicleString()..." );
+    this.showDebugMessage(">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id));
 
     let thisVehicle: ref<VehicleProperties> = this.lookupVehicle(_id);
 

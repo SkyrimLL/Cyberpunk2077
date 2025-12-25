@@ -219,10 +219,17 @@
   @runtimeProperty("ModSettings.min", "0")
   @runtimeProperty("ModSettings.max", "100")
   let hardcoreDetourRobbedClothingChance: Int32 = 40;
-  
+
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
   @runtimeProperty("ModSettings.category.order", "44")
+  @runtimeProperty("ModSettings.displayName", "Some detours can strip cyberware")
+  @runtimeProperty("ModSettings.description", "If ON, some unsafe destinations will also include Cyberware as items that can be stolen.")
+  let hardcoreStealCyberwareON: Bool = false;   
+  
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Robbed and left for dead")
+  @runtimeProperty("ModSettings.category.order", "45")
   @runtimeProperty("ModSettings.displayName", "Percent of lost money when robbed")
   @runtimeProperty("ModSettings.description", "Sets percentage of money robbed after waking up in an unsafe destination (set to 0 to disable)")
   @runtimeProperty("ModSettings.step", "1")

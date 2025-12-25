@@ -466,6 +466,15 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/24327
+        if StrContains(currentItemFriendlyName,"rm_back_claire_") || StrContains(currentItemFriendlyName,"rm_back_chestbag_") || StrContains(currentItemFriendlyName,"rm_belt_waistbag_"){
+          clothSlotMod = 15.0 ;
+
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    Accessory and Jewelry Collection bag bonus : " + clothSlotMod);
+          }
+        }
+
         // https://www.nexusmods.com/cyberpunk2077/mods/8985?tab=files
         // https://www.nexusmods.com/cyberpunk2077/mods/21607?tab=description
         if StrContains(currentItemFriendlyName,"fanny_") {
@@ -479,6 +488,13 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         // ----
         // Pouches
         // ----
+        // https://www.nexusmods.com/cyberpunk2077/mods/24766
+        if StrContains(currentItemFriendlyName,"sneaksuitfv_") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    sneaksuitfv bonus : " + clothSlotMod);
+          }
+        }
 
         if StrContains(currentItemFriendlyName,"waistbag") {
           clothSlotMod = 5.0  ;
@@ -500,6 +516,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           clothSlotMod = 5.0  ;
           if (this.debugON) {
             this.showDebugMessage("::: getEquipmentSlotMods  -    pants side pockets bonus : " + clothSlotMod);
+          }
+        }
+
+        // https://www.nexusmods.com/cyberpunk2077/mods/25423
+        if StrContains(currentItemFriendlyName,"queencobra_techwear_pants_") {
+          clothSlotMod = 5.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    Techwear Pants bonus : " + clothSlotMod);
           }
         }
 
