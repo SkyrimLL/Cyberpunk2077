@@ -336,6 +336,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
+        // https://www.nexusmods.com/cyberpunk2077/mods/26507 - V's Accessory Drawer
+        if StrContains(currentItemFriendlyName,"breezy_bunny_bag_") {
+          clothSlotMod = 20.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -  breezy_bunny_bag bonus : " + clothSlotMod);
+          }
+        }
+
         // https://www.nexusmods.com/cyberpunk2077/mods/16288
         if StrContains(currentItemFriendlyName,"aquelyras_travel_bag") {
           clothSlotMod = 10.0 ;
