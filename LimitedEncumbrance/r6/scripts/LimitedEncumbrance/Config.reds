@@ -44,7 +44,7 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.max", "100")
   let carryCapacityBase: Int32 = 25;
  
-  @runtimeProperty("ModSettings.mod", "Dynamic ENCUMBRANCE")
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
   @runtimeProperty("ModSettings.category", "Dynamic Encumbrance System")
   @runtimeProperty("ModSettings.category.order", "12")
   @runtimeProperty("ModSettings.displayName", "Backpack size")

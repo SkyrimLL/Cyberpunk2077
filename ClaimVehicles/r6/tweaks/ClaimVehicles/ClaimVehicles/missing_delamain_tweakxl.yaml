@@ -1,0 +1,8 @@
+Vehicle.vehicle_list.list:
+  - !append Vehicle.Delamain
+  - !append Vehicle.q005_delamain_cab_combat
+  - !append Vehicle.q101_delamain_cab
+  - !append Vehicle.q108_delamain_cab
+  - !append Vehicle.q307_delamain_cab 
+  - !append Vehicle.sq025_delamain_cab 
+  - !append Vehicle.v_standard2_villefort_cortes_delamain 
