@@ -1,2 +1,5 @@
 SmallPatches/NavMod/NavMod*.log
 SantaMuertePermadeathBridge/bin/x64/plugins/cyber_engine_tweaks/mods/PermadeathBridge/mod/data/Saves.flag 
+.vscode/settings.json
+.gitignore
+ReshadeBridgeSource/deps/red4ext.sdk/README.md

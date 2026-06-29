@@ -16,6 +16,18 @@
 
 // in public class MenuHubGameController extends gameuiMenuGameController 
 
+@wrapMethod(MenuHubGameController)
+
+  protected cb func OnOpenMenuRequest(evt: ref<OpenMenuRequest>) -> Bool {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.m_player.GetPS();
+
+    if (_playerPuppetPS.m_limitedEncumbranceTracking.modON) {
+      _playerPuppetPS.m_limitedEncumbranceTracking.refreshConfig();
+    }
+    
+    wrappedMethod(evt);
+  }
+
 @replaceMethod(MenuHubGameController)
 
   protected cb func OnPlayerMaxWeightUpdated(value: Int32) -> Bool {
