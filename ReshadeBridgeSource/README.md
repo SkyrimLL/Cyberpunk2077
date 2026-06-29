@@ -1,6 +1,6 @@
 # ReshadeBridge
 
-A Cyberpunk 2077 plugin that bridges [ReShade's addon API](https://crosire.github.io/reshade-docs/index.html) with [Red4ext](https://docs.red4ext.com/) scripting, enabling any REDscript mod to dynamically switch the active ReShade preset, toggle effects, or enable/disable individual techniques at runtime.
+A [Red4ext](https://docs.red4ext.com/) plugin that bridges [ReShade's addon API](https://crosire.github.io/reshade-docs/index.html) with REDscript, enabling any REDscript mod to dynamically switch the active ReShade preset, toggle effects, or enable/disable individual techniques at runtime.
 
 The plugin is a single DLL that simultaneously acts as a **Red4ext plugin** (exposing `Main` / `Query` / `Supports` exports) and a **ReShade addon** (registering `effect_runtime` lifecycle callbacks via `DllMain`).
 
@@ -20,12 +20,13 @@ The plugin is a single DLL that simultaneously acts as a **Red4ext plugin** (exp
 ## Clone and build
 
 ```sh
-# 1. Clone with both submodules in one shot (--depth 1 keeps the reshade clone small)
-git clone --recurse-submodules --shallow-submodules https://github.com/YourName/ReshadeBridge.git
-cd ReshadeBridge
+# Clone with both submodules in one shot (--depth 1 keeps the reshade clone small)
+git clone https://github.com/SkyrimLL/Cyberpunk2077/tree/main/ReshadeBridgeSource 
 
-# If you already cloned without submodules:
-git submodule update --init --depth 1
+# 1. Create a new Red4ext project 
+Use the started project structure from: https://github.com/wopss/RED4ext.Example.CMake 
+Copy the source files in the src folder
+Add the external dependencies from Red4ext (https://github.com/WopsS/RED4ext) and reshade API (https://github.com/crosire/reshade)
 
 # 2. Configure (x64 Release)
 $env:PATH += ";C:\Program Files\CMake\bin"
