@@ -77,7 +77,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1; // Confirmed working
         let isAmmoCounterHidden: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
         let isArasakaUION: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
-        let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_digital_sickness") >= 1; // Not working
+        let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working
         let isVRTutorialON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") >= 1; // Not tested
         let isCyberspaceON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") >= 1; // Not tested
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
@@ -86,7 +86,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
         this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
         this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_digital_sickness") );
+        this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
         this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
         this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
         this.showDebugMessage("[ReshadeBridge] refresh: isVictorHUDInstalled is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") );
