@@ -78,14 +78,14 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let isAmmoCounterHidden: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
         let isArasakaUION: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
         let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working
-        let isVRTutorialON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") >= 1; // Not tested
+        // 11let isVRTutorialON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") >= 1; // Not tested
         let isCyberspaceON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") >= 1; // Not tested
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
 
         let newReshadeProfile: String;
 
         this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") );
+        // this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") );
         this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
         this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
         this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
@@ -101,9 +101,9 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         if isCyberspaceON {
             this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is True - switching to " + "Cyberspace");
             newReshadeProfile = "Cyberspace";
-        } else if isVRTutorialON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
-            newReshadeProfile = "VR";
+        // } else if isVRTutorialON {
+        //     this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
+        //     newReshadeProfile = "VR";
         } else if isArasakaUION {
             this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is True - switching to " + "Arasaka");
             newReshadeProfile = "Arasaka";
@@ -174,7 +174,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 public class ConditionalOpticsHeartbeatCallback extends DelayCallback {
     public let player: wref<PlayerPuppet>; 
 
-    public static func Create() -> ref<ConditionalOpticsHeartbeatCallback> {
+    public static func create() -> ref<ConditionalOpticsHeartbeatCallback> {
         let self: ref<ConditionalOpticsHeartbeatCallback> = new ConditionalOpticsHeartbeatCallback();
         return self;
     }
@@ -185,16 +185,30 @@ public class ConditionalOpticsHeartbeatCallback extends DelayCallback {
 
     public func reset(player: wref<PlayerPuppet>) -> Void {
         this.player = player;  
+        // Uncomment the following line to start the heartbeat immediately upon creation of the callback object
+        // this.startHeartbeat(player);
     }
 
-    public func Call() -> Void {
-        // 1. Check your condition
+    public func startHeartbeat(player: wref<PlayerPuppet>) -> Void {
+    //  let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
+    //  delaySystem.DelayCallback(heartbeat, 5.0, false);
+        let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
+        let delayTime: Float = 5.0; // seconds
+        let affectedByTimeDilation: Bool = false;
+        let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS(); 
+ 
+        _playerPuppetPS.m_conditionalOptics.showDebugMessage("[ReshadeBridge] ConditionalOpticsHeartbeatCallback: starting heartbeat.");
+
+        delaySystem.DelayCallback(this, delayTime, affectedByTimeDilation);
+    }
+
+    public func Call() -> Void {       
         let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS(); 
 
         // refresh() will do the checks for new conditions.
         _playerPuppetPS.m_conditionalOptics.refresh();
 
-        // 2. If NOT met, queue the next heartbeat (e.g., 0.5 seconds from now)
+        // queue the next heartbeat (e.g., 0.5 seconds from now)
         let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
         let delayTime: Float = 5.0; // seconds
         let affectedByTimeDilation: Bool = false;
