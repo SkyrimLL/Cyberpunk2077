@@ -20,10 +20,7 @@ public let m_conditionalOptics: ref<ConditionalOptics>;
 
     _playerPuppetPS.InitConditionalOpticsSystem(playerPuppet);
 
-    let heartbeat: ref<ConditionalOpticsHeartbeatCallback> = ConditionalOpticsHeartbeatCallback.create();
-    heartbeat.init(playerPuppet as PlayerPuppet); 
-    // let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
-    // delaySystem.DelayCallback(heartbeat, 5.0, false);
+    _playerPuppetPS.m_conditionalOptics.startHeartbeatIfNeeded();
 
     wrappedMethod(playerPuppet);
   }

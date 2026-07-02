@@ -51,6 +51,20 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public let player: wref<PlayerPuppet>;
 
     public let reshadeProfile: String;
+    public let reshadeProfilePath: String;
+    public let config: ref<ConditionalReshadeOpticsConfig>;
+    public let heartbeat: ref<ConditionalOpticsHeartbeatCallback>;
+    public let heartbeatRunning: Bool;
+    public let heartbeatSessionId: Uint32;
+
+    public let modON: Bool;
+    public let heartbeatContinuousON: Bool;
+    public let effectVRON: Bool;
+    public let effectCyberspaceON: Bool;
+    public let effectKiroshiON: Bool;
+    public let effectCheapCyberwareON: Bool;
+    public let effectGlitchedCyberwareON: Bool;
+    public let effectNoCyberwareON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
         this.reset(player);
@@ -59,10 +73,75 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public func reset(player: wref<PlayerPuppet>) -> Void {
         this.player = player; 
 
+        this.refreshConfig();
         this.refresh();
     }
 
+    public func refreshConfig() -> Void {
+        this.config = new ConditionalReshadeOpticsConfig(); 
+        this.invalidateCurrentState();
+    }
+
+    public func invalidateCurrentState() -> Void {    
+        this.modON = this.config.modON;
+        this.heartbeatContinuousON = this.config.heartbeatContinuousON;
+        this.effectVRON = this.config.effectVRON;
+        this.effectCyberspaceON = this.config.effectCyberspaceON;
+        this.effectKiroshiON = this.config.effectKiroshiON;
+        this.effectCheapCyberwareON = this.config.effectCheapCyberwareON;
+        this.effectGlitchedCyberwareON = this.config.effectGlitchedCyberwareON;
+        this.effectNoCyberwareON = this.config.effectNoCyberwareON;
+    }
+
+    public cb func OnModSettingsChange() -> Void {
+        let wasHeartbeatEnabled: Bool = this.modON && this.heartbeatContinuousON;
+
+        this.showDebugMessage("[ReshadeBridge] Settings were applied! Running post-update method...");
+        this.refreshConfig();
+
+        if wasHeartbeatEnabled && !this.isHeartbeatContinuousEnabled() {
+            this.stopHeartbeat();
+        }
+
+        this.refresh();
+
+        if !wasHeartbeatEnabled && this.isHeartbeatContinuousEnabled() {
+            this.startHeartbeatIfNeeded();
+        }
+    }
+
+    public func isHeartbeatContinuousEnabled() -> Bool {
+        this.refreshConfig();
+        return this.modON && this.heartbeatContinuousON;
+    }
+
+    public func startHeartbeatIfNeeded() -> Void {
+        if this.heartbeatRunning {
+            return;
+        }
+
+        if !IsDefined(this.heartbeat) {
+            this.heartbeat = ConditionalOpticsHeartbeatCallback.create();
+            this.heartbeat.init(this.player);
+        }
+
+        this.heartbeatRunning = true;
+        this.heartbeatSessionId += 1u;
+        this.heartbeat.startHeartbeat(this.player, this.heartbeatSessionId);
+    }
+
+    public func stopHeartbeat() -> Void {
+        this.heartbeatRunning = false;
+    }
+
     public func refresh() -> Void {
+        this.refreshConfig();
+
+        if !this.modON {
+            this.showDebugMessage("[ReshadeBridge] refresh: mod disabled in settings, skipping profile switch.");
+            return;
+        }
+
         // TODO: catch status of other quest facts to determine which Reshade profile to use
         // - start/end of nomad lifepath intro quest - q000_nomad / q001_hide_ammo_counter
         // - start/end of street kid lifepath intro quest - q000_street_kid / q001_hide_ammo_counter
@@ -74,18 +153,42 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         // - vr tutorial - q000_vr_tutorial_enabled
         // - cyberspace - cyberspace_on
 
+        let controlledObjRecordID: TweakDBID = this.player.GetRecord().GetID() ;  
+        let isVRTutorialON: Bool = false;  
+        let isImpersonating: Bool = false;
+
+        switch controlledObjRecordID {
+        case t"Character.johnny_replacer":
+            isImpersonating=true;
+            break;
+        case t"Character.q000_vr_replacer":
+            isImpersonating=true;
+            isVRTutorialON=true; 
+            break;
+        case t"Character.mq304_assassin_replacer_male":
+            isImpersonating=true;
+            break;
+        case t"Character.mq304_assassin_replacer_female":
+            isImpersonating=true;
+            break; 
+        case t"Character.kurt_replacer":
+            isImpersonating=true;
+            break;
+        default:
+            isImpersonating=false;
+        };
+
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1; // Confirmed working
         let isAmmoCounterHidden: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
         let isArasakaUION: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
-        let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working
-        // 11let isVRTutorialON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") >= 1; // Not tested
+        let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working 
         let isCyberspaceON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") >= 1; // Not tested
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
 
         let newReshadeProfile: String;
 
         this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
-        // this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_vr_custom_savelock") );
+        this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + isVRTutorialON );
         this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
         this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
         this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
@@ -93,35 +196,43 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.showDebugMessage("[ReshadeBridge] refresh: isPrologueStarted is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") );
 
         if !RB_IsRuntimeReady() {
-            this.showDebugMessage("[ReshadeBridge] refresh: forcing a refresh of runtime state. Current profile: " + RB_GetPreset());
+            this.showDebugMessage("[ReshadeBridge] refresh: forcing a refresh of runtime state. Current profile path: " + RB_GetPreset());
             RB_RefreshRuntime();  // retry if ReShade wasn't loaded yet
         }
-        this.showDebugMessage("[ReshadeBridge] refresh: current profile is " + RB_GetPreset());
+        this.reshadeProfilePath = RB_GetPreset();
+        this.showDebugMessage("[ReshadeBridge] refresh: current profile path is " + this.reshadeProfilePath);
 
-        if isCyberspaceON {
+        if this.effectCyberspaceON && isCyberspaceON {
             this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is True - switching to " + "Cyberspace");
             newReshadeProfile = "Cyberspace";
-        // } else if isVRTutorialON {
-        //     this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
-        //     newReshadeProfile = "VR";
+        } else if this.effectVRON && isVRTutorialON {
+            this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
+            newReshadeProfile = "VR";
+        } else if isImpersonating {
+            // Special Reshade profile for cases when there should be no reshade effects applied, e.g. Johnny's eyes, impersonations, etc.
+            this.showDebugMessage("[ReshadeBridge] refresh: isImpersonating is True - switching to " + "OFF");
+            newReshadeProfile = "OFF";
         } else if isArasakaUION {
             this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is True - switching to " + "Arasaka");
             newReshadeProfile = "Arasaka";
-        } else if isVictorHUDInstalled {
+        } else if this.effectKiroshiON && isVictorHUDInstalled {
             this.showDebugMessage("[ReshadeBridge] refresh: isVictorHUDInstalled is True - switching to " + "Kyroshi");
             newReshadeProfile = "Kyroshi";
-        } else if isDigitalSicknessON {
+        } else if this.effectGlitchedCyberwareON && isDigitalSicknessON {
             this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is True - switching to " + "RescueGlitched");
             newReshadeProfile = "RescueGlitched";
-        } else if isAmmoCounterHidden && isPrologueStarted {
+        } else if this.effectCheapCyberwareON && isAmmoCounterHidden && isPrologueStarted {
             this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is True - switching to " + "CheapCyberware");
             newReshadeProfile = "CheapCyberware";
-        } else {
+        } else if this.effectNoCyberwareON {
             this.showDebugMessage("[ReshadeBridge] refresh: default case - switching to " + "NoCyberware");
             newReshadeProfile = "NoCyberware";
+        } else {
+            this.showDebugMessage("[ReshadeBridge] refresh: no enabled profile matched. Keeping current profile " + this.reshadeProfile);
+            return;
         }
 
-        if (StrCmp(newReshadeProfile, this.reshadeProfile) != 0) {
+        if (StrCmp(newReshadeProfile, this.reshadeProfile) != 0) || !(StrContains(this.reshadeProfilePath, this.reshadeProfile)){
             this.showDebugMessage("[ReshadeBridge] refresh: profile changed from " + this.reshadeProfile + " to " + newReshadeProfile);
             this.switchProfile(newReshadeProfile);
         }
@@ -139,7 +250,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
     public func switchProfile(profileName: String) -> Void {
         this.showDebugMessage("[ReshadeBridge] switchProfile: profileName: " + profileName);
-        let ok = RB_SetPreset("reshade-presets\\ConditionalReshadeOptics\\V-" + profileName + ".ini");
+        let ok = RB_SetPreset("reshade-presets\\MyConditionalReshadeOptics\\V-" + profileName + ".ini");
         if !ok {
             this.showDebugMessage("[ReshadeBridge] switchProfile: runtime not available yet.");
         } else {
@@ -164,7 +275,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     // }
 
     private func showDebugMessage(debugMessage: String) {
-        LogChannel(n"DEBUG", debugMessage ); 
+       // LogChannel(n"DEBUG", debugMessage ); 
     }
 }
 
@@ -173,6 +284,7 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
 public class ConditionalOpticsHeartbeatCallback extends DelayCallback {
     public let player: wref<PlayerPuppet>; 
+    public let sessionId: Uint32;
 
     public static func create() -> ref<ConditionalOpticsHeartbeatCallback> {
         let self: ref<ConditionalOpticsHeartbeatCallback> = new ConditionalOpticsHeartbeatCallback();
@@ -185,34 +297,47 @@ public class ConditionalOpticsHeartbeatCallback extends DelayCallback {
 
     public func reset(player: wref<PlayerPuppet>) -> Void {
         this.player = player;  
-        // Uncomment the following line to start the heartbeat immediately upon creation of the callback object
-        // this.startHeartbeat(player);
     }
 
-    public func startHeartbeat(player: wref<PlayerPuppet>) -> Void {
+    public func startHeartbeat(player: wref<PlayerPuppet>, sessionId: Uint32) -> Void {
     //  let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
     //  delaySystem.DelayCallback(heartbeat, 5.0, false);
         let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
         let delayTime: Float = 5.0; // seconds
         let affectedByTimeDilation: Bool = false;
         let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS(); 
+        this.sessionId = sessionId;
  
-        _playerPuppetPS.m_conditionalOptics.showDebugMessage("[ReshadeBridge] ConditionalOpticsHeartbeatCallback: starting heartbeat.");
-
-        delaySystem.DelayCallback(this, delayTime, affectedByTimeDilation);
+        if _playerPuppetPS.m_conditionalOptics.heartbeatRunning && _playerPuppetPS.m_conditionalOptics.isHeartbeatContinuousEnabled() {
+            _playerPuppetPS.m_conditionalOptics.showDebugMessage("[ReshadeBridge] ConditionalOpticsHeartbeatCallback: starting heartbeat.");
+            delaySystem.DelayCallback(this, delayTime, affectedByTimeDilation);
+        }
     }
 
     public func Call() -> Void {       
         let _playerPuppetPS: ref<PlayerPuppetPS> = this.player.GetPS(); 
+        let optics: ref<ConditionalOptics> = _playerPuppetPS.m_conditionalOptics;
+
+        if !IsDefined(optics) {
+            return;
+        }
+
+        if !optics.heartbeatRunning || this.sessionId != optics.heartbeatSessionId {
+            return;
+        }
 
         // refresh() will do the checks for new conditions.
-        _playerPuppetPS.m_conditionalOptics.refresh();
+        optics.refresh();
 
         // queue the next heartbeat (e.g., 0.5 seconds from now)
         let delaySystem = GameInstance.GetDelaySystem(GetGameInstance());
         let delayTime: Float = 5.0; // seconds
         let affectedByTimeDilation: Bool = false;
 
-        delaySystem.DelayCallback(this, delayTime, affectedByTimeDilation);
+        if optics.heartbeatRunning && optics.isHeartbeatContinuousEnabled() && this.sessionId == optics.heartbeatSessionId {
+            delaySystem.DelayCallback(this, delayTime, affectedByTimeDilation);
+        } else {
+            optics.stopHeartbeat();
+        }
     }
 }
