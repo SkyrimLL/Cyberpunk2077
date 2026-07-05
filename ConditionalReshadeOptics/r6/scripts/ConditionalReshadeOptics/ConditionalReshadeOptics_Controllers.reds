@@ -8,10 +8,10 @@
 
     if !IsDefined(_playerPuppetPS.m_conditionalOptics) {
         _playerPuppetPS.InitConditionalOpticsSystem(this.m_player);
-        LogChannel(n"DEBUG", "[ReshadeBridge] OnOpenMenuRequest: runtime not available yet.");
+        _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] OnOpenMenuRequest: runtime not available yet.");
     } else {
         _playerPuppetPS.m_conditionalOptics.refresh();
-        LogChannel(n"DEBUG", "[ReshadeBridge] OnOpenMenuRequest: runtime available, refreshed profile.");
+        _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] OnOpenMenuRequest: runtime available, refreshed profile.");
     }
     
     wrappedMethod(evt);
@@ -25,10 +25,10 @@
 
     if !IsDefined(_playerPuppetPS.m_conditionalOptics) {
         _playerPuppetPS.InitConditionalOpticsSystem(this.m_player);
-        LogChannel(n"DEBUG", "[ReshadeBridge] OnOpenMenuRequest: runtime not available yet.");
+        _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] OnOpenMenuRequest: runtime not available yet.");
     } else {
         _playerPuppetPS.m_conditionalOptics.refresh();
-        // LogChannel(n"DEBUG", "[ReshadeBridge] OnOpenMenuRequest: runtime available, refreshed profile.");
+        // _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] OnOpenMenuRequest: runtime available, refreshed profile.");
     }
     
     wrappedMethod(evt);
@@ -46,10 +46,10 @@
 
     if !IsDefined(_playerPuppetPS.m_conditionalOptics) {
         _playerPuppetPS.InitConditionalOpticsSystem(_playerPuppet);
-        LogChannel(n"DEBUG", "[ReshadeBridge] ScannerGameController: runtime not available yet.");
+        _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] ScannerGameController: runtime not available yet.");
     } else {
         _playerPuppetPS.m_conditionalOptics.refresh();
-        // LogChannel(n"DEBUG", "[ReshadeBridge] ScannerGameController: runtime available, refreshed profile.");
+        // _playerPuppetPS.m_conditionalOptics.showDebugMessage( "[ReshadeBridge] ScannerGameController: runtime available, refreshed profile.");
     }
     
     wrappedMethod(show);

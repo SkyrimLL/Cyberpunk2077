@@ -60,6 +60,9 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public let modON: Bool;
     public let heartbeatContinuousON: Bool;
     public let effectVRON: Bool;
+    public let isBraindanceON: Bool;
+    public let isBraindanceEditorON: Bool;
+    public let effectJohnnyON: Bool;
     public let effectCyberspaceON: Bool;
     public let effectKiroshiON: Bool;
     public let effectCheapCyberwareON: Bool;
@@ -86,6 +89,9 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.modON = this.config.modON;
         this.heartbeatContinuousON = this.config.heartbeatContinuousON;
         this.effectVRON = this.config.effectVRON;
+        this.isBraindanceON = this.config.isBraindanceON;
+        this.isBraindanceEditorON = this.config.isBraindanceEditorON;
+        this.effectJohnnyON = this.config.effectJohnnyON;
         this.effectCyberspaceON = this.config.effectCyberspaceON;
         this.effectKiroshiON = this.config.effectKiroshiON;
         this.effectCheapCyberwareON = this.config.effectCheapCyberwareON;
@@ -156,10 +162,12 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let controlledObjRecordID: TweakDBID = this.player.GetRecord().GetID() ;  
         let isVRTutorialON: Bool = false;  
         let isImpersonating: Bool = false;
+        let isVJAsJohnny: Bool = false;
 
         switch controlledObjRecordID {
         case t"Character.johnny_replacer":
             isImpersonating=true;
+            isVJAsJohnny=true;
             break;
         case t"Character.q000_vr_replacer":
             isImpersonating=true;
@@ -178,20 +186,27 @@ public class ConditionalOptics extends ScriptedPuppetPS {
             isImpersonating=false;
         };
 
+        let bdSystem: ref<BraindanceSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"BraindanceSystem") as BraindanceSystem;
+    
         let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1; // Confirmed working
         let isAmmoCounterHidden: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
         let isArasakaUION: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
         let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working 
         let isCyberspaceON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") >= 1; // Not tested
+        let isBraindanceON: Bool = bdSystem.isInBraindance; // Not tested
+        let isBraindanceEditorON: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"Braindance"); // Confirmed working
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
 
         let newReshadeProfile: String;
 
         this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
         this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + isVRTutorialON );
+        this.showDebugMessage("[ReshadeBridge] refresh: isVJAsJohnny is " + isVJAsJohnny );
         this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
         this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
         this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
+        this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceON is " + isBraindanceON );
+        this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceEditorON is " + isBraindanceEditorON );
         this.showDebugMessage("[ReshadeBridge] refresh: isVictorHUDInstalled is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") );
         this.showDebugMessage("[ReshadeBridge] refresh: isPrologueStarted is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") );
 
@@ -208,6 +223,15 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         } else if this.effectVRON && isVRTutorialON {
             this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
             newReshadeProfile = "VR";
+        } else if this.isBraindanceEditorON && isBraindanceEditorON {
+            this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceEditorON is True - switching to " + "BraindanceEditor");
+            newReshadeProfile = "BraindanceEditor";
+        } else if this.isBraindanceON && isBraindanceON {
+            this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceON is True - switching to " + "Braindance");
+            newReshadeProfile = "Braindance";
+        } else if this.effectJohnnyON && isVJAsJohnny {
+            this.showDebugMessage("[ReshadeBridge] refresh: isVJAsJohnny is True - switching to " + "Johnny");
+            newReshadeProfile = "Johnny";
         } else if isImpersonating {
             // Special Reshade profile for cases when there should be no reshade effects applied, e.g. Johnny's eyes, impersonations, etc.
             this.showDebugMessage("[ReshadeBridge] refresh: isImpersonating is True - switching to " + "OFF");
@@ -292,7 +316,7 @@ public class ConditionalOpticsHeartbeatCallback extends DelayCallback {
     }
 
     public func init(player: wref<PlayerPuppet>) -> Void {
-        this.reset(player);
+        this.reset(player); 
     }
 
     public func reset(player: wref<PlayerPuppet>) -> Void {
