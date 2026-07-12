@@ -168,9 +168,11 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
           doResurrect = false;
         }
 
-        // No resurrection if player is in a vehicle
+        // No resurrection if player is in a vehicle - was that ever needed? Resurrection seems to be working in a vehicle as well, so this check is commented out.
         if (IsDefined(_playerPuppetPS.m_santaMuerteTracking.player.m_mountedVehicle))  {
-          doResurrect = false;
+          if (!_playerPuppetPS.m_santaMuerteTracking.deathInVehiclesProtectionON) {
+            doResurrect = false;
+          }
         }
 
         // Certainly no resurrection if Permadeath is set

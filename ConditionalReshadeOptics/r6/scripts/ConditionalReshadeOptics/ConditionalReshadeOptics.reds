@@ -60,14 +60,17 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public let modON: Bool;
     public let heartbeatContinuousON: Bool;
     public let effectVRON: Bool;
-    public let isBraindanceON: Bool;
-    public let isBraindanceEditorON: Bool;
+    public let isArcadeMachineON: Bool;
+
+    public let effectBraindanceON: Bool;
+    public let effectBraindanceEditorON: Bool;
     public let effectJohnnyON: Bool;
     public let effectCyberspaceON: Bool;
     public let effectKiroshiON: Bool;
     public let effectCheapCyberwareON: Bool;
     public let effectGlitchedCyberwareON: Bool;
     public let effectNoCyberwareON: Bool;
+    public let effectArcadeGameON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
         this.reset(player);
@@ -89,14 +92,15 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.modON = this.config.modON;
         this.heartbeatContinuousON = this.config.heartbeatContinuousON;
         this.effectVRON = this.config.effectVRON;
-        this.isBraindanceON = this.config.isBraindanceON;
-        this.isBraindanceEditorON = this.config.isBraindanceEditorON;
+        this.effectBraindanceON = this.config.effectBraindanceON;
+        this.effectBraindanceEditorON = this.config.effectBraindanceEditorON;
         this.effectJohnnyON = this.config.effectJohnnyON;
         this.effectCyberspaceON = this.config.effectCyberspaceON;
         this.effectKiroshiON = this.config.effectKiroshiON;
         this.effectCheapCyberwareON = this.config.effectCheapCyberwareON;
         this.effectGlitchedCyberwareON = this.config.effectGlitchedCyberwareON;
         this.effectNoCyberwareON = this.config.effectNoCyberwareON;
+        this.effectArcadeGameON = this.config.effectArcadeGameON;
     }
 
     public cb func OnModSettingsChange() -> Void {
@@ -143,8 +147,14 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public func refresh() -> Void {
         this.refreshConfig();
 
+        this.refreshReshadeProfile();
+        this.refreshReshadeEffects();
+
+    }
+
+    public func refreshReshadeProfile() -> Void {
         if !this.modON {
-            this.showDebugMessage("[ReshadeBridge] refresh: mod disabled in settings, skipping profile switch.");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: mod disabled in settings, skipping profile switch.");
             return;
         }
 
@@ -199,67 +209,104 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
         let newReshadeProfile: String;
 
-        this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is " + isVRTutorialON );
-        this.showDebugMessage("[ReshadeBridge] refresh: isVJAsJohnny is " + isVJAsJohnny );
-        this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceON is " + isBraindanceON );
-        this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceEditorON is " + isBraindanceEditorON );
-        this.showDebugMessage("[ReshadeBridge] refresh: isVictorHUDInstalled is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") );
-        this.showDebugMessage("[ReshadeBridge] refresh: isPrologueStarted is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVRTutorialON is " + isVRTutorialON );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVJAsJohnny is " + isVJAsJohnny );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isBraindanceON is " + isBraindanceON );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isBraindanceEditorON is " + isBraindanceEditorON );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVictorHUDInstalled is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isPrologueStarted is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") );
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isArcadeMachineON is " + this.isArcadeMachineON );
 
         if !RB_IsRuntimeReady() {
-            this.showDebugMessage("[ReshadeBridge] refresh: forcing a refresh of runtime state. Current profile path: " + RB_GetPreset());
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: forcing a refresh of runtime state. Current profile path: " + RB_GetPreset());
             RB_RefreshRuntime();  // retry if ReShade wasn't loaded yet
         }
         this.reshadeProfilePath = RB_GetPreset();
-        this.showDebugMessage("[ReshadeBridge] refresh: current profile path is " + this.reshadeProfilePath);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: current profile path is " + this.reshadeProfilePath);
 
         if this.effectCyberspaceON && isCyberspaceON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isCyberspaceON is True - switching to " + "Cyberspace");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isCyberspaceON is True - switching to " + "Cyberspace");
             newReshadeProfile = "Cyberspace";
         } else if this.effectVRON && isVRTutorialON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isVRTutorialON is True - switching to " + "VR");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVRTutorialON is True - switching to " + "VR");
             newReshadeProfile = "VR";
-        } else if this.isBraindanceEditorON && isBraindanceEditorON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceEditorON is True - switching to " + "BraindanceEditor");
+        } else if this.effectBraindanceEditorON && isBraindanceEditorON {
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isBraindanceEditorON is True - switching to " + "BraindanceEditor");
             newReshadeProfile = "BraindanceEditor";
-        } else if this.isBraindanceON && isBraindanceON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isBraindanceON is True - switching to " + "Braindance");
+        } else if this.effectBraindanceON && isBraindanceON {
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isBraindanceON is True - switching to " + "Braindance");
             newReshadeProfile = "Braindance";
+        } else if this.effectArcadeGameON && this.isArcadeMachineON {
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isArcadeMachineON is True - switching to " + "Arcade");
+            newReshadeProfile = "Arcade";
         } else if this.effectJohnnyON && isVJAsJohnny {
-            this.showDebugMessage("[ReshadeBridge] refresh: isVJAsJohnny is True - switching to " + "Johnny");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVJAsJohnny is True - switching to " + "Johnny");
             newReshadeProfile = "Johnny";
         } else if isImpersonating {
             // Special Reshade profile for cases when there should be no reshade effects applied, e.g. Johnny's eyes, impersonations, etc.
-            this.showDebugMessage("[ReshadeBridge] refresh: isImpersonating is True - switching to " + "OFF");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isImpersonating is True - switching to " + "OFF");
             newReshadeProfile = "OFF";
         } else if isArasakaUION {
-            this.showDebugMessage("[ReshadeBridge] refresh: isArasakaUION is True - switching to " + "Arasaka");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isArasakaUION is True - switching to " + "Arasaka");
             newReshadeProfile = "Arasaka";
         } else if this.effectKiroshiON && isVictorHUDInstalled {
-            this.showDebugMessage("[ReshadeBridge] refresh: isVictorHUDInstalled is True - switching to " + "Kyroshi");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isVictorHUDInstalled is True - switching to " + "Kyroshi");
             newReshadeProfile = "Kyroshi";
         } else if this.effectGlitchedCyberwareON && isDigitalSicknessON {
-            this.showDebugMessage("[ReshadeBridge] refresh: isDigitalSicknessON is True - switching to " + "RescueGlitched");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isDigitalSicknessON is True - switching to " + "RescueGlitched");
             newReshadeProfile = "RescueGlitched";
         } else if this.effectCheapCyberwareON && isAmmoCounterHidden && isPrologueStarted {
-            this.showDebugMessage("[ReshadeBridge] refresh: isAmmoCounterHidden is True - switching to " + "CheapCyberware");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: isAmmoCounterHidden is True - switching to " + "CheapCyberware");
             newReshadeProfile = "CheapCyberware";
         } else if this.effectNoCyberwareON {
-            this.showDebugMessage("[ReshadeBridge] refresh: default case - switching to " + "NoCyberware");
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: default case - switching to " + "NoCyberware");
             newReshadeProfile = "NoCyberware";
         } else {
-            this.showDebugMessage("[ReshadeBridge] refresh: no enabled profile matched. Keeping current profile " + this.reshadeProfile);
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: no enabled profile matched. Keeping current profile " + this.reshadeProfile);
             return;
         }
 
         if (StrCmp(newReshadeProfile, this.reshadeProfile) != 0) || !(StrContains(this.reshadeProfilePath, this.reshadeProfile)){
-            this.showDebugMessage("[ReshadeBridge] refresh: profile changed from " + this.reshadeProfile + " to " + newReshadeProfile);
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeProfile: profile changed from " + this.reshadeProfile + " to " + newReshadeProfile);
             this.switchProfile(newReshadeProfile);
         }
+
+    }
+
+
+    public func refreshReshadeEffects() -> Void {
+        if !this.modON {
+            this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: mod disabled in settings, skipping Reshade techniques switches.");
+            return;
+        }
+
+        let ses: ref<StatusEffectSystem>;
+        ses = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+
+        let hasExhaustedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerExhausted"); 
+        let hasBleedingEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerBleeding"); 
+        let hasBurningEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerBurning"); 
+        let hasPoisonedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerPoisoned"); 
+        let hasElectrocutedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerElectrocuted"); 
+        let hasEncumberedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");  
+
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasExhaustedEffect is " + hasExhaustedEffect);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasBleedingEffect is " + hasBleedingEffect);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasBurningEffect is " + hasBurningEffect);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasPoisonedEffect is " + hasPoisonedEffect);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasElectrocutedEffect is " + hasElectrocutedEffect);
+        this.showDebugMessage("[ReshadeBridge] refreshReshadeEffects: hasEncumberedEffect is " + hasEncumberedEffect);
+ 
+        this.switchTechnique("GanossaMotionFocus", hasExhaustedEffect);
+        this.switchTechnique("AdaptiveColorGrading", hasBleedingEffect);
+        this.switchTechnique("DeepFry", hasBurningEffect);
+        this.switchTechnique("HueFX", hasPoisonedEffect);
+        this.switchTechnique("ASCII", hasElectrocutedEffect);
+        this.switchTechnique("TiltShift", hasEncumberedEffect);
 
     }
 
@@ -280,6 +327,13 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         } else {
             this.reshadeProfile = profileName;
             this.showDebugMessage("[ReshadeBridge] switchProfile: switched to profile V-" + profileName + ".ini");
+        }
+    }
+
+    public func switchTechnique(techniqueName: String, enable: Bool) -> Void {
+        let ok = RB_SetTechniqueEnabled(techniqueName, enable);
+        if !ok {
+            this.showDebugMessage("[ReshadeBridge] switchTechnique: " + techniqueName + " technique not found.");
         }
     }
 

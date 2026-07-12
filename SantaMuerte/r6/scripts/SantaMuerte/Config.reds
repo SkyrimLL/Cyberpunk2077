@@ -247,6 +247,13 @@
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Safeguards")
   @runtimeProperty("ModSettings.category.order", "51")
+  @runtimeProperty("ModSettings.displayName", "Protection from Death in Vehicles")
+  @runtimeProperty("ModSettings.description", "Turn ON to allow resurrections in vehicles.")
+  let deathInVehiclesProtectionON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Safeguards")
+  @runtimeProperty("ModSettings.category.order", "52")
   @runtimeProperty("ModSettings.displayName", "Allow death when V is Johnny")
   @runtimeProperty("ModSettings.description", "Turn OFF for infinite resurrection (but no teleport) when V is Johnny.")
   let deathWhenImpersonatingJohnnyON: Bool = true;

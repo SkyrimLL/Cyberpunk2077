@@ -35,17 +35,24 @@ public class ConditionalReshadeOpticsConfig {
 
     @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
     @runtimeProperty("ModSettings.category", "Effect detection")
+    @runtimeProperty("ModSettings.category.order", "21")
+    @runtimeProperty("ModSettings.displayName", "Enable arcade game profile")
+    @runtimeProperty("ModSettings.description", "Allow profile switching to Arcade Game when arcade game is detected.")
+    let effectArcadeGameON: Bool = true;
+
+    @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
+    @runtimeProperty("ModSettings.category", "Effect detection")
     @runtimeProperty("ModSettings.category.order", "22")
     @runtimeProperty("ModSettings.displayName", "Enable braindance profile")
     @runtimeProperty("ModSettings.description", "Allow profile switching to Braindance when braindance is detected in View mode.")
-    let isBraindanceON: Bool = true;
+    let effectBraindanceON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
     @runtimeProperty("ModSettings.category", "Effect detection")
     @runtimeProperty("ModSettings.category.order", "22")
     @runtimeProperty("ModSettings.displayName", "Enable braindance editor profile")
     @runtimeProperty("ModSettings.description", "Allow profile switching to BraindanceEditor when braindance editor is detected.")
-    let isBraindanceEditorON: Bool = true;
+    let effectBraindanceEditorON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
     @runtimeProperty("ModSettings.category", "Effect detection")

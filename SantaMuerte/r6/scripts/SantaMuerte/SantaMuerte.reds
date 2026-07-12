@@ -31,6 +31,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let scaleResurrectionsModifier: Float;
   public let capResurrectionsOverride: Int32;
   public let deathLandingProtectionON: Bool;
+  public let deathInVehiclesProtectionON: Bool;
   public let skipTimeON: Bool;
   public let minSkippedTime: Float;
   public let maxSkippedTime: Float;
@@ -109,6 +110,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.capResurrectionsOverride = this.config.capResurrectionsOverride;
     this.unlimitedResurrectON = this.config.unlimitedResurrectON;
     this.deathLandingProtectionON = this.config.deathLandingProtectionON;
+    this.deathInVehiclesProtectionON = this.config.deathInVehiclesProtectionON;
     this.skipTimeON = this.config.skipTimeON;
     this.blackoutON = this.config.blackoutON;
     this.darkFutureEffectON = this.config.darkFutureEffectON; 
