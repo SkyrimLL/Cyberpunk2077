@@ -28,6 +28,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public let immunityHeistEscapeON: Bool;
     public let immunityActTransitionON: Bool;
     public let immunityDFTRON: Bool;
+    public let immunityPanamChaseON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
         this.reset(player);
@@ -59,6 +60,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.immunityHeistEscapeON   = this.config.immunityHeistEscapeON;
         this.immunityActTransitionON = this.config.immunityActTransitionON;
         this.immunityDFTRON          = this.config.immunityDFTRON;
+        this.immunityPanamChaseON    = this.config.immunityPanamChaseON;
     }
 
     public cb func OnModSettingsChange() -> Void {
@@ -197,6 +199,15 @@ public class CinematicImmunity extends ScriptedPuppetPS {
                                      && qs.GetFact(n"q115_started") >= 1
                                      && qs.GetFact(n"q115_done") < 1;
 
+        // Riders on the Storm: car chase after rescuing Saul from the Raffen Shiv camp.
+        // sq004_saul_rescued is set the moment Saul is freed (sq004_03_raffen_shiv_camp phase).
+        // sq004_no_chase is a branch flag set when the chase is skipped; guard against it.
+        // sq004_chase_done is set at the end of sq004_07_chase.scene when the van escape concludes.
+        let isPanamChase: Bool = this.immunityPanamChaseON
+                               && qs.GetFact(n"sq004_saul_rescued") >= 1
+                               && qs.GetFact(n"sq004_no_chase") < 1
+                               && qs.GetFact(n"sq004_chase_done") < 1;
+
         // ── Decision ─────────────────────────────────────────────────────────
 
         this.showDebugMessage("[CinematicImmunity] -----");
@@ -211,6 +222,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.showDebugMessage("[CinematicImmunity] isHeistEscape=" + BoolToString(isHeistEscape));
         this.showDebugMessage("[CinematicImmunity] isActTransition=" + BoolToString(isActTransition));
         this.showDebugMessage("[CinematicImmunity] isDontFearTheReaper=" + BoolToString(isDontFearTheReaper));
+        this.showDebugMessage("[CinematicImmunity] isPanamChase=" + BoolToString(isPanamChase));
 
         let shouldBeImmune: Bool = isVRTutorial
                                 || isJohnnyPossession
@@ -222,7 +234,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
                                 || isInScene
                                 || isHeistEscape
                                 || isActTransition
-                                || isDontFearTheReaper;
+                                || isDontFearTheReaper
+                                || isPanamChase;
 
         this.showDebugMessage("[CinematicImmunity] shouldBeImmune=" + BoolToString(shouldBeImmune));
 
@@ -268,7 +281,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     }
 
     private func showDebugMessage(debugMessage: String) {
-       LogChannel(n"DEBUG", debugMessage ); 
+       // LogChannel(n"DEBUG", debugMessage ); 
     }
 }
 
