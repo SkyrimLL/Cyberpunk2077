@@ -1,4 +1,0 @@
-Vehicle.vehicle_list.list: 
-  - !append Vehicle.Chevillon
-  - !append Vehicle.chevillon_thrax_offer
-  - !append Vehicle.chevallion_emperor_police_offer

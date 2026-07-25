@@ -36,6 +36,17 @@
     };
   }
 
+@addMethod(VehiclesManagerPopupGameController)
+public func forceRefreshVehicleList() -> Void {
+  // m_dataSource.Reset() repopulates the popup's virtual list from a live
+  // GetPlayerUnlockedVehicles() query.  Called after wrappedMethod() so that
+  // any vehicle registration that settled asynchronously after SetupData() ran
+  // inside super.OnPlayerAttach() is captured.
+  if IsDefined(this.m_dataSource) {
+    this.m_dataSource.Reset(VehiclesManagerDataHelper.GetVehicles(this.m_playerPuppet));
+  }
+}
+
 @wrapMethod(VehiclesManagerPopupGameController)
 
   protected cb func OnPlayerAttach(playerPuppet: ref<GameObject>) -> Bool {
@@ -45,9 +56,25 @@
 
     _playerPuppetPS.m_claimedVehicleTracking.refreshConfig(); 
 
+    // Re-register all claimed vehicles in the game's vehicle system before
+    // wrappedMethod calls SetupData() -> GetPlayerUnlockedVehicles().
+    // The game engine can evict NPC-origin vehicles between the claim event
+    // and popup open, so they must be re-asserted here to appear in the list.
+    _playerPuppetPS.m_claimedVehicleTracking.reapplyClaimedVehicles();
+
+    // Apply current summon mode restrictions (Last/Random/etc.) after re-registration.
     _playerPuppetPS.m_claimedVehicleTracking.refreshGarage();
 
     wrappedMethod(playerPuppet);
+
+    // SetupData() (called inside super.OnPlayerAttach inside wrappedMethod) may have
+    // snapshotted the vehicle list before TogglePlayerActiveVehicle finished committing
+    // to the vehicle system.  Force one more reset now that all initialization has run.
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state after wrappedMethod:");
+      _playerPuppetPS.m_claimedVehicleTracking.printGarage();
+    }
+    this.forceRefreshVehicleList();
 }
 
 //public class scannerDetailsGameController extends inkHUDGameController {

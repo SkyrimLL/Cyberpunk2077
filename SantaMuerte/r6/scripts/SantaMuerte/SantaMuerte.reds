@@ -55,6 +55,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let hardcoreDetourRobbedClothingChance: Int32;
   public let hardcoreDetourRobbedMoneyPercent: Int32;
 
+  public let stolenCyberwareCount: Int32;
+
   public let config: ref<SantaMuerteConfig>;
 
   public let unlimitedResurrectON: Bool; 
@@ -1301,7 +1303,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }
-        if (randNum < 20) {
+        if (randNum < 40) && (!isAutomaticLoveCompleted)  {
           // Tyger Claw's Cages Hideout
           position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
           rotation = playerForwardAngle;
@@ -1369,7 +1371,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           isDestinationFound = true;
           triggerRobPlayer = false;
         }
-        if (randNum <= 20) {
+        if (randNum < 80) {
           // Trash Dump
           position = new Vector4(2329.168, -1826.530, 79.302, 1.000000);
           rotation = playerForwardAngle;
@@ -1386,7 +1388,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           isDestinationFound = true;
           triggerRobPlayer = false;
         }
-        if (randNum <= 20) {
+        if (randNum < 80) {
           // Gas station with Wraiths
           position = new Vector4(-1705.800, -5016.451, 80.346, 1.000000);
           rotation = playerForwardAngle;
@@ -1572,13 +1574,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       case "Maelstrom":
         randNum = RandRange(0,100);
 
-        if (randNum >= 40) {
+        if (randNum >= 60) {
           // Creepy Maelstrom BD shack 
           position = new Vector4(-1006.454, 3378.892, 8.540, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
         } 
-        if  (randNum >= 20) && (randNum < 40) {
+        if  (randNum >= 40) && (randNum < 60) {
           // Northside warehouse
           position = new Vector4(-1048.417, 3125.615, 7.118, 1.000000);
           rotation = playerForwardAngle;
@@ -1591,7 +1593,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           isDestinationFound = true;
           stripCyberware = true;
         }
-        if  (randNum >= 20) && (randNum < 40) {
+        if (randNum < 20) {
           // Northside containers
           position = new Vector4(-1245.751, 2717.268, 7.294, 1.000000);
           rotation = playerForwardAngle;
@@ -1696,13 +1698,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
           isDestinationFound = true;
           stripCyberware = true;
         }
-        if  (randNum >= 20) && (randNum < 90)  {
+        if  (randNum >= 40) && (randNum < 90)  {
           // Tyger Claw's Cages Hideout
           position = new Vector4(-529.289, 521.130, 18.297, 1.000000);
           rotation = playerForwardAngle;
           isDestinationFound = true;
         }  
-        if  (randNum >= 20) && (randNum < 40)  {
+        if (randNum < 40)  {
           // Japantown reservoir
           position = new Vector4(-576.191, 994.016, 11.908, 1.000000);
           rotation = playerForwardAngle;
@@ -1957,7 +1959,10 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     let training_bot: Bool = Equals(this.lastInstigatorName, "Training Bot");
 
-    if endgame || dogtown || isImpersonating || isInNamedDistrict || paused || noTimeSkip || noFastTravel || scene || mounted || swimming || carrying || lore_animation || training_bot {
+    if endgame || dogtown || isImpersonating || isInNamedDistrict || paused || noTimeSkip 
+    // 2026-07-21 - Disabling scene check for now, as it is too restrictive and prevents teleporting if combat is still ongoing after a scene ends.  Will need to find a better way to check for combat state.
+    // || noFastTravel || scene 
+    || mounted || swimming || carrying || lore_animation || training_bot {
       this.showDebugMessage( s">>> Santa Muerte: Teleport canceled: ");
       this.showDebugMessage( s">>>    Endgame \(endgame)"); 
       this.showDebugMessage( s">>>    dogtown \(dogtown)"); 
@@ -2105,24 +2110,38 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   }
 
   public final func disposeItems(itemList: array<ItemID>, stripCyberware: Bool) -> Void {
-    let i: Int32; 
+    let item_count: Int32; 
     let item: ItemModParams;
     let m_inventoryManager: wref<InventoryDataManagerV2> = EquipmentSystem.GetData(this.player).GetInventoryManager();
+
+    this.stolenCyberwareCount = 0;
 
     // Add chance of rest of inventory being stolen
     for itemData in m_inventoryManager.GetPlayerInventoryData() { 
       let itemID = itemData.ID;
 
-      if this.IsValidItem(itemData, stripCyberware) {
-        if (RandRange(1,100) <= this.hardcoreDetourRobbedClothingChance) {
+      if (RandRange(1,100) <= this.hardcoreDetourRobbedClothingChance) {
+        if this.IsValidItem(itemData, stripCyberware) {
           // Tentative solution to record list of lost items
           // ArrayPush(this.m_storedItems, itemID);
      
           GameInstance.GetTransactionSystem(this.player.GetGame()).RemoveItem(this.player, itemID, 1);
+          item_count += 1;
 
         }
 
       }
+    }
+
+    if (this.stolenCyberwareCount > 0) {
+      let message: String = SantaMuerteText.HARVESTED();
+
+      this.player.SetWarningMessage(message, SimpleMessageType.Relic);  
+
+      this.showDebugMessage( ">>> Santa Muerte: disposeItems: " + IntToString(this.stolenCyberwareCount) + " items stolen" );
+      this.stolenCyberwareCount = 0;
+    } else {
+      this.showDebugMessage( ">>> Santa Muerte: disposeItems: no items stolen" );
     }
  
   }
@@ -2144,6 +2163,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     if (RPGManager.IsItemCyberware(itemData.ID)) || (RPGManager.IsItemTypeCyberwareWeapon(itemType)) {
       if ((stripCyberware) && (this.hardcoreStealCyberwareON)) {
         isValid = true;
+        this.stolenCyberwareCount += 1;
       } else {
         isValid = false;
       }

@@ -16,18 +16,32 @@ public class CinematicImmunityConfig {
     // ── Scene detection ──────────────────────────────────────────────────────
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
-    @runtimeProperty("ModSettings.category", "Scene Detection")
+    @runtimeProperty("ModSettings.category", "Character Impersonation")
     @runtimeProperty("ModSettings.category.order", "10")
     @runtimeProperty("ModSettings.displayName", "Johnny possession")
-    @runtimeProperty("ModSettings.description", "Grant immunity during Johnny Silverhand possession sequences (Character.johnny_replacer).")
+    @runtimeProperty("ModSettings.description", "Grant immunity during Johnny Silverhand possession sequences.")
     public let immunityJohnnyON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
-    @runtimeProperty("ModSettings.category", "Scene Detection")
+    @runtimeProperty("ModSettings.category", "Character Impersonation")
     @runtimeProperty("ModSettings.category.order", "11")
-    @runtimeProperty("ModSettings.displayName", "Generic scene tiers (SceneTier3-5)")
-    @runtimeProperty("ModSettings.description", "Grant immunity when the game's high-level PSM is in SceneTier3, 4, or 5, or when time-skip / fast-travel is blocked by a scene restriction.")
-    public let immunityInSceneON: Bool = true;
+    @runtimeProperty("ModSettings.displayName", "Kurt Hanssen impersonation")
+    @runtimeProperty("ModSettings.description", "Grant immunity during Kurt Hanssen impersonation sequences.")
+    public let immunityKurtHanssenON: Bool = true;
+
+    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    @runtimeProperty("ModSettings.category", "Character Impersonation")
+    @runtimeProperty("ModSettings.category.order", "12")
+    @runtimeProperty("ModSettings.displayName", "Aguilar / Assassin impersonation")
+    @runtimeProperty("ModSettings.description", "Grant immunity during Aguilar / Assassin impersonation sequences.")
+    public let immunityAguilarAssassinON: Bool = true;
+
+    // @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    // @runtimeProperty("ModSettings.category", "Scene Detection")
+    // @runtimeProperty("ModSettings.category.order", "11")
+    // @runtimeProperty("ModSettings.displayName", "Generic scene tiers (SceneTier3-5)")
+    // @runtimeProperty("ModSettings.description", "Grant immunity when the game's high-level PSM is in SceneTier3, 4, or 5, or when time-skip / fast-travel is blocked by a scene restriction.")
+    public let immunityInSceneON: Bool = false;
 
     // ── Cyberspace and Braindance ─────────────────────────────────────────────
 
@@ -64,27 +78,34 @@ public class CinematicImmunityConfig {
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")
     @runtimeProperty("ModSettings.category.order", "31")
-    @runtimeProperty("ModSettings.displayName", "Nomad / Street Kid prologue")
-    @runtimeProperty("ModSettings.description", "Grant immunity during the Nomad and Street Kid lifepath prologues (before The Rescue begins).")
-    public let immunityNomadSKPrologueON: Bool = true;
+    @runtimeProperty("ModSettings.displayName", "Nomad prologue")
+    @runtimeProperty("ModSettings.description", "Grant immunity during the Nomad lifepath prologue (before The Rescue begins).")
+    public let immunityNomadPrologueON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")
     @runtimeProperty("ModSettings.category.order", "32")
+    @runtimeProperty("ModSettings.displayName", "Street Kid prologue")
+    @runtimeProperty("ModSettings.description", "Grant immunity during the Street Kid lifepath prologue (before The Rescue begins).")
+    public let immunityStreetKidPrologueON: Bool = true;
+
+    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    @runtimeProperty("ModSettings.category", "Prologue Scenes")
+    @runtimeProperty("ModSettings.category.order", "33")
     @runtimeProperty("ModSettings.displayName", "The Rescue: wakeup & car chase")
     @runtimeProperty("ModSettings.description", "Grant immunity during The Rescue's digital-sickness scene and the subsequent car chase with Jackie, up to Viktor's ripperdoc visit.")
     public let immunityRescueSceneON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")
-    @runtimeProperty("ModSettings.category.order", "33")
+    @runtimeProperty("ModSettings.category.order", "34")
     @runtimeProperty("ModSettings.displayName", "The Heist: Konpeki Plaza escape")
     @runtimeProperty("ModSettings.description", "Grant immunity during the escape car chase after The Heist goes wrong, from chip acquisition until the quest concludes at No Tell Motel.")
     public let immunityHeistEscapeON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")
-    @runtimeProperty("ModSettings.category.order", "34")
+    @runtimeProperty("ModSettings.category.order", "35")
     @runtimeProperty("ModSettings.displayName", "Act 1 -> Act 2 transition")
     @runtimeProperty("ModSettings.description", "Grant immunity during the No Tell Motel sequence through the H10 apartment scene with Johnny, between The Heist completing and Playing for Time beginning.")
     public let immunityActTransitionON: Bool = true;
@@ -112,6 +133,5 @@ public class CinematicImmunityConfig {
 
     public func RegisterMyListeners() -> Void {
         ModSettings.RegisterListenerToClass(this);
-        ModSettings.RegisterListenerToModifications(this);
     }
 }

@@ -93,8 +93,6 @@ public class ConditionalReshadeOpticsConfig {
     public func RegisterMyListeners() {
         // Automatically updates your class variables when changed in the UI
         ModSettings.RegisterListenerToClass(this);
-        
-        // Essential: Tells Mod Settings to trigger callbacks on this object
-        ModSettings.RegisterListenerToModifications(this);
+
     }
 }

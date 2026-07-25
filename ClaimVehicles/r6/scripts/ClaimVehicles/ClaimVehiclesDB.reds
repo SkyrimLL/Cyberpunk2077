@@ -105,7 +105,7 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
     // Add vehicle to unlocked state array if not defined yet
     if (!this.isVehicleUnlockStateDefined(_id)) {
       ArrayPush(this.vehiclesUnlockStateDB, VehicleUnlockState.createItem(_id, _state));
-      // LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehiclesUnlockStateDB)) + " in vehicles unlock history.");
+      this.showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehiclesUnlockStateDB)) + " in vehicles unlock history.");
 
     } else {
       for thisVehicle in this.vehiclesUnlockStateDB { 
@@ -121,7 +121,7 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
     // Add vehicle to unlocked state array if not defined yet
     if (!this.isVehicleUnlockStateDefined(_id)) {
       // ArrayPush(this.vehiclesUnlockStateDB, VehicleUnlockState.createItem(_id, _state));
-      // LogChannel(n"DEBUG", ">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehiclesUnlockStateDB)) + " in vehicles unlock history.");
+      this.showDebugMessage(">>> N.C.L.A.I.M:  " + ToString(ArraySize(this.vehiclesUnlockStateDB)) + " in vehicles unlock history.");
 
     } else {
       for thisVehicle in this.vehiclesUnlockStateDB { 

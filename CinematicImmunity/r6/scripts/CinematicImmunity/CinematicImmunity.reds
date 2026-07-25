@@ -19,8 +19,11 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public let modON: Bool;
     public let immunityVRTutorialON: Bool;
     public let immunityJohnnyON: Bool;
+    public let immunityAguilarAssassinON: Bool;
+    public let immunityKurtHanssenON: Bool;
     public let immunityCorpoIntroON: Bool;
-    public let immunityNomadSKPrologueON: Bool;
+    public let immunityNomadPrologueON: Bool;
+    public let immunityStreetKidPrologueON: Bool;
     public let immunityRescueSceneON: Bool;
     public let immunityCyberspaceON: Bool;
     public let immunityBraindanceON: Bool;
@@ -31,12 +34,13 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public let immunityPanamChaseON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
+        ModSettings.RegisterListenerToModifications(this);
         this.reset(player);
     }
 
     public func reset(player: wref<PlayerPuppet>) -> Void {
         this.player = player;
-        this.immunityActive = false;
+        this.removeImmunity();
         this.refreshConfig();
         this.refresh();
     }
@@ -51,8 +55,11 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.modON                   = this.config.modON;
         this.immunityVRTutorialON    = this.config.immunityVRTutorialON;
         this.immunityJohnnyON        = this.config.immunityJohnnyON;
+        this.immunityAguilarAssassinON    = this.config.immunityAguilarAssassinON;
+        this.immunityKurtHanssenON   = this.config.immunityKurtHanssenON;
         this.immunityCorpoIntroON    = this.config.immunityCorpoIntroON;
-        this.immunityNomadSKPrologueON = this.config.immunityNomadSKPrologueON;
+        this.immunityNomadPrologueON    = this.config.immunityNomadPrologueON;
+        this.immunityStreetKidPrologueON = this.config.immunityStreetKidPrologueON;
         this.immunityRescueSceneON   = this.config.immunityRescueSceneON;
         this.immunityCyberspaceON    = this.config.immunityCyberspaceON;
         this.immunityBraindanceON    = this.config.immunityBraindanceON;
@@ -65,10 +72,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
 
     public cb func OnModSettingsChange() -> Void {
         this.showDebugMessage("[CinematicImmunity] Settings changed – applying update.");
-        this.refreshConfig();
-        if !this.modON && this.immunityActive {
-            this.removeImmunity();
-        };
+        this.refreshConfig(); 
         this.refresh();
     }
 
@@ -96,13 +100,18 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     }
 
     public func refresh() -> Void {
+        if this.modON {
+            this.startHeartbeatIfNeeded();
+        } else {
+            this.stopHeartbeat();
+        }
         this.refreshImmunity();
     }
 
     // Evaluate all scene conditions and apply / remove god-mode immunity as needed.
     public func refreshImmunity() -> Void {
         if !this.modON {
-            if this.immunityActive { this.removeImmunity(); };
+            this.removeImmunity(); 
             return;
         };
 
@@ -132,6 +141,15 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         let isJohnnyPossession: Bool = this.immunityJohnnyON
                                     && Equals(controlledObjRecordID, t"Character.johnny_replacer");
 
+        // Kurt Hanssen impersonation sequences
+        let isKurtHanssenImpersonation: Bool = this.immunityKurtHanssenON
+                                             && Equals(controlledObjRecordID, t"Character.kurt_replacer");
+
+        // Aguilar assassin impersonation sequences
+        let isAguilarAssassinImpersonation: Bool = this.immunityAguilarAssassinON
+                                                 && ( Equals(controlledObjRecordID, t"Character.mq304_assassin_replacer_male")
+                                                 || Equals(controlledObjRecordID, t"Character.mq304_assassin_replacer_female") );
+
         // ── Quest-fact checks ────────────────────────────────────────────────
 
         // Corpo lifepath: Arasaka UI is active during the intro boardroom scene
@@ -139,12 +157,14 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         let isCorpoIntro: Bool = this.immunityCorpoIntroON
                                && qs.GetFact(n"q000_var_arasaka_ui_on") >= 1;
 
-        // Nomad / Street Kid lifepath prologue: lifepath flag is set but The Rescue
-        // (q001) has not yet started.  q000_nomad / q000_street_kid are set at the
-        // very start of those prologues.
-        let isNomadOrSKPrologue: Bool = this.immunityNomadSKPrologueON
-                                      && (qs.GetFact(n"q000_nomad") >= 1
-                                      || qs.GetFact(n"q000_street_kid") >= 1)
+        // Nomad lifepath prologue: lifepath flag is set but The Rescue (q001) has not yet started.
+        let isNomadPrologue: Bool = this.immunityNomadPrologueON
+                                  && qs.GetFact(n"q000_nomad") >= 1
+                                  && qs.GetFact(n"q001_active") < 1;
+
+        // Street Kid lifepath prologue: lifepath flag is set but The Rescue (q001) has not yet started.
+        let isStreetKidPrologue: Bool = this.immunityStreetKidPrologueON
+                                      && qs.GetFact(n"q000_street_kid") >= 1
                                       && qs.GetFact(n"q001_active") < 1;
 
         // The Rescue: digital-sickness / wakeup sequence.
@@ -153,7 +173,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         // on all save states, so we use the ripperdoc gate as a broader guard.
         let isRescueScene: Bool = this.immunityRescueSceneON
                                 && qs.GetFact(n"q001_active") >= 1
-                                && qs.GetFact(n"q001_ripperdoc_done") < 1;
+                                && qs.GetFact(n"q001_aft_maxtac_scene") < 1
+                                && qs.GetFact(n"q001_aft_maxtac_scene_skip") < 1;
 
         // Cyberspace / net-dive sequences
         let isCyberspace: Bool = this.immunityCyberspaceON
@@ -169,27 +190,36 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         // let isCarChase: Bool = qs.GetFact(n"car_chase_on") >= 1;
 
         // V in scene: active during specific in-game scenes, as determined by the high-level state machine tier.
-        let isInScene: Bool = this.immunityInSceneON
-                           && (scene || noTimeSkip || noFastTravel);
+        // Disabled for now, as it is too restrictive and prevents teleporting if combat is still ongoing after a scene ends.  Will need to find a better way to check for combat state.
+        // let isInScene: Bool = this.immunityInSceneON
+        //                           && (scene || noTimeSkip || noFastTravel);
 
         // ── Story-specific narrow windows ────────────────────────────────────
 
-        // The Heist escape: from the moment the Relic chip enters V's head (confirmed
-        // working fact, perksMain.swift) until the quest concludes (q005_done confirmed).
-        // Covers the Konpeki Plaza car chase and ride to No Tell Motel.
+        // The Heist escape: from the moment V boards the Delamain for the getaway
+        // (q005_ride_to_notell, set in q005_07_garage.questphase when the garage
+        // car-chase escape begins and the ride to No Tell Motel starts) until the
+        // quest concludes (q005_done confirmed).
         let isHeistEscape: Bool = this.immunityHeistEscapeON
-                                && qs.GetFact(n"q005_johnny_chip_acquired") >= 1
+                                && qs.GetFact(n"q005_ride_to_notell") >= 1
                                 && qs.GetFact(n"q005_done") < 1;
 
         // Act 1 → Act 2 transition: No Tell Motel through the H10 apartment scene
-        // with Johnny, until Playing for Time (q101) is tracked as active.
-        // q005_done is confirmed working. q101_active mirrors the q001_active pattern.
+        // with Johnny, until V reaches the pills in the H10 apartment.
+        // q005_done is confirmed working.
+        // Primary end gate: q101_v_reached_pills fires in q101_07c_johnny_triggers.scene
+        // when V physically reaches the pills (early in the apartment wakeup scene).
+        // Backup end gate: q101_08_takemura_hmm fires in q101_08_takemura_v_room.scene
+        // (Takemura's phone call, a separate scene), in case the primary does not fire.
+        // Immunity lifts as soon as either fact is set.
         let isActTransition: Bool = this.immunityActTransitionON
                                  && qs.GetFact(n"q005_done") >= 1
-                                 && qs.GetFact(n"q101_talking_to_johnny_end") < 1;
+                                 && qs.GetFact(n"q101_v_reached_pills") < 1
+                                 && qs.GetFact(n"q101_08_takemura_hmm") < 1;
 
-        this.showDebugMessage("[CinematicImmunity] q005_done=" + qs.GetFact(n"q005_done"));
-        this.showDebugMessage("[CinematicImmunity] q101_talking_to_johnny_end=" + qs.GetFact(n"q101_talking_to_johnny_end"));
+        // this.showDebugMessage("[CinematicImmunity] q005_done=" + qs.GetFact(n"q005_done"));
+        // this.showDebugMessage("[CinematicImmunity] q101_v_reached_pills=" + qs.GetFact(n"q101_v_reached_pills"));
+        // this.showDebugMessage("[CinematicImmunity] q101_08_takemura_hmm=" + qs.GetFact(n"q101_08_takemura_hmm"));
 
         // (Don't Fear) The Reaper: V assaults Arasaka Tower in q115.
         // Covers both the Rogue-assisted ending and the solo DFTR variant.
@@ -214,11 +244,12 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.showDebugMessage("[CinematicImmunity] isVRTutorial=" + BoolToString(isVRTutorial));
         this.showDebugMessage("[CinematicImmunity] isJohnnyPossession=" + BoolToString(isJohnnyPossession));
         this.showDebugMessage("[CinematicImmunity] isCorpoIntro=" + BoolToString(isCorpoIntro));
-        this.showDebugMessage("[CinematicImmunity] isNomadOrSKPrologue=" + BoolToString(isNomadOrSKPrologue));
+        this.showDebugMessage("[CinematicImmunity] isNomadPrologue=" + BoolToString(isNomadPrologue));
+        this.showDebugMessage("[CinematicImmunity] isStreetKidPrologue=" + BoolToString(isStreetKidPrologue));
         this.showDebugMessage("[CinematicImmunity] isRescueScene=" + BoolToString(isRescueScene));
         this.showDebugMessage("[CinematicImmunity] isCyberspace=" + BoolToString(isCyberspace));
         this.showDebugMessage("[CinematicImmunity] isBraindance=" + BoolToString(isBraindance));
-        this.showDebugMessage("[CinematicImmunity] isInScene=" + BoolToString(isInScene));
+        // this.showDebugMessage("[CinematicImmunity] isInScene=" + BoolToString(isInScene));
         this.showDebugMessage("[CinematicImmunity] isHeistEscape=" + BoolToString(isHeistEscape));
         this.showDebugMessage("[CinematicImmunity] isActTransition=" + BoolToString(isActTransition));
         this.showDebugMessage("[CinematicImmunity] isDontFearTheReaper=" + BoolToString(isDontFearTheReaper));
@@ -227,11 +258,11 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         let shouldBeImmune: Bool = isVRTutorial
                                 || isJohnnyPossession
                                 || isCorpoIntro
-                                || isNomadOrSKPrologue
+                                || isNomadPrologue
+                                || isStreetKidPrologue
                                 || isRescueScene
                                 || isCyberspace
                                 || isBraindance
-                                || isInScene
                                 || isHeistEscape
                                 || isActTransition
                                 || isDontFearTheReaper
@@ -249,7 +280,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public func applyImmunity() -> Void {
         if !IsDefined(this.player) {
             return;
-        }
+        } 
+
         GameInstance.GetGodModeSystem(this.player.GetGame()).AddGodMode(
             this.player.GetEntityID(),
             gameGodModeType.Invulnerable,
@@ -260,13 +292,15 @@ public class CinematicImmunity extends ScriptedPuppetPS {
             t"BaseStatusEffect.Invulnerable"
         );
         this.immunityActive = true;
+        GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("ConditionalImmunityStatus", 1);
         this.showDebugMessage("[CinematicImmunity] Invulnerability granted.");
     }
 
     public func removeImmunity() -> Void {
         if !IsDefined(this.player) {
             return;
-        }
+        } 
+
         GameInstance.GetGodModeSystem(this.player.GetGame()).RemoveGodMode(
             this.player.GetEntityID(),
             gameGodModeType.Invulnerable,
@@ -277,6 +311,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
             t"BaseStatusEffect.Invulnerable"
         );
         this.immunityActive = false;
+        GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("ConditionalImmunityStatus", 0);
         this.showDebugMessage("[CinematicImmunity] Invulnerability removed.");
     }
 

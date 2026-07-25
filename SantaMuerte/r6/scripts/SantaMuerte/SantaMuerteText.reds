@@ -13,4 +13,6 @@ public class SantaMuerteText {
 
   public static func SAFETELEPORTFEE() -> String { return "Safety Extraction Processing Fee: %VAL%"; } 
 
+  public static func HARVESTED() -> String { return "You discover with horror that some of your cyberware was carved out of your body."; } 
+
 }
