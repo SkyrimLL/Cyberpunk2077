@@ -1,14 +1,5 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.Thorton
-  - !append Vehicle.thorton_colby_nomad_missiles_offer
-  - !append Vehicle.thorton_colby_offer
-  - !append Vehicle.thorton_colby_pickup_nomad_offer
-  - !append Vehicle.thorton_colby_pickup_offer
-  - !append Vehicle.thorton_galena_nomad_missiles_offer
-  - !append Vehicle.thorton_galena_nomad_offer
-  - !append Vehicle.thorton_galena_offer
-  - !append Vehicle.thorton_mackinaw_offer
-  - !append Vehicle.thorton_merrimac_offer
+  - !append Vehicle.Thorton 
   - !append Vehicle.thorton_poor_open_trunk
   - !append Vehicle.aldecado_thorton_colby_heat_3
   - !append Vehicle.aldecado_thorton_galena_heat_1
@@ -149,3 +140,20 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard3_thorton_mackinaw_sixth_street
   - !append Vehicle.v_standard3_thorton_mackinaw_valentinos
   - !append Vehicle.v_utility4_thorton_mackinaw_bmf 
+  - !append Vehicle.v_standard25_thorton_colby_nomad_player
+  - !append Vehicle.v_standard25_thorton_colby_nomad_player_missiles
+  - !append Vehicle.v_standard25_thorton_colby_pickup_02_player
+  - !append Vehicle.v_standard25_thorton_colby_pickup_kurtz_player
+  - !append Vehicle.v_standard25_thorton_colby_pickup_player
+  - !append Vehicle.v_standard25_thorton_merrimac_player
+  - !append Vehicle.v_standard2_thorton_colby_gt_player
+  - !append Vehicle.v_standard2_thorton_colby_player
+  - !append Vehicle.v_standard2_thorton_galena_bobas_player
+  - !append Vehicle.v_standard2_thorton_galena_gt_player
+  - !append Vehicle.v_standard2_thorton_galena_nomad_player
+  - !append Vehicle.v_standard2_thorton_galena_nomad_player_missiles
+  - !append Vehicle.v_standard2_thorton_galena_player
+  - !append Vehicle.v_standard3_thorton_mackinaw_02_player
+  - !append Vehicle.v_standard3_thorton_mackinaw_ncu_player
+  - !append Vehicle.v_standard3_thorton_mackinaw_player
+  - !append Vehicle.v_utility4_thorton_mackinaw_bmf_player

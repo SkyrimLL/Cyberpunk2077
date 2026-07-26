@@ -1,6 +1,5 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.Mahir
-  - !append Vehicle.mahir_supron_offer
+  - !append Vehicle.Mahir 
   - !append Vehicle.cs_savable_mahir_mt28_coach
   - !append Vehicle.cs_savable_mahir_supron
   - !append Vehicle.cs_savable_mahir_supron_kurtz
@@ -15,6 +14,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.mws_mahir_supron_kurtz
   - !append Vehicle.mws_mahir_voodoo_boys
   - !append Vehicle.q000_nomad_v_standard25_mahir_supron_quest
+  - !append Vehicle.mahir_poor_open_trunk_open_right_door
   - !append Vehicle.v_mahir_mt28_coach
   - !append Vehicle.v_standard25_mahir_mox
   - !append Vehicle.v_standard25_mahir_supron
@@ -30,3 +30,6 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard3_mahir_supron_kurtz_basic_mq304
   - !append Vehicle.v_standard3_mahir_supron_kurtz_overlander 
   - !append Vehicle.v_standard3_mahir_supron_kurtz_prevention
+  - !append Vehicle.v_standard25_mahir_supron_gt_player
+  - !append Vehicle.v_standard25_mahir_supron_player
+  - !append Vehicle.v_standard3_mahir_supron_kurtz_player

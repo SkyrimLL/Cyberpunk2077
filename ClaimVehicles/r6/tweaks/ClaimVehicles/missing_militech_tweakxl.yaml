@@ -7,15 +7,9 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.cs_savable_v_standard3_militech_hellhound_police_siren
   - !append Vehicle.hackable_militech_behemoth
   - !append Vehicle.hackable_militech_hellhound_police_siren
-  - !append Vehicle.ep1_hackable_militech_behemoth_kurtz
-  - !append Vehicle.militech_hellhound_offer
-  - !append Vehicle.q000_nomad_v_utility4_militech_behemoth_quest
-  - !append Vehicle.q114_militech_av
-  - !append Vehicle.q114_militech_gun_wagon 
-  - !append Vehicle.q114_militech_mechdrop_av
-  - !append Vehicle.q114_militech_missile_av
-  - !append Vehicle.q114_militech_missile_truck_final
-  - !append Vehicle.q114_militech_panzer
+  - !append Vehicle.ep1_hackable_militech_behemoth_kurtz 
+  - !append Vehicle.q000_nomad_v_utility4_militech_behemoth_quest 
+  - !append Vehicle.q114_militech_missile_truck_final 
   - !append Vehicle.q114_militech_response_bike
   - !append Vehicle.q114_militech_response_car
   - !append Vehicle.q304_v_utility4_militech_behemoth_quest_scanning

@@ -1,9 +1,5 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.Archer
-  - !append Vehicle.archer_quartz_bandit_offer
-  - !append Vehicle.archer_quartz_nomad_02_offer
-  - !append Vehicle.archer_quartz_nomad_offer
-  - !append Vehicle.archer_quartz_offer
+  - !append Vehicle.Archer 
   - !append Vehicle.aldecado_archer_quartz_heat_3
   - !append Vehicle.cs_savable_archer_hella
   - !append Vehicle.cs_savable_archer_hella_kurtz
@@ -72,3 +68,9 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_archer_quartz_tyger_courier_expanded
   - !append Vehicle.v_archer_hella_dodger_car
   - !append Vehicle.v_sts_ep1_01_archer_hella_scavengers
+  - !append Vehicle.v_standard2_archer_bandit_player
+  - !append Vehicle.v_standard2_archer_hella_player
+  - !append Vehicle.v_standard2_archer_quartz_base_player
+  - !append Vehicle.v_standard2_archer_quartz_nomad_player
+  - !append Vehicle.v_standard2_archer_quartz_nomad_player_02
+  - !append Vehicle.v_standard2_archer_quartz_player

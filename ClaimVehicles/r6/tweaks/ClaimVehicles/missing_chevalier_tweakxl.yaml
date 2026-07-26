@@ -56,3 +56,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_utility4_chevalier_centurion_flatbed_poor_dogtown
   - !append Vehicle.v_utility4_chevalier_centurion_poor
   - !append Vehicle.v_utility4_chevalier_centurion_poor_dogtown
+  - !append Vehicle.v_standard2_chevalier_thrax_player
+  - !append Vehicle.v_standard3_chevalier_emperor_player
+  - !append Vehicle.v_utility4_chevalier_legatus_aquila_basic
+  - !append Vehicle.v_utility4_chevalier_legatus_basic
+  - !append Vehicle.v_utility4_chevalier_legatus_player

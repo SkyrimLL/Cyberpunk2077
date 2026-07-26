@@ -1058,7 +1058,6 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     // LogChannel(n"DEBUG", debugMessage ); 
   }
 
-
 // Compatibility with Codeware mod: use EnablePlayerVehicleID instead of EnablePlayerVehicle if Codeware is installed
 @if(!ModuleExists("Codeware"))
   public func enablePlayerVehicle(_vehicleId: TweakDBID, _enable: Bool, _despawnIfDisabling: Bool) -> Void {

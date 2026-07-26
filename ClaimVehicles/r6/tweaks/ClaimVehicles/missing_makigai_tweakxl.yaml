@@ -1,9 +1,7 @@
 Vehicle.vehicle_list.list:
   - !append Vehicle.cs_savable_makigai_maimai
   - !append Vehicle.Maimai
-  - !append Vehicle.Makigai
-  - !append Vehicle.makigai_maimai_offer
-  - !append Vehicle.makigai_tanishi_offer
+  - !append Vehicle.Makigai 
   - !append Vehicle.e319_makigai_maimai
   - !append Vehicle.ep1_cs_savable_makigai_tanishi
   - !append Vehicle.ep1_hackable_makigai_tanishi
@@ -27,3 +25,6 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard3_makigai_tanishi_poor
   - !append Vehicle.v_standard3_makigai_tanishi_poor_dogtown
   - !append Vehicle.v_standard3_makigai_tanishi_premium
+  - !append Vehicle.v_standard2_makigai_maimai_player
+  - !append Vehicle.v_standard3_makigai_tanishi_player
+  - !append Vehicle.v_standard3_makigai_tanishi_player_mr_hands

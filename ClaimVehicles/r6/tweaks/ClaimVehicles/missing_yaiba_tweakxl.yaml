@@ -1,9 +1,6 @@
 Vehicle.vehicle_list.list:
   - !append Vehicle.Kusanagi
-  - !append Vehicle.Yaiba
-  - !append Vehicle.yaiba_kusanagi_offer 
-  - !append Vehicle.yaiba_kusanagi_02_offer
-  - !append Vehicle.yaiba_kusanagi_03_offer
+  - !append Vehicle.Yaiba 
   - !append Vehicle.cs_savable_yaiba_kusanagi
   - !append Vehicle.e319_yaiba_kusanagi
   - !append Vehicle.hackable_yaiba_kusanagi
@@ -15,3 +12,33 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_quest
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger
   - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger_courier 
+  - !append Vehicle.mq060_yaiba_muramasa_aggresive
+  - !append Vehicle.mq060_yaiba_muramasa_designerfavorite
+  - !append Vehicle.mq060_yaiba_muramasa_jackofalltrades
+  - !append Vehicle.mq060_yaiba_muramasa_lowkeypredator
+  - !append Vehicle.mq060_yaiba_muramasa_minimalist
+  - !append Vehicle.mq060_yaiba_muramasa_showoff
+  - !append Vehicle.mq060_yaiba_muramasa_yaibabrandclassic
+  - !append Vehicle.v_sport1_yaiba_semimaru
+  - !append Vehicle.v_sport1_yaiba_semimaru_player
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player_02
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_player_03
+  - !append Vehicle.v_sportbike1_yaiba_kusanagi_tyger_player
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_as
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_as_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_as_ns
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_as_ns_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_ns
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_naked_ns_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_player
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_as
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_as_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_as_ns
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_as_ns_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_nr
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_ns
+  - !append Vehicle.v_sportbike1_yaiba_muramasa_regular_ns_nr

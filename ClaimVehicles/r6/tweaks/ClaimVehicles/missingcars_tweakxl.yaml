@@ -1,7 +1,6 @@
 Vehicle.vehicle_list.list:
   - !append Vehicle.Aerondight
-  - !append Vehicle.Alvarado
-  - !append Vehicle.alvarado_hearse_combi_offer 
+  - !append Vehicle.Alvarado 
   - !append Vehicle.arr_05_fox_car
   - !append Vehicle.arr_05_objective_truck
   - !append Vehicle.Aurochs
@@ -27,14 +26,11 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.kab_02_backup_galena
   - !append Vehicle.kab_02_backup_thrax
   - !append Vehicle.kerry_vehicle
-  - !append Vehicle.kerry_vehicle_sq017
-  - !append Vehicle.kurtz_men_military_colby_offer
-  - !append Vehicle.kurtz_men_military_supron_offer 
+  - !append Vehicle.kerry_vehicle_sq017 
   - !append Vehicle.ma_bls_ina_se1_08_trapped_car
   - !append Vehicle.ma_bls_ina_se1_22_wraith_car
   - !append Vehicle.ma_cct_dtn_03_scavenger_van
-  - !append Vehicle.ma_pac_cvi_08_bike_kusanagi
-  - !append Vehicle.ma_pac_cvi_08_crash_car
+  - !append Vehicle.ma_pac_cvi_08_bike_kusanagi 
   - !append Vehicle.ma_pac_cvi_08_shion
   - !append Vehicle.ma_pac_cvi_08_van
   - !append Vehicle.ma_wat_lch_03_garbage_truck
@@ -43,8 +39,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.mitch_vehicle 
   - !append Vehicle.mq001_little_bombus
   - !append Vehicle.mq001_scorpion_vehicle
-  - !append Vehicle.mq005_police_car
-  - !append Vehicle.mq006_rollercoaster_cart
+  - !append Vehicle.mq005_police_car 
   - !append Vehicle.mq013_bike
   - !append Vehicle.mq017_delivery_truck
   - !append Vehicle.mq026_maelstrom_car
@@ -78,13 +73,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.ow_fixer_car_regina
   - !append Vehicle.ow_fixer_car_rouge
   - !append Vehicle.ow_fixer_car_wakako
-  - !append Vehicle.panam_army_truck
-  - !append Vehicle.panam_panzer
-  - !append Vehicle.panam_panzer_q202
-  - !append Vehicle.panam_vehicle 
-  - !append Vehicle.Panzer
-  - !append Vehicle.PlayerBike
-  - !append Vehicle.PlayerCar
+  - !append Vehicle.panam_army_truck 
+  - !append Vehicle.panam_vehicle  
   - !append Vehicle.Porsche
   - !append Vehicle.ps_interceptor
   - !append Vehicle.q000_arasaka_chase_car
@@ -139,8 +129,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q114_nomad_car_cassidy
   - !append Vehicle.q114_nomad_car_regular_001
   - !append Vehicle.q114_nomad_car_teddy
-  - !append Vehicle.q114_nomad_car_van_001 
-  - !append Vehicle.q114_nomad_panzer
+  - !append Vehicle.q114_nomad_car_van_001  
   - !append Vehicle.q114_transmission_van 
   - !append Vehicle.q202_bob_vehicle
   - !append Vehicle.q202_teddy_vehicle  
@@ -164,8 +153,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.q303_limo
   - !append Vehicle.q304_ambush_truck
   - !append Vehicle.q304_car_retrieval_truck
-  - !append Vehicle.q304_car_retrieval_truck_replacement
-  - !append Vehicle.q304_crash_cortes
+  - !append Vehicle.q304_car_retrieval_truck_replacement 
   - !append Vehicle.q304_get_away_car
   - !append Vehicle.q304_get_away_car_stadium 
   - !append Vehicle.q304_songbird_escape_002
@@ -186,8 +174,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.reginald_vehicle
   - !append Vehicle.Riptide
   - !append Vehicle.rogue_bike
-  - !append Vehicle.rogue_car 
-  - !append Vehicle.sa_ep1_airdrop_crate
+  - !append Vehicle.rogue_car  
   - !append Vehicle.sa_ep1_courier_outro_behemoth
   - !append Vehicle.santiago_bike
   - !append Vehicle.santiago_truck
@@ -195,8 +182,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.Seamurai 
   - !append Vehicle.Shion
   - !append Vehicle.Shion_MZ1_Nomad_Engine
-  - !append Vehicle.Shion_MZ2_Nomad_Engine
-  - !append Vehicle.ShionNomadDataPackage
+  - !append Vehicle.Shion_MZ2_Nomad_Engine 
   - !append Vehicle.sobchak_ncpd_vehicle
   - !append Vehicle.sobchak_vehicle
   - !append Vehicle.spr_03_nomad_truck
@@ -253,10 +239,7 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.Turbo
   - !append Vehicle.Type66 
   - !append Vehicle.v_001_limousine
-  - !append Vehicle.v_003_smalltruck
-  - !append Vehicle.v_004_bubble_one
-  - !append Vehicle.v_005_lego
-  - !append Vehicle.v_006_golf
+  - !append Vehicle.v_003_smalltruck 
   - !append Vehicle.v_007_aerondight_demo_trigger
   - !append Vehicle.v_007_interceptor
   - !append Vehicle.v_007_interceptor_demo_trigger
@@ -264,17 +247,22 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_009_box_car
   - !append Vehicle.v_010_v_tek
   - !append Vehicle.v_011_scavenger_van
-  - !append Vehicle.v_012_corpo_suv
-  - !append Vehicle.v_bubble_demo_trigger
-  - !append Vehicle.v_golf_demo_trigger
-  - !append Vehicle.v_lego_demo_trigger
+  - !append Vehicle.v_012_corpo_suv 
   - !append Vehicle.v_sport2_porsche_911turbo 
   - !append Vehicle.v_sport2_porsche_911turbo_quest
-  - !append Vehicle.v_sport2_porsche_911turbo_cabrio
-  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_offer 
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio 
   - !append Vehicle.v_trailer_supron
   - !append Vehicle.v_villefort_columbus_courier_intro_chase  
   - !append Vehicle.vm_001_motorcycle
   - !append Vehicle.wst_ep1_10_scavenger_vehicle
   - !append Vehicle.Zetatech
   - !append Vehicle.Zeya
+  - !append Vehicle.cvi_02_ps_objective_van
+  - !append Vehicle.mq057_semimaru_car
+  - !append Vehicle.mq059_gang_car  
+  - !append Vehicle.q114_fake_4wheel_truck
+  - !append Vehicle.q301_sf1
+  - !append Vehicle.q305_apc
+  - !append Vehicle.q305_maxtac_hellhound
+  - !append Vehicle.v_sport2_porsche_911turbo_cabrio_player
+  - !append Vehicle.v_sport2_porsche_911turbo_player

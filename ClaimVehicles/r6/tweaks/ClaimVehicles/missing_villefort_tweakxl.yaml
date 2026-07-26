@@ -1,9 +1,5 @@
 Vehicle.vehicle_list.list:
-  - !append Vehicle.Villefort
-  - !append Vehicle.villefort_alvarado_offer
-  - !append Vehicle.villefort_columbus_offer
-  - !append Vehicle.villefort_cortes_offer
-  - !append Vehicle.villefort_deleon_offer
+  - !append Vehicle.Villefort 
   - !append Vehicle.border_patrol_villefort_cortes_heat_1
   - !append Vehicle.border_patrol_villefort_cortes_heat_2
   - !append Vehicle.cs_savable_villefort_alvarado
@@ -107,3 +103,8 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.v_standard2_villefort_cortes_premium
   - !append Vehicle.v_standard2_villefort_cortes_quest
   - !append Vehicle.v_sts_ep1_01_villefort_columbus_scavengers
+  - !append Vehicle.v_sport2_villefort_deleon_sport_player
+  - !append Vehicle.v_standard25_villefort_columbus_player
+  - !append Vehicle.v_standard2_villefort_cortes_delamain_player
+  - !append Vehicle.v_standard2_villefort_cortes_delamain_taxi
+  - !append Vehicle.v_standard2_villefort_cortes_player

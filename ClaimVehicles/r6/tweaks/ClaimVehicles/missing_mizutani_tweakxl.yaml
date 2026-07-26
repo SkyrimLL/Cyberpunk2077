@@ -1,9 +1,5 @@
  Vehicle.vehicle_list.list:
-  - !append Vehicle.Mizutani
-  - !append Vehicle.mizutani_hozuki_offer
-  - !append Vehicle.mizutani_shion_nomad_missiles_offer
-  - !append Vehicle.mizutani_shion_nomad_offer
-  - !append Vehicle.mizutani_shion_offer
+  - !append Vehicle.Mizutani 
   - !append Vehicle.cs_savable_mizutani_shion
   - !append Vehicle.cs_savable_mizutani_shion_tyger
   - !append Vehicle.cs_v_sport2_mizutani_shion_nomad
@@ -45,3 +41,11 @@
   - !append Vehicle.v_standard2_mizutani_hozuki_sport
   - !append Vehicle.v_standard2_mizutani_hozuki_sti
   - !append Vehicle.v_standard2_mizutani_hozuki_web
+  - !append Vehicle.v_sport2_mizutani_shion_base_player
+  - !append Vehicle.v_sport2_mizutani_shion_nomad_02_player
+  - !append Vehicle.v_sport2_mizutani_shion_nomad_player
+  - !append Vehicle.v_sport2_mizutani_shion_nomad_player_missiles
+  - !append Vehicle.v_sport2_mizutani_shion_player
+  - !append Vehicle.v_sport2_mizutani_shion_targa_player
+  - !append Vehicle.v_standard2_mizutani_hozuki_gt_player
+  - !append Vehicle.v_standard2_mizutani_hozuki_player
