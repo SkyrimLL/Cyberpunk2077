@@ -1,5 +1,16 @@
 // Interception of Second Heart mechanics
 
+// Event for delayed skip time to allow death animation to play
+public class DelayedSkipTimeEvent extends Event {
+  public let timeSkipped: Float;
+}
+
+@addMethod(PlayerPuppet)
+protected cb func OnDelayedSkipTimeEvent(evt: ref<DelayedSkipTimeEvent>) -> Bool {
+  let playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+  playerPuppetPS.m_santaMuerteTracking.skipTimeWithBlackout(evt.timeSkipped);
+}
+
 @replaceMethod(DeathDecisions)
 protected final const func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
   let _playerPuppet: ref<PlayerPuppet> = scriptInterface.executionOwner as PlayerPuppet;
@@ -35,8 +46,17 @@ protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: r
 
 				let minSkippedTime = _playerPuppetPS.m_santaMuerteTracking.minSkippedTime;
 				let maxSkippedTime = _playerPuppetPS.m_santaMuerteTracking.maxSkippedTime;
-		    let timeSkipped = RandRangeF(minSkippedTime, maxSkippedTime);
-		    _playerPuppetPS.m_santaMuerteTracking.skipTimeWithBlackout(timeSkipped);
+				let timeSkipped = RandRangeF(minSkippedTime, maxSkippedTime);
+				
+				// Add delay before resurrection to show death animation
+				let deathAnimDelay = _playerPuppetPS.m_santaMuerteTracking.deathAnimationDelay;
+				if (deathAnimDelay > 0.0) {
+					let delayedEvent: ref<DelayedSkipTimeEvent> = new DelayedSkipTimeEvent();
+					delayedEvent.timeSkipped = timeSkipped;
+					GameInstance.GetDelaySystem(_playerPuppet.GetGame()).DelayEvent(_playerPuppet, delayedEvent, deathAnimDelay);
+				} else {
+					_playerPuppetPS.m_santaMuerteTracking.skipTimeWithBlackout(timeSkipped);
+				}
 
 				GameInstance.GetTimeSystem( scriptInterface.GetGame() ).UnsetTimeDilation( n"" );
 				GameInstance.GetTimeSystem( scriptInterface.GetGame() ).UnsetTimeDilationOnLocalPlayerZero( n"" );
@@ -113,6 +133,10 @@ private func DeathVanish( scriptInterface : ref<StateGameScriptInterface> )
 	owner.PromoteOpticalCamoEffectorToCompletelyBlocking();
 
 	let enableVisiblityDelay : Float = GameInstance.GetStatsSystem( owner.GetGame() ).GetStatValue( Cast<StatsObjectID>( owner.GetEntityID() ), gamedataStatType.OpticalCamoDuration );
+	// FIX: Use a safe minimum delay of 0.5 seconds if OpticalCamoDuration is 0 or very small
+	if enableVisiblityDelay < 0.5 {
+		enableVisiblityDelay = 0.5;
+	};
 	let hostileTargets : array<TrackedLocation> = owner.GetTargetTrackerComponent().GetHostileThreats( false );
 	let hostileTarget : wref<GameObject>;
 	let hostileTargetPuppet : wref<ScriptedPuppet>;
@@ -132,7 +156,7 @@ private func DeathVanish( scriptInterface : ref<StateGameScriptInterface> )
 		}
 		vanishEvt = new ExitCombatOnOpticalCamoActivatedEvent();
 		vanishEvt.npc = hostileTarget;
-		GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, vanishEvt, 0.1  );  
+		GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, vanishEvt, exitCombatDelay );  
 		j += 1;
 	} 
 

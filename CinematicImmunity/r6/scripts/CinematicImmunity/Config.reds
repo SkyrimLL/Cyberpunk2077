@@ -119,11 +119,29 @@ public class CinematicImmunityConfig {
     @runtimeProperty("ModSettings.description", "Grant immunity during the van chase after rescuing Saul from the Raffen Shiv camp (sq004). Active from Saul's rescue until the chase scene concludes.")
     public let immunityPanamChaseON: Bool = true;
 
+    // ── Car race ─────────────────────────────────────────────────────────────
+
+    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    @runtimeProperty("ModSettings.category", "Car Race")
+    @runtimeProperty("ModSettings.category.order", "41")
+    @runtimeProperty("ModSettings.displayName", "Claire's car race")
+    @runtimeProperty("ModSettings.description", "Grant immunity during Claire's car race (sq024). Active from the race starting until it concludes.")
+    public let immunityCarRaceON: Bool = true;
+
+    // ── Chimera chase ─────────────────────────────────────────────────────────────
+
+    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    @runtimeProperty("ModSettings.category", "Chimera Chase")
+    @runtimeProperty("ModSettings.category.order", "50")
+    @runtimeProperty("ModSettings.displayName", "Chimera chase")
+    @runtimeProperty("ModSettings.description", "Grant immunity during the Chimera chase. Active from the chase starting until it concludes.")
+    public let immunityChimeraChaseON: Bool = true;
+
     // ── Endgame ─────────────────────────────────────────────
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Endgame")
-    @runtimeProperty("ModSettings.category.order", "50")
+    @runtimeProperty("ModSettings.category.order", "60")
     @runtimeProperty("ModSettings.displayName", "(Don't Fear) The Reaper")
     @runtimeProperty("ModSettings.description", "Grant immunity during the solo Arasaka Tower assault ending (q115). Covers both the Rogue-assisted and solo DFTR variants.")
     public let immunityDFTRON: Bool = true;

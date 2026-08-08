@@ -24,6 +24,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
   public let newDeathAnimationON: Bool; 
   public let randomDeathAnimationON: Bool; 
+  public let deathAnimationDelay: Float;
   public let santaMuerteRelicDifficulty: santaMuerteRelicMode;
   public let santaMuerteLoreDifficulty: santaMuerteRelicMode;
   public let santaMuerteLoreDifficultyON: Bool; 
@@ -48,7 +49,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let santaMuerteWidgetON: Bool;
   public let informativeHUDCompatibilityON: Bool;
   public let deathWhenImpersonatingJohnnyON: Bool;
-  public let hardcoreDetourRobbedON: Bool; 
+  public let hardcoreDetourRobbedON: Bool;
+  public let hardcoreOnlyRobOnTeleportON: Bool;
   public let hardcoreStealEquippedON: Bool;
   public let hardcoreStealCyberwareON: Bool;
   public let hardcoreDetourRobbedChance: Int32;
@@ -63,9 +65,18 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
   public let modON: Bool;  
 
+  public let sleepRecoveryON: Bool;
+  public let sleepRecoveryAmount: Int32;
+  public let sleepRecoveryMinDuration: Float;
+  public persistent let lastGameTime: Float;
+
   public let debugON: Bool;
   public let warningsON: Bool;   
 
+  public persistent let tutorialTrackerData: ref<SantaMuerteTutorialTracker>;
+  public let tutorialManager: ref<SantaMuerteTutorialManager>;
+  public let showTutorialsON: Bool;
+  public persistent let lastResetTutorialsState: Bool;
 
   public func init(player: wref<PlayerPuppet>) -> Void {
     this.reset(player);
@@ -76,6 +87,29 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     this.refreshConfig();
 
+    // Initialize tutorial tracker (persistent data)
+    if !IsDefined(this.tutorialTrackerData) {
+      this.tutorialTrackerData = new SantaMuerteTutorialTracker();
+      this.tutorialTrackerData.init();
+    }
+
+    // Initialize tutorial manager
+    if !IsDefined(this.tutorialManager) {
+      this.tutorialManager = new SantaMuerteTutorialManager();
+      this.tutorialManager.initWithTracker(player, this, this.tutorialTrackerData);
+    }
+
+    // Debug mode: Reset tutorials on each game load
+    if this.debugON {
+      if IsDefined(this.tutorialTrackerData) && IsDefined(this.tutorialManager) {
+        this.tutorialTrackerData.resetAll();
+        this.tutorialManager.resetWarnings();
+        this.showDebugMessage("[SantaMuerte DEBUG] Tutorials reset on game load.");
+
+        let message: String = SantaMuerteText.TUTORIALRESET();
+        this.player.SetWarningMessage(message, SimpleMessageType.Relic);   
+      }
+    }
     // ------------------ Edit these values to configure the mod
     // Toggle warnings when exceeding your carry capacity without powerlevel bonus
     // this.warningsON = true;
@@ -85,6 +119,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     // For developers only 
     // this.debugON = true;
 
+  }
+
+  public cb func OnModSettingsChange() -> Void {
+      this.showDebugMessage("[SantaMuerte] Settings changed – applying update.");
+      this.refreshConfig();  
   }
 
   public func refreshConfig() -> Void {
@@ -105,7 +144,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     // Pull from config
     this.newDeathAnimationON = this.config.newDeathAnimationON;
-    this.randomDeathAnimationON = this.config.randomDeathAnimationON; 
+    this.randomDeathAnimationON = this.config.randomDeathAnimationON;
+    this.deathAnimationDelay = this.config.deathAnimationDelay;
     this.santaMuerteRelicDifficulty = this.config.santaMuerteRelicDifficulty;
     this.santaMuerteLoreDifficultyON = this.config.santaMuerteLoreDifficultyON;
     this.scaleResurrectionsModifier = this.config.scaleResurrectionsModifier;
@@ -129,7 +169,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.santaMuerteWidgetON = this.config.santaMuerteWidgetON;
     this.informativeHUDCompatibilityON = this.config.informativeHUDCompatibilityON;
     this.deathWhenImpersonatingJohnnyON = this.config.deathWhenImpersonatingJohnnyON;
+    this.sleepRecoveryON = this.config.sleepRecoveryON;
+    this.sleepRecoveryAmount = this.config.sleepRecoveryAmount;
+    this.sleepRecoveryMinDuration = this.config.sleepRecoveryMinDuration;
     this.hardcoreDetourRobbedON = this.config.hardcoreDetourRobbedON;
+    this.hardcoreOnlyRobOnTeleportON = this.config.hardcoreOnlyRobOnTeleportON;
     this.hardcoreDetourRobbedChance = this.config.hardcoreDetourRobbedChance;
     this.hardcoreDetourRobbedClothingChance = this.config.hardcoreDetourRobbedClothingChance;
     this.hardcoreDetourRobbedMoneyPercent = this.config.hardcoreDetourRobbedMoneyPercent;
@@ -137,7 +181,37 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.hardcoreStealCyberwareON = this.config.hardcoreStealCyberwareON;
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
-    this.modON = this.config.modON;  
+    this.modON = this.config.modON;
+    this.showTutorialsON = this.config.showTutorialsON;
+
+    // Update tutorial manager settings
+    if IsDefined(this.tutorialManager) {
+      this.tutorialManager.getTracker().showTutorialsON = this.showTutorialsON;
+    }
+
+    // Reset tutorials if requested - only when the toggle changes from OFF to ON
+    if this.config.resetTutorialsON && !this.lastResetTutorialsState {
+      // Ensure tutorialTrackerData is initialized before resetting
+      if !IsDefined(this.tutorialTrackerData) {
+        this.tutorialTrackerData = new SantaMuerteTutorialTracker();
+        this.tutorialTrackerData.init();
+      }
+      
+      // Use proper reset methods
+      if IsDefined(this.tutorialTrackerData) && IsDefined(this.tutorialManager) && IsDefined(this.player) {
+        // Reset all tutorials using the proper method
+        this.tutorialTrackerData.resetAll();
+        this.tutorialManager.resetWarnings();
+        
+        this.showDebugMessage("[SantaMuerte] All tutorials have been reset."); 
+
+        let message: String = SantaMuerteText.TUTORIALRESET();
+        this.player.SetWarningMessage(message, SimpleMessageType.Relic);   
+      }
+    }
+    
+    // Track the current state to prevent repeated resets
+    this.lastResetTutorialsState = this.config.resetTutorialsON;
  
   } 
 
@@ -192,6 +266,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.resurrectCount = this.resurrectCountMax;
     }    
 
+    this.refreshResurrectionHUD();
+
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCount = " + ToString(this.resurrectCount) );
     this.showDebugMessage( ">>> Santa Muerte: updateResurrections: resurrectCountMax = " + ToString(this.resurrectCountMax) );
 
@@ -199,6 +275,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     if (this.warningsON) {
       this.player.SetWarningMessage(message, SimpleMessageType.Relic);  
+    }
+
+    // Show first resurrection tutorial
+    if IsDefined(this.tutorialManager) {
+      this.tutorialManager.showTutorial(SantaMuerteTutorialType.FirstResurrection);
+      // Also check if we should show resurrection warnings
+      this.tutorialManager.checkResurrectionWarnings();
     }
   } 
 
@@ -219,6 +302,99 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       this.resurrectCount = 0;
     }
   } 
+
+  public func refreshResurrectionHUD() -> Void {
+    let evt: ref<SantaMuerteResurrectionUpdateEvent> = new SantaMuerteResurrectionUpdateEvent();
+    this.player.QueueEvent(evt);
+  }
+
+  public func restoreResurrectionsAfterSleep(skipHoursAmount: Float) -> Void {
+    if (!this.sleepRecoveryON) {
+      return;
+    }
+
+    if (!this.isRelicInstalled()) {
+      this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Relic not installed, skipping" );
+      return;
+    }
+
+    // Only restore if the time skip was long enough (indicates rest/sleep, not just quick time advancement)
+    if (skipHoursAmount < this.sleepRecoveryMinDuration) {
+      this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Time skip too short (" + ToString(skipHoursAmount) + " hours < " + ToString(this.sleepRecoveryMinDuration) + " hours)" );
+      return;
+    }
+
+    // Don't restore if already at max
+    this.updateMaxResurrections();
+    if (this.resurrectCount >= this.resurrectCountMax) {
+      this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Already at max resurrections" );
+      return;
+    }
+
+    let oldCount: Int32 = this.resurrectCount;
+    
+    // Calculate the chance of full recovery based on relic condition
+    // Resurrections left = maxResurrections - resurrectionCount
+    let resurrectionsLeft: Int32 = this.resurrectCountMax - this.resurrectCount;
+    let recoveryChance: Int32 = 0;
+    
+    // Prevent division by zero
+    if (this.resurrectCountMax > 0) {
+      recoveryChance = (resurrectionsLeft * 100) / this.resurrectCountMax;
+    }
+    
+    let randomRoll: Int32 = RandRange(0, 100);
+    let fullRecovery: Bool = randomRoll < recoveryChance;
+    
+    this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Recovery chance = " + ToString(recoveryChance) + "%, Roll = " + ToString(randomRoll) + ", Full recovery = " + ToString(fullRecovery) );
+    
+    // Restore resurrections based on the roll
+    let i: Int32 = 0;
+    let amountToRestore: Int32;
+    
+    if (fullRecovery) {
+      // Full recovery - restore the configured amount
+      amountToRestore = this.sleepRecoveryAmount;
+    } else {
+      // Partial recovery - only restore 1 resurrection
+      amountToRestore = 1;
+    }
+    
+    while (i < amountToRestore) {
+      this.decrementResurrections();
+      i += 1;
+    }
+
+    if this.darkFutureEffectON {
+      GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 1);
+      GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
+    }
+
+    this.refreshResurrectionHUD();
+    this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Restored resurrections after sleep" ); 
+
+    let restoredAmount: Int32 = oldCount - this.resurrectCount;
+    
+    if (restoredAmount > 0) {
+      this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Restored " + ToString(restoredAmount) + " resurrections after " + ToString(skipHoursAmount) + " hours of rest" );
+      
+      let message: String;
+      if (fullRecovery) {
+        message = "Relic stabilized during rest. Resurrections restored: +" + ToString(restoredAmount) + " (" + ToString(this.resurrectCount) + "/" + ToString(this.resurrectCountMax) + ")";
+      } else {
+        message = "Relic struggled to stabilize. Partial recovery: +" + ToString(restoredAmount) + " (" + ToString(this.resurrectCount) + "/" + ToString(this.resurrectCountMax) + ")";
+      }
+      
+      if (this.warningsON) {
+        this.player.SetWarningMessage(message, SimpleMessageType.Relic);
+      }
+
+      // Show sleep recovery tutorial on first recovery
+      if IsDefined(this.tutorialManager) {
+        this.tutorialManager.showTutorial(SantaMuerteTutorialType.SleepRecovery);
+      }
+    }
+  }
 
   public func maxResurrectionReached(isSecondHeartInstalled: Bool) -> Bool {    
     this.updateMaxResurrections();
@@ -336,10 +512,18 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let factOfrendaPicked: Int32 = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"sq018_ofrenda_picked") ;
     let factJackieFuneralDone: Int32 = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"sq018_done") ;
     let factMistyTarotDone: Int32 = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"mq033_misty_tarot_talk_needed") ;
+    let factCloudsDollDone: Int32 = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q105_dollhouse_room_6") 
+      + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q105_dollhouse_room_9") ;
 
     let _resurrectionFacts: Int32 = 0;
 
-    _resurrectionFacts = factHeistDone * ( factMamaWellesMet + (factMandalaFound * 2) + factMistyInvited + factOfrendaPicked + (factJackieFuneralDone * 2) + (factMistyTarotDone * 2) );
+    _resurrectionFacts = factHeistDone * ( factMamaWellesMet 
+      + (factMandalaFound * 2) 
+      + factMistyInvited 
+      + factOfrendaPicked 
+      + (factJackieFuneralDone * 2) 
+      + (factMistyTarotDone * 2) 
+      + factCloudsDollDone);
 
     // Sets Lore Difficulty based on choice with Jackie's body
     if (jackieStayNotell) {
@@ -517,8 +701,35 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
         // Add 6 to 12 hours to account for transportation and healing
         skipHoursAmount += RandRangeF(6.0, 12.0);
+        
+        // Always skip time when teleportation happens to make it more immersive
+        this.showDebugMessage( ">>> Santa Muerte: skipTime: Force skip due to teleport: skipHoursAmount = " + ToString(skipHoursAmount) ); 
+        this.skipTimeForced(skipHoursAmount);
+        return;
       }
       
+    }
+
+    // Robbery can happen independently when no teleportation occurred
+    // but blackout or time skip is happening
+    if (!teleportSuccessful) {
+      let shouldRob: Bool = false;
+      let isBlackoutHappening: Bool = (this.blackoutON) && (skipHoursAmount >= this.maxBlackoutTime);
+      let isTimeSkipHappening: Bool = (this.skipTimeON) && (!StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip"));
+      
+      // Robbery can happen during blackout or time skip events
+      // Only if hardcoreOnlyRobOnTeleportON is disabled
+      if (isBlackoutHappening || isTimeSkipHappening) {
+        if (this.hardcoreDetourRobbedON) && (!this.hardcoreOnlyRobOnTeleportON) && (RandRange(1, 100) <= this.hardcoreDetourRobbedChance) {
+          shouldRob = true;
+        }
+      }
+      
+      if (shouldRob) {
+        // Rob player without cyberware stripping (less severe than detour teleport robberies)
+        this.robPlayer(false);
+        this.showDebugMessage( ">>> Santa Muerte: Player robbed without teleportation" );
+      }
     }
 
     if (this.skipTimeON) && (!StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip")) {
@@ -567,6 +778,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       timeSystem.SetGameTimeBySeconds(Cast<Int32>(newTimeStamp));
       GameTimeUtils.FastForwardPlayerState(this.player);
+
+      // Restore resurrections after a good sleep/rest
+      // this.restoreResurrectionsAfterSleep(skipHoursAmount);
 
       // this.clearBlackout();
  
@@ -689,6 +903,10 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       exitCombatDelay = TweakDBInterface.GetFloat(t"Items.AdvancedOpticalCamoCommon.exitCombatDelay", 1.50);
       this.player.PromoteOpticalCamoEffectorToCompletelyBlocking(); 
       enableVisiblityDelay = GameInstance.GetStatsSystem(this.player.GetGame()).GetStatValue(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatType.OpticalCamoDuration);
+      // FIX: Use a safe minimum delay of 0.5 seconds if OpticalCamoDuration is 0 or very small
+      if enableVisiblityDelay < 0.5 {
+        enableVisiblityDelay = 0.5;
+      };
       this.player.SetInvisible(true);
       hostileTargets = this.player.GetTargetTrackerComponent().GetHostileThreats(false);
       j = 0;
@@ -728,7 +946,9 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
       
       // 2024-12-07 - Testing shut down combat
-      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 2);   
+      // Fixed: Changed from 2 (OutOfCombat transition state) to 0 (Default resting state)
+      // This allows the player to properly re-enter combat after resurrection
+      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 0);   
       this.player.m_combatController.SendAnimFeatureData(false);
       PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
       // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
@@ -809,6 +1029,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         teleportSuccessful = this.tryTeleportRipperDoc();
       }
     } 
+
+    // Show safe teleport tutorial on first successful teleport
+    if teleportSuccessful && IsDefined(this.tutorialManager) {
+      let delayedEvent: ref<DelayedTutorialEvent> = new DelayedTutorialEvent();
+      delayedEvent.tutorialType = SantaMuerteTutorialType.FirstSafeTeleport;
+      GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, delayedEvent, 3.0);
+    }
 
     return teleportSuccessful;
 
@@ -1029,6 +1256,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         rotation = playerForwardAngle;
         isDestinationFound = true;
         break;
+      case gamedataDistrict.Badlands_RedPeaks:
+        // Doc Octavio (nearest ripper doc to Red Peaks)
+        position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
+        rotation = playerForwardAngle;
+        isDestinationFound = true;
+        break;
       case gamedataDistrict.NorthBadlands:
         // Doc Octavio 
         position = new Vector4(588.214, -2180.696, 42.437, 1.000000);
@@ -1069,6 +1302,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     if (!teleportSuccessful) {
       teleportSuccessful = this.tryTeleportDetourByDistrict();
+    }
+
+    // Show detour teleport tutorial on first successful detour teleport
+    if teleportSuccessful && IsDefined(this.tutorialManager) {
+      let delayedEvent: ref<DelayedTutorialEvent> = new DelayedTutorialEvent();
+      delayedEvent.tutorialType = SantaMuerteTutorialType.FirstDetourTeleport;
+      GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, delayedEvent, 3.0);
     }
 
     return teleportSuccessful;
@@ -1361,6 +1601,23 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         isDestinationFound = true;
         triggerRobPlayer = false;
         break;
+      case gamedataDistrict.Badlands_RedPeaks:
+        randNum = RandRange(0,100);
+
+        if (randNum >= 80) {
+          // Sunset Motel - room 102
+          position = new Vector4(1662.659, -791.086, 49.826, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+          triggerRobPlayer = false;
+        }
+        if (randNum < 80) {
+          // Trash Dump
+          position = new Vector4(1166.663, -226.652, 16.039, 1.000000);
+          rotation = playerForwardAngle;
+          isDestinationFound = true;
+        }
+        break;
       case gamedataDistrict.NorthBadlands:
         randNum = RandRange(0,100);
 
@@ -1401,9 +1658,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         break;
     }
 
-    if (isDestinationFound) && (triggerRobPlayer) {
-      if (this.hardcoreDetourRobbedON) {
-        this.robPlayer(stripCyberware);
+    if (isDestinationFound) {
+      if (triggerRobPlayer) {
+        if (this.hardcoreDetourRobbedON) {
+          this.robPlayer(stripCyberware);
+        }
       }
       this.showDebugMessage( ">>> Santa Muerte: Detour teleport by district" ); 
       this.showDebugMessage( ToString(position) ); 
@@ -2078,6 +2337,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       if (this.hardcoreDetourRobbedMoneyPercent > 0) {
         this.RemovePlayerMoneyPercent(this.hardcoreDetourRobbedMoneyPercent);
       }
+
+      // Show robbery tutorial on first robbery
+      if IsDefined(this.tutorialManager) {
+        let delayedEvent: ref<DelayedTutorialEvent> = new DelayedTutorialEvent();
+        delayedEvent.tutorialType = SantaMuerteTutorialType.FirstRobbery;
+        GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, delayedEvent, 3.0);
+      }
     }
 
     equipmentSystem.QueueRequest(unequipSetRequest);
@@ -2137,6 +2403,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       let message: String = SantaMuerteText.HARVESTED();
 
       this.player.SetWarningMessage(message, SimpleMessageType.Relic);  
+
+      // Show tutorial for first cyberware removal
+      if IsDefined(this.tutorialManager) {
+        this.tutorialManager.showTutorial(SantaMuerteTutorialType.FirstCyberwareRemoval);
+      }
 
       this.showDebugMessage( ">>> Santa Muerte: disposeItems: " + IntToString(this.stolenCyberwareCount) + " items stolen" );
       this.stolenCyberwareCount = 0;
@@ -2272,13 +2543,15 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
     } else {
       if this.darkFutureEffectON {
         if (this.getMaxResurrectionPercent() < 50.0) {
-            // Resurrections are punishing at first
+            // Resurrections are punishing while the player is healthy (less than 50% of resurrections used)
             GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 2);
 
           } else {
-            // With less than 50% resurrections left, resurrections have a healing effect
+            // With 50% or more resurrections used, resurrections have a healing effect
             GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 1);
           }
+
+        GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
       }
     }
 
@@ -2311,25 +2584,24 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
   private func showDebugMessage(debugMessage: String) {
     // LogChannel(n"DEBUG", debugMessage ); 
   }
+
+  // Tutorial System Utilities
+  public func resetAllTutorials() -> Void {
+    if IsDefined(this.tutorialTrackerData) {
+      this.tutorialTrackerData.resetAll();
+      this.showDebugMessage(">>> Santa Muerte: All tutorials have been reset");
+    }
+  }
+
+  public func resetTutorialWarnings() -> Void {
+    if IsDefined(this.tutorialTrackerData) {
+      this.tutorialTrackerData.resetWarnings();
+      this.showDebugMessage(">>> Santa Muerte: Tutorial warnings have been reset");
+    }
+  }
  
 }
 
-// Moving this code here for compatibility with Codeware
-@if(ModuleExists("Codeware"))
-public func globalApplyLoadingScreen() -> Void {
-  let controller = GameInstance.GetInkSystem().GetLayer(n"inkHUDLayer").GetGameController() as inkGameController;
-
-  if IsDefined(controller) { 
-    let nextLoadingTypeEvt = new inkSetNextLoadingScreenEvent();
-    nextLoadingTypeEvt.SetNextLoadingScreenType(inkLoadingScreenType.FastTravel);
-    controller.QueueBroadcastEvent(nextLoadingTypeEvt);
-  };
-} 
-
-@if(!ModuleExists("Codeware"))
-public func globalApplyLoadingScreen() -> Void {
-    // Do nothing
-}
  
 
 

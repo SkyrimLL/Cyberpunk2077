@@ -1,3 +1,11 @@
+// In SantaMuerte_Controllers.reds - Add this event at the top
+public class SantaMuerteResurrectionUpdateEvent extends Event {}
+
+// Add this method to healthbarWidgetGameController
+@addMethod(healthbarWidgetGameController)
+protected cb func OnSantaMuerteResurrectionUpdateEvent(evt: ref<SantaMuerteResurrectionUpdateEvent>) -> Bool {
+  this.UpdateMemoryBarData();
+}
 // public native class healthbarWidgetGameController extends inkHUDGameController {
 
 /* 
@@ -191,3 +199,69 @@
     }
 
   }
+
+// ------------------- 
+
+// Custom event to notify PlayerPuppet of time skip completion
+public class SantaMuerteTimeSkipEvent extends Event {
+  public let timeSkipped: Float;
+}
+
+// Wrap the time skip popup to track when time skip starts
+@wrapMethod(TimeskipGameController)
+protected cb func OnInitialize() -> Bool {
+  let player: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
+  
+  if IsDefined(player) {
+    let playerPS: ref<PlayerPuppetPS> = player.GetPS();
+    if IsDefined(playerPS) {
+      // Store current game time before skip starts
+      let timeSystem: ref<TimeSystem> = GameInstance.GetTimeSystem(player.GetGame());
+      playerPS.m_santaMuerteTimeBeforeSkip = timeSystem.GetGameTimeStamp();
+    }
+  }
+  
+  return wrappedMethod();
+}
+
+// Wrap the UI controller to detect when time skip finishes
+@wrapMethod(gameuiInGameMenuGameController)
+protected cb func OnTimeSkipFinishEvent(evt: ref<TimeSkipFinishEvent>) -> Bool {
+  let player: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
+  
+  if IsDefined(player) {
+    let playerPS: ref<PlayerPuppetPS> = player.GetPS();
+    if IsDefined(playerPS) && IsDefined(playerPS.m_santaMuerteTracking) {
+      // Calculate actual time skipped
+      let timeSystem: ref<TimeSystem> = GameInstance.GetTimeSystem(player.GetGame());
+      let currentTime: Float = timeSystem.GetGameTimeStamp();
+      let timeSkippedSeconds: Float = currentTime - playerPS.m_santaMuerteTimeBeforeSkip;
+      let timeSkippedHours: Float = timeSkippedSeconds / 3600.0;
+      
+      // Send event to player with actual time skipped
+      let customEvt: ref<SantaMuerteTimeSkipEvent> = new SantaMuerteTimeSkipEvent();
+      customEvt.timeSkipped = timeSkippedHours;
+      player.QueueEvent(customEvt);
+    }
+  }
+  
+  return wrappedMethod(evt);
+}
+
+
+// Moving this code here for compatibility with Codeware
+@if(ModuleExists("Codeware"))
+public func globalApplyLoadingScreen() -> Void {
+  let controller = GameInstance.GetInkSystem().GetLayer(n"inkHUDLayer").GetGameController() as inkGameController;
+
+  if IsDefined(controller) { 
+    let nextLoadingTypeEvt = new inkSetNextLoadingScreenEvent();
+    nextLoadingTypeEvt.SetNextLoadingScreenType(inkLoadingScreenType.FastTravel);
+    controller.QueueBroadcastEvent(nextLoadingTypeEvt);
+  };
+} 
+
+@if(!ModuleExists("Codeware"))
+public func globalApplyLoadingScreen() -> Void {
+    // Do nothing
+}

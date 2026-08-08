@@ -46,6 +46,9 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
     // Skip time and chance of teleport.
     let _playerPuppetPS: ref<PlayerPuppetPS> = owner.GetPS();
 
+    // Ensure player is visible before combat exit to prevent invisibility issues
+    owner.SetInvisible(false);
+
     _playerPuppetPS.m_santaMuerteTracking.forceCombatExit();
 
     // // borrowed from: public class ExplorationEvents extends HighLevelTransition { -> OnEnter()

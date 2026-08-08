@@ -108,7 +108,11 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   }
  
-
+  public cb func OnModSettingsChange() -> Void {
+      this.showDebugMessage("[LimitedEncumbrance] Settings changed – applying update.");
+      this.refreshConfig();  
+  }
+  
   public func refreshConfig() -> Void {
     this.config = new LimitedEncumbranceConfig();
     this.invalidateCurrentState(); 
@@ -395,6 +399,15 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
             this.showDebugMessage("::: getEquipmentSlotMods  -    avs_plate_carrier bonus : " + clothSlotMod);
           }
         }
+        // https://www.nexusmods.com/cyberpunk2077/mods/32081
+        if StrContains(currentItemFriendlyName,"scorpion_combat_carrier") {
+          clothSlotMod = 10.0  ;
+          if (this.debugON) {
+            this.showDebugMessage("::: getEquipmentSlotMods  -    scorpion_combat_carrier bonus : " + clothSlotMod);
+          }
+        }
+
+        
 
         // https://www.nexusmods.com/cyberpunk2077/mods/11597
         if StrContains(currentItemFriendlyName,"t2_vest_08") {

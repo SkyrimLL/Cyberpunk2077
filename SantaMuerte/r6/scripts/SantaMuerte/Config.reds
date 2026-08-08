@@ -48,7 +48,17 @@
   @runtimeProperty("ModSettings.category.order", "15")
   @runtimeProperty("ModSettings.displayName", "Randomize Death Animation")
   @runtimeProperty("ModSettings.description", "Use a mix between default animation and the animation from Second Heart Fx (V falls flat on the ground when dying).")
-  let randomDeathAnimationON: Bool = true; 
+  let randomDeathAnimationON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Death Options")
+  @runtimeProperty("ModSettings.category.order", "16")
+  @runtimeProperty("ModSettings.displayName", "Death Animation Delay")
+  @runtimeProperty("ModSettings.description", "Delay in seconds before resurrection to allow death animation to play. Set to 0 for instant resurrection.")
+  @runtimeProperty("ModSettings.step", "0.5")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "5.0")
+  let deathAnimationDelay: Float = 2.0; 
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Resurrection Options")
@@ -191,11 +201,18 @@
   @runtimeProperty("ModSettings.category.order", "40")
   @runtimeProperty("ModSettings.displayName", "Death Teleport Hardcore mode")
   @runtimeProperty("ModSettings.description", "If ON, when teleported to an unsafe destination (Detour), V will be robbed from most inventory items (WARNING: Quest items should be safe. There is no way to recover stolen items).")
-  let hardcoreDetourRobbedON: Bool = false;   
+  let hardcoreDetourRobbedON: Bool = false;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
   @runtimeProperty("ModSettings.category.order", "41")
+  @runtimeProperty("ModSettings.displayName", "Only rob on teleports")
+  @runtimeProperty("ModSettings.description", "If ON, robbery can only happen during teleports. If OFF, robbery can also happen during blackout/time skip events without teleportation.")
+  let hardcoreOnlyRobOnTeleportON: Bool = true;   
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Robbed and left for dead")
+  @runtimeProperty("ModSettings.category.order", "42")
   @runtimeProperty("ModSettings.displayName", "Chance of being robbed")
   @runtimeProperty("ModSettings.description", "Sets the random chance of stolen items from V's inventory after waking up in an unsafe destination.")
   @runtimeProperty("ModSettings.step", "1")
@@ -205,14 +222,14 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "42")
+  @runtimeProperty("ModSettings.category.order", "43")
   @runtimeProperty("ModSettings.displayName", "Always steal equipped items")
   @runtimeProperty("ModSettings.description", "If ON, equipped items will be stolen no matter what. If OFF, equipped items will be subjected to the chance of being robbed defined above.")
   let hardcoreStealEquippedON: Bool = false;   
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "43")
+  @runtimeProperty("ModSettings.category.order", "44")
   @runtimeProperty("ModSettings.displayName", "Chance of losing items when robbed")
   @runtimeProperty("ModSettings.description", "Sets the random chance of stolen items items from V's inventory after waking up in an unsafe destination.")
   @runtimeProperty("ModSettings.step", "1")
@@ -222,14 +239,14 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "44")
+  @runtimeProperty("ModSettings.category.order", "45")
   @runtimeProperty("ModSettings.displayName", "Some detours can strip cyberware")
   @runtimeProperty("ModSettings.description", "If ON, some unsafe destinations will also include Cyberware as items that can be stolen.")
   let hardcoreStealCyberwareON: Bool = false;   
   
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Robbed and left for dead")
-  @runtimeProperty("ModSettings.category.order", "45")
+  @runtimeProperty("ModSettings.category.order", "46")
   @runtimeProperty("ModSettings.displayName", "Percent of lost money when robbed")
   @runtimeProperty("ModSettings.description", "Sets percentage of money robbed after waking up in an unsafe destination (set to 0 to disable)")
   @runtimeProperty("ModSettings.step", "1")
@@ -259,6 +276,33 @@
   let deathWhenImpersonatingJohnnyON: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Sleep Recovery")
+  @runtimeProperty("ModSettings.category.order", "55")
+  @runtimeProperty("ModSettings.displayName", "Enable Sleep Recovery")
+  @runtimeProperty("ModSettings.description", "Turn ON to restore a small amount of resurrections after sleeping (time skip of 3+ hours).")
+  let sleepRecoveryON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Sleep Recovery")
+  @runtimeProperty("ModSettings.category.order", "56")
+  @runtimeProperty("ModSettings.displayName", "Resurrections Restored")
+  @runtimeProperty("ModSettings.description", "Number of resurrections restored after a good sleep (capped at max).")
+  @runtimeProperty("ModSettings.step", "1")
+  @runtimeProperty("ModSettings.min", "1")
+  @runtimeProperty("ModSettings.max", "10")
+  let sleepRecoveryAmount: Int32 = 2;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Sleep Recovery")
+  @runtimeProperty("ModSettings.category.order", "57")
+  @runtimeProperty("ModSettings.displayName", "Min Sleep Duration (hours)")
+  @runtimeProperty("ModSettings.description", "Minimum time skip duration (in hours) required to trigger resurrection recovery.")
+  @runtimeProperty("ModSettings.step", "0.5")
+  @runtimeProperty("ModSettings.min", "1.0")
+  @runtimeProperty("ModSettings.max", "12.0")
+  let sleepRecoveryMinDuration: Float = 3.0;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "HUD")
   @runtimeProperty("ModSettings.category.order", "60")
   @runtimeProperty("ModSettings.displayName", "Display Resurrections in HUD")
@@ -273,6 +317,20 @@
   let informativeHUDCompatibilityON: Bool = false;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Tutorials")
+  @runtimeProperty("ModSettings.category.order", "80")
+  @runtimeProperty("ModSettings.displayName", "Display Tutorial Messages")
+  @runtimeProperty("ModSettings.description", "Show tutorial messages explaining game mechanics at key moments (first resurrection, first teleport, etc.). Tutorials will only display once per save.")
+  let showTutorialsON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Tutorials")
+  @runtimeProperty("ModSettings.category.order", "81")
+  @runtimeProperty("ModSettings.displayName", "Reset All Tutorials")
+  @runtimeProperty("ModSettings.description", "Turn ON to reset all tutorial messages so they can be shown again. This will automatically turn OFF after the reset is complete.")
+  let resetTutorialsON: Bool = false;
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Notifications")
   @runtimeProperty("ModSettings.category.order", "90")
   @runtimeProperty("ModSettings.displayName", "Display Warning Messages")
@@ -281,11 +339,16 @@
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Testing only")
-  @runtimeProperty("ModSettings.category.order", "91")
+  @runtimeProperty("ModSettings.category.order", "92")
   @runtimeProperty("ModSettings.displayName", "Display Test Messages")
   @runtimeProperty("ModSettings.description", "Display Test Messages in the console and on screen")
   let debugON: Bool = true;
 
+  // ── Listener registration ────────────────────────────────────────────────
+
+  public func RegisterMyListeners() -> Void {
+      ModSettings.RegisterListenerToClass(this);
+  }
 }
 
 // Replace false with true to show full debug logs in CET console

@@ -97,6 +97,11 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     }
   }
 
+  public cb func OnModSettingsChange() -> Void {
+      this.showDebugMessage("[ClaimVehicles] Settings changed – applying update.");
+      this.refreshConfig();  
+  }
+
   public func refreshConfig() -> Void {
     this.config = new ClaimVehiclesConfig(); 
     this.invalidateCurrentState();
@@ -132,6 +137,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
     if (this.warningsON) {
       this.showDebugMessage("N.C.L.A.I.M: Reading Vehicle ID from Model: '"+claimedVehicleModel+"'"  );
+      this.showDebugMessage(">>> ClaimVehicles: getVehicleStringFromModel: searching for:" + TDBID.ToStringDEBUG(vehicleRecordID));
     }
 
     // Universal vehicle detection
@@ -1055,7 +1061,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   }
 
   private func showDebugMessage(debugMessage: String) {
-    // LogChannel(n"DEBUG", debugMessage ); 
+    // LogChannel(n"DEBUG", debugMessage );  
   }
 
 // Compatibility with Codeware mod: use EnablePlayerVehicleID instead of EnablePlayerVehicle if Codeware is installed

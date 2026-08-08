@@ -125,6 +125,12 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.description", "Display Test Messages in the console and on screen")
   let debugON: Bool = true;
 
+
+  // ── Listener registration ────────────────────────────────────────────────
+
+  public func RegisterMyListeners() -> Void {
+      ModSettings.RegisterListenerToClass(this);
+  }
 }
 
 // Replace false with true to show full debug logs in CET console

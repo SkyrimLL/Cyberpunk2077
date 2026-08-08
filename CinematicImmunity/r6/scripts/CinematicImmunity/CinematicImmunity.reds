@@ -32,6 +32,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public let immunityActTransitionON: Bool;
     public let immunityDFTRON: Bool;
     public let immunityPanamChaseON: Bool;
+    public let immunityCarRaceON: Bool;
+    public let immunityChimeraChaseON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
         ModSettings.RegisterListenerToModifications(this);
@@ -68,6 +70,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.immunityActTransitionON = this.config.immunityActTransitionON;
         this.immunityDFTRON          = this.config.immunityDFTRON;
         this.immunityPanamChaseON    = this.config.immunityPanamChaseON;
+        this.immunityCarRaceON        = this.config.immunityCarRaceON;
+        this.immunityChimeraChaseON  = this.config.immunityChimeraChaseON;
     }
 
     public cb func OnModSettingsChange() -> Void {
@@ -124,6 +128,7 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         let bdSystem: ref<BraindanceSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"BraindanceSystem") as BraindanceSystem;
         let bb: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
 
+        let isPhantomLibertyStandalone: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"ep1_standalone") >= 1;
 
         let noTimeSkip: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"NoTimeSkip"); 
         let noFastTravel: Bool = StatusEffectSystem.ObjectHasStatusEffect(this.player, t"GameplayRestriction.BlockFastTravel");
@@ -189,6 +194,13 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         // Car chase: active during high-speed vehicle sequences.  
         // let isCarChase: Bool = qs.GetFact(n"car_chase_on") >= 1;
 
+        // V in Claire's car races 
+        let isCarRace: Bool = this.immunityCarRaceON
+                               && qs.GetFact(n"custom_race_started") >= 1;
+                
+        this.showDebugMessage("[CinematicImmunity] custom_race_started=" + qs.GetFact(n"custom_race_started"));
+
+
         // V in scene: active during specific in-game scenes, as determined by the high-level state machine tier.
         // Disabled for now, as it is too restrictive and prevents teleporting if combat is still ongoing after a scene ends.  Will need to find a better way to check for combat state.
         // let isInScene: Bool = this.immunityInSceneON
@@ -216,6 +228,21 @@ public class CinematicImmunity extends ScriptedPuppetPS {
                                  && qs.GetFact(n"q005_done") >= 1
                                  && qs.GetFact(n"q101_v_reached_pills") < 1
                                  && qs.GetFact(n"q101_08_takemura_hmm") < 1;
+
+        // Force disable Heist escape and Act transition immunity in Phantom Liberty standalone mode, since those sequences are not present in that version of the game.
+        if isPhantomLibertyStandalone {
+            isHeistEscape = false;
+            isActTransition = false;
+        }
+
+        // Chimera chase: active during the Chimera chase sequence.
+        let isChimeraChase: Bool = this.immunityChimeraChaseON
+                               && (
+                                qs.GetFact(n"chimera_phase1_fact") >= 1
+                                || qs.GetFact(n"chimera_phase2_fact") >= 1
+                                || qs.GetFact(n"chimera_phase3_fact") >= 1
+                               )
+                               && qs.GetFact(n"chimera_defeated") < 1;
 
         // this.showDebugMessage("[CinematicImmunity] q005_done=" + qs.GetFact(n"q005_done"));
         // this.showDebugMessage("[CinematicImmunity] q101_v_reached_pills=" + qs.GetFact(n"q101_v_reached_pills"));
@@ -254,6 +281,9 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.showDebugMessage("[CinematicImmunity] isActTransition=" + BoolToString(isActTransition));
         this.showDebugMessage("[CinematicImmunity] isDontFearTheReaper=" + BoolToString(isDontFearTheReaper));
         this.showDebugMessage("[CinematicImmunity] isPanamChase=" + BoolToString(isPanamChase));
+        this.showDebugMessage("[CinematicImmunity] isCarRace=" + BoolToString(isCarRace));
+        this.showDebugMessage("[CinematicImmunity] isChimeraChase=" + BoolToString(isChimeraChase));
+        
 
         let shouldBeImmune: Bool = isVRTutorial
                                 || isJohnnyPossession
@@ -266,6 +296,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
                                 || isHeistEscape
                                 || isActTransition
                                 || isDontFearTheReaper
+                                || isCarRace
+                                || isChimeraChase
                                 || isPanamChase;
 
         this.showDebugMessage("[CinematicImmunity] shouldBeImmune=" + BoolToString(shouldBeImmune));
