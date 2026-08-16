@@ -59,6 +59,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
     public let modON: Bool;
     public let heartbeatContinuousON: Bool;
+    public let effectDynamicStatusON: Bool;
+    public let effectCinematicImmunityON: Bool;
     public let effectVRON: Bool;
     public let isArcadeMachineON: Bool;
 
@@ -93,6 +95,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public func invalidateCurrentState() -> Void {    
         this.modON = this.config.modON;
         this.heartbeatContinuousON = this.config.heartbeatContinuousON;
+        this.effectDynamicStatusON = this.config.effectDynamicStatusON;
+        this.effectCinematicImmunityON = this.config.effectCinematicImmunityON;
         this.effectVRON = this.config.effectVRON;
         this.effectBraindanceON = this.config.effectBraindanceON;
         this.effectBraindanceEditorON = this.config.effectBraindanceEditorON;
@@ -151,14 +155,22 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
         this.refreshReshadeProfile();
         this.refreshReshadeEffects();
+        this.refreshCinematicImmunityEffect();
 
     }
 
     public func refreshReshadeProfile() -> Void {
-        if !this.modON {
-            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: mod disabled in settings, skipping profile switch.");
+        let questSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.player.GetGame());
+        let thermalVisionActive: Bool = questSystem.GetFact(n"qc_thermal_vision_active") > 0;
+
+        if !this.modON || thermalVisionActive {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: mod disabled or thermal vision inactive, turning off all ReShade effects.");
+            RB_SetEffectsEnabled(false);
             return;
         }
+
+        // Ensure effects are enabled when mod is active
+        RB_SetEffectsEnabled(true);
 
         // TODO: catch status of other quest facts to determine which Reshade profile to use
         // - start/end of nomad lifepath intro quest - q000_nomad / q001_hide_ammo_counter
@@ -200,27 +212,27 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
         let bdSystem: ref<BraindanceSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"BraindanceSystem") as BraindanceSystem;
     
-        let isVictorHUDInstalled: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") >= 1; // Confirmed working
-        let isAmmoCounterHidden: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
-        let isArasakaUION: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
-        let isDigitalSicknessON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") >= 1; // Not working 
-        let isCyberspaceON: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") >= 1; // Not tested
+        let isVictorHUDInstalled: Bool = questSystem.GetFact(n"q001_ripperdoc_done") >= 1; // Confirmed working
+        let isAmmoCounterHidden: Bool = questSystem.GetFact(n"q001_hide_ammo_counter") >= 1;   // Confirmed working
+        let isArasakaUION: Bool = questSystem.GetFact(n"q000_var_arasaka_ui_on") >= 1; // Confirmed working
+        let isDigitalSicknessON: Bool = questSystem.GetFact(n"q001_wakeup_scene_done") >= 1; // Not working 
+        let isCyberspaceON: Bool = questSystem.GetFact(n"cyberspace_on") >= 1; // Not tested
         let isBraindanceON: Bool = bdSystem.isInBraindance; // Not tested
         let isBraindanceEditorON: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"Braindance"); // Confirmed working
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
 
         let newReshadeProfile: String;
 
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isCyberspaceON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"cyberspace_on") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isCyberspaceON is " + questSystem.GetFact(n"cyberspace_on") );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isVRTutorialON is " + isVRTutorialON );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isVJAsJohnny is " + isVJAsJohnny );
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isDigitalSicknessON is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_wakeup_scene_done") );
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isAmmoCounterHidden is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_hide_ammo_counter") );
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isArasakaUION is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q000_var_arasaka_ui_on") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isDigitalSicknessON is " + questSystem.GetFact(n"q001_wakeup_scene_done") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isAmmoCounterHidden is " + questSystem.GetFact(n"q001_hide_ammo_counter") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isArasakaUION is " + questSystem.GetFact(n"q000_var_arasaka_ui_on") );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isBraindanceON is " + isBraindanceON );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isBraindanceEditorON is " + isBraindanceEditorON );
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isVictorHUDInstalled is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_ripperdoc_done") );
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isPrologueStarted is " + GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isVictorHUDInstalled is " + questSystem.GetFact(n"q001_ripperdoc_done") );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isPrologueStarted is " + questSystem.GetFact(n"q001_active") );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isArcadeMachineON is " + this.isArcadeMachineON );
 
         if !RB_IsRuntimeReady() {
@@ -286,6 +298,11 @@ public class ConditionalOptics extends ScriptedPuppetPS {
             return;
         }
 
+        if !this.effectDynamicStatusON {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: dynamic effects disabled in settings, skipping Reshade techniques switches.");
+            return;
+        }
+
         let game = this.player.GetGame();  
         let ses: ref<StatusEffectSystem>;
         ses = GameInstance.GetStatusEffectSystem(this.player.GetGame());
@@ -299,7 +316,6 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let hasJohnnyEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessLow") 
             || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessMedium")
             || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessHeavy"); 
-        let hasCinematicImmunityEffect: Bool = GameInstance.GetQuestsSystem(game).GetFactStr("ConditionalImmunityStatus") > 0; 
 
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasExhaustedEffect is " + hasExhaustedEffect);
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasBleedingEffect is " + hasBleedingEffect);
@@ -308,7 +324,6 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasElectrocutedEffect is " + hasElectrocutedEffect);
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasEncumberedEffect is " + hasEncumberedEffect);
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasJohnnyEffect is " + hasJohnnyEffect);
-        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasCinematicImmunityEffect is " + hasCinematicImmunityEffect);
  
         this.switchTechnique("GanossaMotionFocus", hasExhaustedEffect);
         this.switchTechnique("LiquidLens", hasExhaustedEffect);
@@ -324,6 +339,23 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.switchTechnique("TiltShift", hasEncumberedEffect);
 
         this.switchTechnique("AdaptiveColorGrading", hasJohnnyEffect);
+    }
+
+    public func refreshCinematicImmunityEffect() -> Void {
+        if !this.modON {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshCinematicImmunityEffect: mod disabled in settings, skipping.");
+            return;
+        }
+
+        if !this.effectCinematicImmunityON {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshCinematicImmunityEffect: cinematic immunity effect disabled in settings, skipping.");
+            return;
+        }
+
+        let game = this.player.GetGame();
+        let hasCinematicImmunityEffect: Bool = GameInstance.GetQuestsSystem(game).GetFactStr("ConditionalImmunityStatus") > 0;
+
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshCinematicImmunityEffect: hasCinematicImmunityEffect is " + hasCinematicImmunityEffect);
         
         this.switchTechnique("Border", hasCinematicImmunityEffect);
     }

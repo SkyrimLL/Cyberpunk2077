@@ -51,6 +51,22 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
 
     _playerPuppetPS.m_santaMuerteTracking.forceCombatExit();
 
+    // FIX: Restore health regeneration after resurrection to fix Biomonitor and other auto-heal cyberware
+    // This was previously commented out but is needed to re-enable stat pool regeneration modifiers
+    if !IsMultiplayer() && ScriptedPuppet.IsActive(owner) {
+      GameInstance.GetStatPoolsSystem(owner.GetGame()).RequestSettingModifierWithRecord(
+        Cast<StatsObjectID>(owner.GetEntityID()), 
+        gamedataStatPoolType.Health, 
+        gameStatPoolModificationTypes.Regeneration, 
+        t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen"
+      );
+    };
+
+    // FIX: Clean up audio events to prevent audio degradation after multiple deaths
+    // Reset audio parameters that may be stuck from death animations
+    scriptInterface.GetAudioSystem().Play(n"global_death_exit");
+    this.SetAudioParameter(n"RTPC_Vertical_Velocity", 0.00, scriptInterface);
+
     // // borrowed from: public class ExplorationEvents extends HighLevelTransition { -> OnEnter()
     // let animFeature: ref<AnimFeature_SceneSystem>;
     // PlayerPuppet.ReevaluateAllBreathingEffects(scriptInterface.owner as PlayerPuppet);
@@ -106,6 +122,11 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
     _playerPuppetPS.m_santaMuerteTracking.applyJohnnySickness();
 
     // _playerPuppetPS.m_santaMuerteTracking.forceCameraReset();
+
+    // Clear Second Heart status effect with delay to avoid crash and allow resurrection animation to complete
+    // Delay increased to 4.0 seconds to ensure the full resurrection sequence finishes before clearing
+    let clearSecondHeartEvt: ref<DelayedClearSecondHeartEvent> = new DelayedClearSecondHeartEvent();
+    GameInstance.GetDelaySystem(owner.GetGame()).DelayEvent(owner, clearSecondHeartEvt, 4.0);
 
 	  wrappedMethod( stateContext, scriptInterface );
     GameInstance.GetDelaySystem( owner.GetGame() ).DelayEvent( owner, enableVisibilityEvt, 0.1 );
@@ -195,7 +216,8 @@ protected func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<Stat
           return;
         
         } else {
-          // Final death detected
+          // Final death detected - resurrections exhausted
+          // Note: This triggers game load unless permadeath bridge addon is installed
           _playerPuppetPS.m_santaMuerteTracking.markGameForPermaDeath();
 
         };      		

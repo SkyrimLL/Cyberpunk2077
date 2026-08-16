@@ -569,3 +569,6 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.yv_toyota_supra_yellow
   - !append Vehicle.rs_etron_gt
   - !append Vehicle.camaro_ss_2010_base
+  - !append Vehicle.beat_base
+  - !append Vehicle.maelstrom__yaiba_kusanagi
+  - !append Vehicle.mox__yaiba_kusanagi

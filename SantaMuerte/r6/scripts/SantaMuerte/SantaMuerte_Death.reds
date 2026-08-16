@@ -5,10 +5,19 @@ public class DelayedSkipTimeEvent extends Event {
   public let timeSkipped: Float;
 }
 
+// Event for delayed Second Heart status effect removal
+public class DelayedClearSecondHeartEvent extends Event {}
+
 @addMethod(PlayerPuppet)
 protected cb func OnDelayedSkipTimeEvent(evt: ref<DelayedSkipTimeEvent>) -> Bool {
   let playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
   playerPuppetPS.m_santaMuerteTracking.skipTimeWithBlackout(evt.timeSkipped);
+}
+
+@addMethod(PlayerPuppet)
+protected cb func OnDelayedClearSecondHeartEvent(evt: ref<DelayedClearSecondHeartEvent>) -> Bool {
+  let playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+  playerPuppetPS.m_santaMuerteTracking.clearSecondHeart();
 }
 
 @replaceMethod(DeathDecisions)
@@ -69,7 +78,10 @@ protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: r
 				this.StartDeathEffects( stateContext, scriptInterface );
 				this.isDyingEffectPlaying = false;
 				super.OnEnter ( stateContext, scriptInterface );
-				this.ForceDisableToggleWalk( stateContext );
+				this.ForceDisableToggleWalk( stateContext );			
+				// FIX: Clean up any lingering audio effects from previous deaths
+				// This helps prevent audio degradation after multiple deaths
+				scriptInterface.GetAudioSystem().NotifyGameTone(n"EnterDeath");
 				return;
 			// }
 			}

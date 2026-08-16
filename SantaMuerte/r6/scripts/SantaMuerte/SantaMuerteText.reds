@@ -23,7 +23,9 @@ public class SantaMuerteText {
 
   public static func RESURRECTUNLIMITED() -> String { return "RELIC Protocol Initiated Load Address: 0x00R%VAL%S: CRITICAL ::FATAL ERROR::"; } 
 
-  public static func PERMADEATH() -> String { return "The Santa Muerte welcomes you: CORRUPTED ::FATAL ERROR::"; } 
+  public static func PERMADEATH() -> String { return "The Santa Muerte welcomes you: CORRUPTED ::FATAL ERROR::"; }
+  
+  public static func FINALDEATH() -> String { return "RELIC FAILURE: Resurrection limit reached. Game will load last save."; } 
 
   public static func SAFETELEPORTFEE() -> String { return "Safety Extraction Processing Fee: %VAL%"; } 
 
@@ -62,6 +64,7 @@ public class SantaMuerteText {
     msg += "• Resurrections Remaining: %COUNT%/%MAX%\n";
     msg += "• Each death consumes one resurrection charge\n";
     msg += "• When charges are depleted, death will be permanent\n\n";
+    msg += "• With the Soulkiller permadeath add-on, your last death means having to start a new game\n\n";
     msg += "The Relic's capabilities may evolve as your journey continues. Monitor your status carefully.";
     return msg;
   }

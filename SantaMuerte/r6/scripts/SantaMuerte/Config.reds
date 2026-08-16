@@ -83,13 +83,20 @@
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Resurrection Options")
   @runtimeProperty("ModSettings.category.order", "22")
-  @runtimeProperty("ModSettings.displayName", "Unlimited Resurrect")
-  @runtimeProperty("ModSettings.description", "Bypass the maximum number of resurrections")
-  let unlimitedResurrectON: Bool = false; 
+  @runtimeProperty("ModSettings.displayName", "Unlimited Resurrections")
+  @runtimeProperty("ModSettings.description", "If ON, you will have unlimited resurrections and never reach the maximum. The resurrection pool will not be managed.")
+  let unlimitedResurrectionsON: Bool = false;
 
   @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
   @runtimeProperty("ModSettings.category", "Resurrection Options")
   @runtimeProperty("ModSettings.category.order", "23")
+  @runtimeProperty("ModSettings.displayName", "Second Heart Installed")
+  @runtimeProperty("ModSettings.description", "Amplifies resurrection recovery during sleep/rest")
+  let hasSecondHeartInstalledON: Bool = false; 
+
+  @runtimeProperty("ModSettings.mod", "SANTA MUERTE")
+  @runtimeProperty("ModSettings.category", "Resurrection Options")
+  @runtimeProperty("ModSettings.category.order", "24")
   @runtimeProperty("ModSettings.displayName", "Dark Future Compatibility")
   @runtimeProperty("ModSettings.description", "Resurrections will impact your energy and nerve.")
   let darkFutureEffectON: Bool = false; 

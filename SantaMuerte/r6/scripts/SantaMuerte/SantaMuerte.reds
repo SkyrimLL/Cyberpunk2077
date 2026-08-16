@@ -31,6 +31,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let resurrectCountMax:  Int32;
   public let scaleResurrectionsModifier: Float;
   public let capResurrectionsOverride: Int32;
+  public let unlimitedResurrectionsON: Bool;
   public let deathLandingProtectionON: Bool;
   public let deathInVehiclesProtectionON: Bool;
   public let skipTimeON: Bool;
@@ -56,12 +57,13 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public let hardcoreDetourRobbedChance: Int32;
   public let hardcoreDetourRobbedClothingChance: Int32;
   public let hardcoreDetourRobbedMoneyPercent: Int32;
+  public let hasSecondHeartInstalledON: Bool; 
 
   public let stolenCyberwareCount: Int32;
+  public let hasSecondHeartInstalled: Bool;
 
   public let config: ref<SantaMuerteConfig>;
 
-  public let unlimitedResurrectON: Bool; 
 
   public let modON: Bool;  
 
@@ -86,6 +88,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.player = player;
 
     this.refreshConfig();
+
+    // Clear any lingering JohnnySickness effects from previous session
+    this.clearJohnnySickness();
+
+    // Clear any lingering Second Heart cooldown effects from previous session
+    this.clearSecondHeart();
 
     // Initialize tutorial tracker (persistent data)
     if !IsDefined(this.tutorialTrackerData) {
@@ -150,7 +158,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     this.santaMuerteLoreDifficultyON = this.config.santaMuerteLoreDifficultyON;
     this.scaleResurrectionsModifier = this.config.scaleResurrectionsModifier;
     this.capResurrectionsOverride = this.config.capResurrectionsOverride;
-    this.unlimitedResurrectON = this.config.unlimitedResurrectON;
+    this.unlimitedResurrectionsON = this.config.unlimitedResurrectionsON;
+    this.hasSecondHeartInstalledON = this.config.hasSecondHeartInstalledON;
     this.deathLandingProtectionON = this.config.deathLandingProtectionON;
     this.deathInVehiclesProtectionON = this.config.deathInVehiclesProtectionON;
     this.skipTimeON = this.config.skipTimeON;
@@ -218,8 +227,8 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   public func updateResurrections(isSecondHeartInstalled: Bool) -> Void {    
     let relicMetaquestContribution: Int32 = this.getRelicMetaquestContribution() ;
 
-    if (this.unlimitedResurrectON) || (isSecondHeartInstalled) {
-      this.showDebugMessage( ">>> Santa Muerte: updateResurrections: skipped: isSecondHeartInstalled [" + ToString(isSecondHeartInstalled) + "] - unlimitedResurrectON [" + ToString(this.unlimitedResurrectON) + "]" );
+    if (isSecondHeartInstalled) {
+      this.showDebugMessage( ">>> Santa Muerte: updateResurrections: skipped: isSecondHeartInstalled [" + ToString(isSecondHeartInstalled) + "]" );
       return;
     }
 
@@ -309,6 +318,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   }
 
   public func restoreResurrectionsAfterSleep(skipHoursAmount: Float) -> Void {
+    // Clear any lingering JohnnySickness effects after time skip
+    this.clearJohnnySickness();
+    
+    // Clear any lingering Second Heart cooldown effects after time skip
+    this.clearSecondHeart();
+
     if (!this.sleepRecoveryON) {
       return;
     }
@@ -343,6 +358,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       recoveryChance = (resurrectionsLeft * 100) / this.resurrectCountMax;
     }
     
+    // Amplify recovery if Second Heart is installed
+    if (this.hasSecondHeartInstalledON) {
+      recoveryChance = Min(recoveryChance + 50, 100); // Boost chance by 50%, capped at 100%
+      this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Second Heart amplifying recovery chance to " + ToString(recoveryChance) + "%" );
+    }
+    
     let randomRoll: Int32 = RandRange(0, 100);
     let fullRecovery: Bool = randomRoll < recoveryChance;
     
@@ -355,6 +376,11 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     if (fullRecovery) {
       // Full recovery - restore the configured amount
       amountToRestore = this.sleepRecoveryAmount;
+      // Amplify recovery amount if Second Heart is installed
+      if (this.hasSecondHeartInstalledON) {
+        amountToRestore = Cast<Int32>(Cast<Float>(amountToRestore) * 1.5); // 50% more resurrections restored
+        this.showDebugMessage( ">>> Santa Muerte: restoreResurrectionsAfterSleep: Second Heart amplifying recovery amount to " + ToString(amountToRestore) );
+      }
     } else {
       // Partial recovery - only restore 1 resurrection
       amountToRestore = 1;
@@ -366,6 +392,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     }
 
     if this.darkFutureEffectON {
+      // SantaMuerteDFState = 1 -> Healing effect
       GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 1);
       GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("SantaMuerteDFState", 0);
     }
@@ -394,15 +421,22 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         this.tutorialManager.showTutorial(SantaMuerteTutorialType.SleepRecovery);
       }
     }
+     
   }
 
   public func maxResurrectionReached(isSecondHeartInstalled: Bool) -> Bool {    
     this.updateMaxResurrections();
 
-    if (this.unlimitedResurrectON) || (isSecondHeartInstalled) { 
-      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: unlimitedResurrectON = " + ToString(this.unlimitedResurrectON) );
-      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: isSecondHeartInstalled = " + ToString(isSecondHeartInstalled) );
+    // Check for unlimited resurrections mode
+    if (this.unlimitedResurrectionsON) {
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: Unlimited resurrections enabled ");
       return false;
+    }
+
+    if (isSecondHeartInstalled) { 
+      this.hasSecondHeartInstalled = true;
+      this.showDebugMessage( ">>> Santa Muerte: maxResurrectionReached: isSecondHeartInstalled = " + ToString(isSecondHeartInstalled) );
+      // return false; // Unlimited resurrections with secondHeart disabled as of 2026-08-15
     }
 
     if (!this.deathWhenImpersonatingJohnnyON) && (this.isPlayerImpersonatingJohnny())  {
@@ -420,10 +454,6 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
   } 
 
   public func getMaxResurrectionPercent() -> Float {    
-    if (this.unlimitedResurrectON) { 
-      return 100.0;
-    }
-
     if (this.resurrectCountMax != 0) {
       return (Cast<Float>(this.resurrectCount) * 100.0) / Cast<Float>(this.resurrectCountMax) ;  
     } else {
@@ -779,6 +809,12 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       timeSystem.SetGameTimeBySeconds(Cast<Int32>(newTimeStamp));
       GameTimeUtils.FastForwardPlayerState(this.player);
 
+      // Clear any lingering JohnnySickness effects after time skip
+      this.clearJohnnySickness();
+      
+      // Clear any lingering Second Heart cooldown effects after time skip
+      this.clearSecondHeart();
+
       // Restore resurrections after a good sleep/rest
       // this.restoreResurrectionsAfterSleep(skipHoursAmount);
 
@@ -859,6 +895,28 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
       m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.CyberwareInstallationAnimationBlackout");
     }
+  }
+
+  public func clearJohnnySickness() -> Void {
+    let m_statusEffectSystem: wref<StatusEffectSystem>;
+    m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+
+    this.showDebugMessage( ">>> Santa Muerte: clearJohnnySickness" ); 
+
+    // Remove all possible JohnnySickness effects that might be lingering
+    m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessLow");
+    m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessMedium");
+    m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessHeavy");
+  }
+
+  public func clearSecondHeart() -> Void {
+    let m_statusEffectSystem: wref<StatusEffectSystem>;
+    m_statusEffectSystem = GameInstance.GetStatusEffectSystem(this.player.GetGame());
+
+    this.showDebugMessage( ">>> Santa Muerte: clearSecondHeart" ); 
+
+    // Remove Second Heart effect - delayed to avoid crash during resurrection
+    m_statusEffectSystem.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.SecondHeart");
   } 
  
   public func forceBlackout() -> Void {
@@ -937,27 +995,33 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
       // FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.m_owner.GetGame());
       // GameObjectEffectHelper.BreakEffectLoopEvent(this.m_owner, n"stealth_mode");
 
+      // Use built-in combat controller method instead of manual implementation
+      this.player.m_combatController.ActivateOutOfCombat();
 
-      let invalidateEvent: ref<PlayerCombatControllerInvalidateEvent> = new PlayerCombatControllerInvalidateEvent();
-      invalidateEvent.m_state = PlayerCombatState.OutOfCombat;
-      this.player.QueueEvent(invalidateEvent);
+      // Manual implementation - commented out in favor of ActivateOutOfCombat()
+      // let invalidateEvent: ref<PlayerCombatControllerInvalidateEvent> = new PlayerCombatControllerInvalidateEvent();
+      // invalidateEvent.m_state = PlayerCombatState.OutOfCombat;
+      // this.player.QueueEvent(invalidateEvent);
 
-      GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
-      GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
+      // GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
+      // GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
       
       // 2024-12-07 - Testing shut down combat
       // Fixed: Changed from 2 (OutOfCombat transition state) to 0 (Default resting state)
       // This allows the player to properly re-enter combat after resurrection
-      this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 0);   
-      this.player.m_combatController.SendAnimFeatureData(false);
-      PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
-      // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
-      ChatterHelper.TryPlayLeaveCombatChatter(this.player);
-      GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
-      GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
+      // NOTE: ActivateOutOfCombat() sets Combat state to 2 (standard transition), not 0
 
-      FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.player.GetGame());
-      GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"stealth_mode");   
+      // this.player.SetBlackboardIntVariable(GetAllBlackboardDefs().PlayerStateMachine.Combat, 0);   
+      // this.player.m_combatController.SendAnimFeatureData(false);
+      // PlayerPuppet.ReevaluateAllBreathingEffects(this.player as PlayerPuppet);
+      // GameInstance.GetStatPoolsSystem(this.player.GetGame()).RequestSettingModifierWithRecord(Cast<StatsObjectID>(this.player.GetEntityID()), gamedataStatPoolType.Health, gameStatPoolModificationTypes.Regeneration, t"BaseStatPools.PlayerBaseOutOfCombatHealthRegen");
+      // ChatterHelper.TryPlayLeaveCombatChatter(this.player);
+
+      // GameInstance.GetAudioSystem(this.player.GetGame()).NotifyGameTone(n"LeaveCombat");
+      // GameInstance.GetAudioSystem(this.player.GetGame()).HandleOutOfCombatMix(this.player);
+
+      // FastTravelSystem.RemoveFastTravelLock(n"InCombat", this.player.GetGame());
+      // GameObjectEffectHelper.BreakEffectLoopEvent(this.player, n"stealth_mode");   
  
     };
 
@@ -1012,22 +1076,32 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     randNum = RandRange(0,100);
 
+    // Try hospital teleports first if enabled (covers 0-99 range)
     if (this.blackoutSafeTeleportHospitalON)  {
       if (randNum >= 30) && (!(this.isInDogtown())) {
         this.showDebugMessage( ">>> Santa Muerte: Medevac to Hospital" ); 
         teleportSuccessful = this.tryTeleportMedicalCenter();
-      }      
-      if (randNum < 30) {
+      } else if (randNum < 30) {
         this.showDebugMessage( ">>> Santa Muerte: Viktor only" ); 
         teleportSuccessful = this.tryTeleportViktor();
       }
+      
+      // If hospital teleport succeeded, return early
+      if (teleportSuccessful) {
+        // Show safe teleport tutorial on first successful teleport
+        if IsDefined(this.tutorialManager) {
+          let delayedEvent: ref<DelayedTutorialEvent> = new DelayedTutorialEvent();
+          delayedEvent.tutorialType = SantaMuerteTutorialType.FirstSafeTeleport;
+          GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, delayedEvent, 3.0);
+        }
+        return true;
+      }
     }
 
+    // Try ripper doc teleports if hospital teleports failed or weren't enabled
     if (this.blackoutSafeTeleportON)  {
-      if (randNum < 90) && (randNum > 0) {
-        this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
-        teleportSuccessful = this.tryTeleportRipperDoc();
-      }
+      this.showDebugMessage( ">>> Santa Muerte: Nearby RipperDoc" ); 
+      teleportSuccessful = this.tryTeleportRipperDoc();
     } 
 
     // Show safe teleport tutorial on first successful teleport
@@ -2527,8 +2601,8 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
     }
 
     // Guardrails to avoid setting permadeath when it is not needed
-    if (this.unlimitedResurrectON) {
-      this.showDebugMessage( ">>> Santa Muerte: markGameForPermaDeath: skipped: unlimitedResurrectON [" + ToString(this.unlimitedResurrectON) + "]" );
+    if (this.hasSecondHeartInstalledON) {
+      this.showDebugMessage( ">>> Santa Muerte: markGameForPermaDeath: skipped: hasSecondHeartInstalledON [" + ToString(this.hasSecondHeartInstalledON) + "]" );
       return;
     }
 
@@ -2537,9 +2611,16 @@ NotEquals(this.GetItemData().GetItemType(), gamedataItemType.Con_Skillbook)
       return; 
     }
 
-    if this.maxResurrectionReached(false) {
-      // Send signal to CET to write flag
+    if this.maxResurrectionReached(this.hasSecondHeartInstalled) {
+      // Send signal to CET bridge addon (if installed) to write permadeath flag
+      // NOTE: Without the santaMuertePermadeathBridge addon, game will simply load last save
       GameInstance.GetQuestsSystem(this.player.GetGame()).SetFactStr("MarkPermadeath", 1);
+      
+      // Show clearer message about what's happening
+      let message: String = SantaMuerteText.FINALDEATH();
+      if (this.warningsON) {
+        this.player.SetWarningMessage(message, SimpleMessageType.Relic);
+      }
     } else {
       if this.darkFutureEffectON {
         if (this.getMaxResurrectionPercent() < 50.0) {

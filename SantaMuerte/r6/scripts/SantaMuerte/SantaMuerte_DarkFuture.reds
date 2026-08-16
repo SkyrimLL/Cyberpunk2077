@@ -18,10 +18,22 @@ import DarkFuture.Needs.DFNerveSystem
 import DarkFuture.Needs.DFEnergySystem
 
 @if(ModuleExists("DarkFuture.System"))
+import DarkFuture.Addictions.DFAlcoholAddictionSystem
+
+@if(ModuleExists("DarkFuture.System"))
+import DarkFuture.Addictions.DFNarcoticAddictionSystem
+
+@if(ModuleExists("DarkFuture.System"))
+import DarkFuture.Addictions.DFNicotineAddictionSystem
+
+@if(ModuleExists("DarkFuture.System"))
 public class SantaMuerteCompatibility_DarkFuture extends ScriptableSystem {
 	private let questsSystem: wref<QuestsSystem>;
 	private let dfNerveSystem: ref<DFNerveSystem>;
 	private let dfEnergySystem: ref<DFEnergySystem>;
+	private let dfAlcoholAddictionSystem: ref<DFAlcoholAddictionSystem>;
+	private let dfNarcoticAddictionSystem: ref<DFNarcoticAddictionSystem>;
+	private let dfNicotineAddictionSystem: ref<DFNicotineAddictionSystem>;
 
 	private let baseFact: CName = n"SantaMuerteDFState";
 
@@ -39,6 +51,9 @@ public class SantaMuerteCompatibility_DarkFuture extends ScriptableSystem {
 			this.questsSystem = GameInstance.GetQuestsSystem(gameInst);
 			this.dfNerveSystem = DFNerveSystem.GetInstance(gameInst);
 			this.dfEnergySystem = DFEnergySystem.GetInstance(gameInst);
+			this.dfAlcoholAddictionSystem = DFAlcoholAddictionSystem.GetInstance(gameInst);
+			this.dfNarcoticAddictionSystem = DFNarcoticAddictionSystem.GetInstance(gameInst);
+			this.dfNicotineAddictionSystem = DFNicotineAddictionSystem.GetInstance(gameInst);
 
 			this.showDebugMessage("SANTA MUERTE >>> SantaMuerteCompatibility_DarkFuture: Player attached, registering listener for fact " + ToString(this.baseFact));
 			this.baseFactListenerId = this.questsSystem.RegisterListener(this.baseFact, this, n"OnFactChange");
@@ -52,13 +67,16 @@ public class SantaMuerteCompatibility_DarkFuture extends ScriptableSystem {
 	protected cb func OnFactChange(factValue: Int32) -> Bool {
 		if factValue == 1 { // Beneficial effect: resurrections have a healing effect
 			this.showDebugMessage("SantaMuerteCompatibility_DarkFuture: Beneficial effect: resurrections have a healing effect");
-			this.dfNerveSystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(20.0, 40.0), true);
-			this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(10.0, 20.0), true);
+			this.dfNerveSystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(10.0, 20.0), true);
+			this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(20.0, 40.0), true);	 
+			this.dfAlcoholAddictionSystem.ModAddictionAmount(-10.0);
+			this.dfNarcoticAddictionSystem.ModAddictionAmount(-10.0);
+			this.dfNicotineAddictionSystem.ModAddictionAmount(-10.0);
 		} else {
 			if factValue == 2 { // Detrimental effect: resurrections have a damaging effect
 				this.showDebugMessage("SantaMuerteCompatibility_DarkFuture: Detrimental effect: resurrections have a damaging effect");
-				this.dfNerveSystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(-10.0, -20.0), true);
-				this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(-20.0, -40.0), true);
+			    this.dfNerveSystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(-20.0, -40.0), true);
+				this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(-10.0, -20.0), true);
 			}
 
 		}
@@ -76,6 +94,9 @@ public class NegotiableAffection_DarkFuture extends ScriptableSystem {
 	private let questsSystem: wref<QuestsSystem>;
 	private let dfNerveSystem: ref<DFNerveSystem>;
 	private let dfEnergySystem: ref<DFEnergySystem>;
+	private let dfAlcoholAddictionSystem: ref<DFAlcoholAddictionSystem>;
+	private let dfNarcoticAddictionSystem: ref<DFNarcoticAddictionSystem>;
+	private let dfNicotineAddictionSystem: ref<DFNicotineAddictionSystem>;
 
 	private let baseFact: CName = n"na_v_is_working";
 
@@ -93,6 +114,9 @@ public class NegotiableAffection_DarkFuture extends ScriptableSystem {
 			this.questsSystem = GameInstance.GetQuestsSystem(gameInst);
 			this.dfNerveSystem = DFNerveSystem.GetInstance(gameInst);
 			this.dfEnergySystem = DFEnergySystem.GetInstance(gameInst);
+			this.dfAlcoholAddictionSystem = DFAlcoholAddictionSystem.GetInstance(gameInst);
+			this.dfNarcoticAddictionSystem = DFNarcoticAddictionSystem.GetInstance(gameInst);
+			this.dfNicotineAddictionSystem = DFNicotineAddictionSystem.GetInstance(gameInst);
 
 			this.showDebugMessage("SANTA MUERTE >>> NegotiableAffection_DarkFuture: Player attached, registering listener for fact " + ToString(this.baseFact));
 			this.baseFactListenerId = this.questsSystem.RegisterListener(this.baseFact, this, n"OnFactChange");
@@ -107,7 +131,10 @@ public class NegotiableAffection_DarkFuture extends ScriptableSystem {
 		if factValue == 1 { // Beneficial effect: resurrections have a healing effect
 			this.showDebugMessage("NegotiableAffection_DarkFuture: Beneficial effect: sex has a healing effect");
 			this.dfNerveSystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(20.0, 40.0), true);
-			this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(10.0, 20.0), true);
+			this.dfEnergySystem.QueueContextuallyDelayedNeedValueChange(RandRangeF(10.0, 20.0), true); 
+			this.dfAlcoholAddictionSystem.ModAddictionAmount(-30.0);
+			this.dfNarcoticAddictionSystem.ModAddictionAmount(-30.0);
+			this.dfNicotineAddictionSystem.ModAddictionAmount(-30.0);
 		}  
 	}
 
