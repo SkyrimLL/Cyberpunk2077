@@ -1,4 +1,6 @@
 Vehicle.vehicle_list.list: 
+  - !append Vehicle.maelstrom__yaiba_kusanagi
+  - !append Vehicle.mox__yaiba_kusanagi
   - !append Vehicle.NCA.cs_savable_v_standard25_thorton_merrimac_police_siren
   - !append Vehicle.NCA.v_sportbike3_brennan_apollo_sport
   - !append Vehicle.NCA.v_sportbike2_arch_courier
@@ -570,5 +572,4 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.rs_etron_gt
   - !append Vehicle.camaro_ss_2010_base
   - !append Vehicle.beat_base
-  - !append Vehicle.maelstrom__yaiba_kusanagi
-  - !append Vehicle.mox__yaiba_kusanagi
+  - !append Vehicle.yv_pantera_customisable

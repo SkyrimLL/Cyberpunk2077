@@ -140,8 +140,8 @@ protected cb func OnSantaMuerteResurrectionUpdateEvent(evt: ref<SantaMuerteResur
       numbers.Reparent(canvas);        
     }
 
-    // Display relic resurrections
-    if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) {   
+    // Display relic resurrections (but not when impersonating Johnny)
+    if (_playerPuppetPS.m_santaMuerteTracking.modON) && (_playerPuppetPS.m_santaMuerteTracking.isRelicInstalled()) && (_playerPuppetPS.m_santaMuerteTracking.santaMuerteWidgetON) && !(_playerPuppetPS.m_santaMuerteTracking.isPlayerImpersonatingJohnny()) {   
     // if (player.IsInCombat()) 
     // {
       let resurrections = new inkText();
