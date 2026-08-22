@@ -33,7 +33,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   public let debugON: Bool;
   public let warningsON: Bool;  
 
-  public let scannerModeON: Bool;
+  public let quickhackManualModeON: Bool;
   public let remoteControlQuickhackON: Bool; 
   public let forceBrakesQuickhackON: Bool; 
 
@@ -118,7 +118,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     this.summonMode = this.config.summonMode;  
     this.remoteControlQuickhackON = this.config.remoteControlQuickhackON;   
     this.forceBrakesQuickhackON = this.config.forceBrakesQuickhackON;   
-    this.scannerModeON = this.config.scannerModeON;  
+    this.quickhackManualModeON = this.config.quickhackManualModeON;  
     this.warningsON = this.config.warningsON;
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;  

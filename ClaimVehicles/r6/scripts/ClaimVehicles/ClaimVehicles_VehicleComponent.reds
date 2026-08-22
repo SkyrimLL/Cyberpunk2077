@@ -36,7 +36,7 @@
       isVehicleHackable = true;
     }  
 
-    if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.scannerModeON)) ) {
+    if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON)) ) {
 
       if (isVehicleHackable) { 
         _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);
@@ -69,21 +69,47 @@
     
     if ((_playerPuppetPS.m_claimedVehicleTracking.modON) && (evt.remoteControl)) {
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: OnRemoteControlEvent: ");
-      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: scannerModeON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.scannerModeON));
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: quickhackManualModeON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON));
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: remoteControlQuickhackON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON));
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: playerGearheadLevel: " + ToString(playerGearheadLevel));
 
-      // GearHead perk + Scanner mode (easy mode ON) = 100% chance of stealing vehicle
-      if ((_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) && (playerGearheadLevel>=1)) {
-        _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
+      // GearHead perk + Manual mode (easy mode ON) = 100% chance of stealing vehicle
+      if (_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON) {
+        if (playerGearheadLevel>=1) {
+          _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);
         } else {
-          // Else, normal chance if RemoteControl quickhack is ON
-          if ((_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) ){
+          // Manual mode enabled but missing perk - notify user and fall through to dynamic mode
+          if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+            _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Manual mode requires Gearhead perk (Tech tree)");
+          }
+          // Fall through to dynamic mode
+          if (_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) {
             if (chanceHack  > playerOnStealTrigger) {
-              _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);  
+              _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);
             } else {
+              if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+                _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Vehicle claim attempt failed");
+              }
               _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
             }
+          } else if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+            _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Remote Control claiming is disabled");
           }
+        }
+      } else {
+        // Normal dynamic mode - RemoteControl quickhack is ON
+        if (_playerPuppetPS.m_claimedVehicleTracking.remoteControlQuickhackON) {
+          if (chanceHack  > playerOnStealTrigger) {
+            _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), true);
+          } else {
+            if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+              _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Vehicle claim attempt failed");
+            }
+            _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+          }
+        } else if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+          _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Remote Control claiming is disabled");
+        }
       }
     }
 
@@ -93,6 +119,8 @@
 @wrapMethod(VehicleComponent)
 
   protected cb func OnForceBrakesQuickhackEvent(evt: ref<VehicleForceBrakesQuickhackEvent>) -> Bool {
+    wrappedMethod(evt);
+
     let _playerPuppet: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(this.GetVehicle().GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
     let _playerPuppetPS: ref<PlayerPuppetPS> = _playerPuppet.GetPS();
     let playerDevSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(_playerPuppet.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
@@ -108,17 +136,18 @@
     };
     */
 
-    // TO DO: Add method to remove a vehicle from Manager List
     if (_playerPuppetPS.m_claimedVehicleTracking.modON)  {
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: OnForceBrakesQuickhackEvent: ");
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: forceBrakesQuickhackON: " + ToString(_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON));
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(":: playerGearheadLevel: " + ToString(playerGearheadLevel));
 
-      if ((_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) && (playerGearheadLevel>=1)) {
-        _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);  
+      if (_playerPuppetPS.m_claimedVehicleTracking.forceBrakesQuickhackON) {
+        if (playerGearheadLevel>=1) {
+          _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(this.GetVehicle(), false);
+        } else if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
+          _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Gearhead perk required (Tech tree)");
+        }
       }
     }
-
-    wrappedMethod(evt);
   }
  

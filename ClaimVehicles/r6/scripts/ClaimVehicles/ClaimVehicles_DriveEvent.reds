@@ -27,7 +27,7 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
 
       vehicle = scriptInterface.owner as VehicleObject;
       
-      if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.scannerModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.scannerModeON)) ) {
+      if (_playerPuppetPS.m_claimedVehicleTracking.modON) && ( (!_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON) || ( (_playerPuppetPS.m_claimedVehicleTracking.player.m_focusModeActive) && (_playerPuppetPS.m_claimedVehicleTracking.quickhackManualModeON)) ) {
 
         // Added here to display vehicle Model strings in logs even when mod doesn't trigger - Remove once testing is done
         let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());

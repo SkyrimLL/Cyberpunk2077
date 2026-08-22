@@ -33,8 +33,8 @@ public class ClaimVehiclesConfig {
   @runtimeProperty("ModSettings.category", "Manual Mode")
   @runtimeProperty("ModSettings.category.order", "10")
   @runtimeProperty("ModSettings.displayName", "Manual Remote Control QuickHack Claim")
-  @runtimeProperty("ModSettings.description", "Gives 100% chance of stealing vehicle if GearHead perk is ON and Remote Control Quickhack is used (OFF means claim attempts are dynamic)")
-  let scannerModeON: Bool = false; 
+  @runtimeProperty("ModSettings.description", "Gives 100% chance of stealing vehicle when Remote Control Quickhack is used. REQUIRES Gearhead perk (Tech tree, level 1+). Falls back to dynamic mode if perk is missing.")
+  let quickhackManualModeON: Bool = false; 
 
   @runtimeProperty("ModSettings.mod", "N.C.L.A.I.M.S")
   @runtimeProperty("ModSettings.category", "Dynamic mode - Vehicle Claim System")
@@ -117,8 +117,8 @@ public class ClaimVehiclesConfig {
   @runtimeProperty("ModSettings.category", "QuickHacks support")
   @runtimeProperty("ModSettings.category.order", "41")
   @runtimeProperty("ModSettings.displayName", "Force Brakes QuickHack Dismiss")
-  @runtimeProperty("ModSettings.description", "Force Brakes QuickHack will dismiss a vehicle if it is in your list.")
-  let forceBrakesQuickhackON: Bool = false; 
+  @runtimeProperty("ModSettings.description", "Force Brakes QuickHack will dismiss a vehicle if it is in your list. Requires Gearhead perk (level 1+).")
+  let forceBrakesQuickhackON: Bool = true; 
 
   @runtimeProperty("ModSettings.mod", "N.C.L.A.I.M.S")
   @runtimeProperty("ModSettings.category", "Notifications")
