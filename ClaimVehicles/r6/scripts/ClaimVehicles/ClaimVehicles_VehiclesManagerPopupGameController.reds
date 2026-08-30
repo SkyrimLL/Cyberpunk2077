@@ -60,10 +60,26 @@ public func forceRefreshVehicleList() -> Void {
     // wrappedMethod calls SetupData() -> GetPlayerUnlockedVehicles().
     // The game engine can evict NPC-origin vehicles between the claim event
     // and popup open, so they must be re-asserted here to appear in the list.
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state BEFORE reapplyClaimedVehicles:");
+      _playerPuppetPS.m_claimedVehicleTracking.printGarage();
+    }
+    
     _playerPuppetPS.m_claimedVehicleTracking.reapplyClaimedVehicles();
+    
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state AFTER reapplyClaimedVehicles:");
+      _playerPuppetPS.m_claimedVehicleTracking.printGarage();
+    }
 
     // Apply current summon mode restrictions (Last/Random/etc.) after re-registration.
+    // Do this BEFORE wrappedMethod so SetupData() sees the filtered list
     _playerPuppetPS.m_claimedVehicleTracking.refreshGarage();
+    
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state AFTER refreshGarage, BEFORE wrappedMethod:");
+      _playerPuppetPS.m_claimedVehicleTracking.printGarage();
+    }
 
     wrappedMethod(playerPuppet);
 
@@ -71,10 +87,15 @@ public func forceRefreshVehicleList() -> Void {
     // snapshotted the vehicle list before TogglePlayerActiveVehicle finished committing
     // to the vehicle system.  Force one more reset now that all initialization has run.
     if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
-      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state after wrappedMethod:");
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: garage state BEFORE forceRefreshVehicleList:");
       _playerPuppetPS.m_claimedVehicleTracking.printGarage();
     }
     this.forceRefreshVehicleList();
+    
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+      _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: FINAL garage state after all processing:");
+      _playerPuppetPS.m_claimedVehicleTracking.printGarage();
+    }
 }
 
 //public class scannerDetailsGameController extends inkHUDGameController {

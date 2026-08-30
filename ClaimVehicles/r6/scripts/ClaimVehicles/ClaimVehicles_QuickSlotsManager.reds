@@ -41,16 +41,18 @@
           // LogChannel(n"DEBUG", "N.C.L.A.I.M: Checking database for '"+StrLower(_this_vehicleModel)+"' - isUnlocked: " + vehiclesList[i].isUnlocked);
         }
 
-        if ( StrCmp(StrLower(_this_vehicleModel), StrLower(vehicleModel)) == 0 ) {
+        // Compare by tweakID instead of display name string
+        if ( Equals(vehiclesList[i].recordID, vehicleData.recordID) ) {
           if (playerOwner.m_claimedVehicleTracking.warningsON) { 
-            // LogChannel(n"DEBUG", ">>> Found matching vehicle record ID.");
+            // LogChannel(n"DEBUG", ">>> Found matching vehicle by tweakID.");
           }
           matchFound = 1;
    
           // GameInstance.GetVehicleSystem(this.m_Player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(vehicleData.recordID), vehicleData.vehicleType, true); 
           playerOwner.m_claimedVehicleTracking.getVehicleStringFromModel(vehiclesList[i].recordID, _this_vehicleModel);
 
-          if (StrCmp(playerOwner.m_claimedVehicleTracking.matchVehicleString, "")!=0) {
+          // Check if vehicle has valid tweakID instead of string check
+          if (TDBID.IsValid(playerOwner.m_claimedVehicleTracking.matchVehicleRecordID) && !Equals(playerOwner.m_claimedVehicleTracking.matchVehicleRecordID, t"")) {
 
             playerOwner.m_claimedVehicleTracking.enablePlayerVehicle( playerOwner.m_claimedVehicleTracking.matchVehicleRecordID, false, false);
           }

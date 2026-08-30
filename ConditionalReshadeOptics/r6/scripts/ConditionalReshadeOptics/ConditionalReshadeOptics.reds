@@ -160,6 +160,13 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     }
 
     public func refreshReshadeProfile() -> Void {
+        // Check if player is in an active game session (not in pre-game menu)
+        if !IsDefined(this.player) {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: player not defined, skipping (likely in main menu).");
+            RB_SetEffectsEnabled(false);
+            return;
+        }
+
         let questSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.player.GetGame());
         let thermalVisionActive: Bool = questSystem.GetFact(n"qc_thermal_vision_active") > 0;
 
@@ -293,6 +300,12 @@ public class ConditionalOptics extends ScriptedPuppetPS {
 
 
     public func refreshReshadeEffects() -> Void {
+        // Check if player is in an active game session (not in pre-game menu)
+        if !IsDefined(this.player) {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: player not defined, skipping (likely in main menu).");
+            return;
+        }
+
         if !this.modON {
             this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: mod disabled in settings, skipping Reshade techniques switches.");
             return;
@@ -307,15 +320,40 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let ses: ref<StatusEffectSystem>;
         ses = GameInstance.GetStatusEffectSystem(this.player.GetGame());
 
-        let hasExhaustedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerExhausted"); 
-        let hasBleedingEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerBleeding"); 
-        let hasBurningEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerBurning"); 
-        let hasPoisonedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerPoisoned"); 
-        let hasElectrocutedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerElectrocuted"); 
+        // BaseStatusEffect.Blind 
+        // BaseStatusEffect.MajorBlind 
+        // BaseStatusEffect.MinorBlind 
+        // BaseStatusEffect.ModerateBlind 
+        // BaseStatusEffect.BreathingHeavy
+        // BaseStatusEffect.BreathingLow
+        // BaseStatusEffect.BreathingMedium
+        // BaseStatusEffect.BreathingSick
+        // BaseStatusEffect.Burning
+        // BaseStatusEffect.MediumBurning
+        // BaseStatusEffect.Cloaked
+        // BaseStatusEffect.Drugged
+        // BaseStatusEffect.DruggedSevere
+        // BaseStatusEffect.Drunk
+        // BaseStatusEffect.Overheat 
+        // BaseStatusEffect.Sandevsitan 
+
+        let hasExhaustedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Exhausted"); 
+        let hasBleedingEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Bleeding"); 
+        let hasBurningEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Burning") 
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.MediumBurning")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Overheat")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"AIQuickHackStatusEffect.HackOverheat"); 
+        let hasPoisonedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Poisoned"); 
+        let hasElectrocutedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.OverloadShort") 
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Overload")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Blind")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.MajorBlind")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.MinorBlind")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.ModerateBlind"); 
         let hasEncumberedEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");  
         let hasJohnnyEffect: Bool = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessLow") 
-            || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessMedium")
-            || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessHeavy"); 
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessMedium")
+                                    || ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.JohnnySicknessHeavy"); 
 
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasExhaustedEffect is " + hasExhaustedEffect);
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeEffects: hasBleedingEffect is " + hasBleedingEffect);
@@ -331,17 +369,20 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.switchTechnique("AdaptiveColorGrading", hasBleedingEffect);
 
         this.switchTechnique("DeepFry", hasBurningEffect);
-
         this.switchTechnique("HueFX", hasPoisonedEffect);
-
         this.switchTechnique("ASCII", hasElectrocutedEffect);
-
         this.switchTechnique("TiltShift", hasEncumberedEffect);
 
         this.switchTechnique("AdaptiveColorGrading", hasJohnnyEffect);
     }
 
     public func refreshCinematicImmunityEffect() -> Void {
+        // Check if player is in an active game session (not in pre-game menu)
+        if !IsDefined(this.player) {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshCinematicImmunityEffect: player not defined, skipping (likely in main menu).");
+            return;
+        }
+
         if !this.modON {
             this.showDebugMessage("[ConditionalReshadeOptics] refreshCinematicImmunityEffect: mod disabled in settings, skipping.");
             return;

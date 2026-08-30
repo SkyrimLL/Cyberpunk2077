@@ -1,0 +1,32 @@
+
+quest:
+  phases:
+    - path: mod\LiveALittleMilitechFix\quest\LiveALittleMilitechFix.questphase
+      parent: base\quest\persistent_content.questphase
+      input:
+        node: [151, 9, 3, 6, 21]
+        socket: "Out"
+      output:
+        node: [151, 9, 3, 6, 38]
+        socket: "In"
+      intercept: true
+
+    - path:  mod\LiveALittleMilitechFix\quest\LiveALittleMilitechFix_cut.questphase
+      parent: base\quest\persistent_content.questphase
+      input:
+        node: [151, 9, 3, 6, 21]
+        socket: "Out"
+      output:
+        node: [151, 9, 3, 6, 27]
+        socket: "CutDestination"
+      intercept: true
+
+    - path: mod\LiveALittleMilitechFix\quest\LiveALittleMilitechFix.questphase
+      parent: mod\quest\changedquests\newgameplus_persistent_content.questphase
+      input:
+        node: [151, 9, 3, 6, 21]
+        socket: "Out"
+      output:
+        node: [151, 9, 3, 6, 38]
+        socket: "In"
+      intercept: true

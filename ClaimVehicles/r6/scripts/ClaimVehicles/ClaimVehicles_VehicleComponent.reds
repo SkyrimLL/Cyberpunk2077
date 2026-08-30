@@ -41,7 +41,25 @@
       if (isVehicleHackable) { 
         _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);
       } else {
-        _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+        // Get vehicle info to check if it's known
+        let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());
+        let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
+        _playerPuppetPS.m_claimedVehicleTracking.getVehicleStringFromModel(vehicle.GetRecordID(), claimedVehicleModel);
+        
+        // Only report crime for known vehicles (valid tweakID in database)
+        let isVehicleKnown: Bool = TDBID.IsValid(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID) && !Equals(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID, t"");
+        
+        if (isVehicleKnown) {
+          // Skip crime reporting if vehicle is from El Capitan courier mission
+          let isQuestVehicle: Bool = vehicle.IsQuest();
+          let isCourierMissionActive: Bool = GameInstance.GetQuestsSystem(_playerPuppet.GetGame()).GetFact(n"sa_ep1_couriers_active") >= 1;
+          
+          if (!isQuestVehicle && !isCourierMissionActive) {
+            _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+          }
+        } else {
+          _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: StealVehicle - skipped crime reporting (unknown vehicle)"  );
+        }
       }
     }
   }
@@ -90,7 +108,31 @@
               if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
                 _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Vehicle claim attempt failed");
               }
-              _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+              
+              // Get vehicle info to check if it's known
+              let vehicle: wref<VehicleObject> = this.GetVehicle();
+              let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());
+              let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
+              _playerPuppetPS.m_claimedVehicleTracking.getVehicleStringFromModel(vehicle.GetRecordID(), claimedVehicleModel);
+              
+              // Only report crime for known vehicles (valid tweakID in database)
+              let isVehicleKnown: Bool = TDBID.IsValid(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID) && !Equals(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID, t"");
+              
+              if (isVehicleKnown) {
+                // Skip crime reporting if vehicle is from El Capitan courier mission
+                let isQuestVehicle: Bool = vehicle.IsQuest();
+                let isCourierMissionActive: Bool = GameInstance.GetQuestsSystem(_playerPuppet.GetGame()).GetFact(n"sa_ep1_couriers_active") >= 1;
+                
+                if (!isQuestVehicle && !isCourierMissionActive) {
+                  _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+                } else {
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnRemoteControlEvent - skipped crime reporting (quest/courier)"  );
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnRemoteControlEvent - isQuestVehicle: "+ToString(isQuestVehicle)  );
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnRemoteControlEvent - isCourierMissionActive: "+ToString(isCourierMissionActive)  );
+                }
+              } else {
+                _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnRemoteControlEvent - skipped crime reporting (unknown vehicle)"  );
+              }
             }
           } else if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
             _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Remote Control claiming is disabled");
@@ -105,7 +147,27 @@
             if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
               _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Vehicle claim attempt failed");
             }
-            _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+            
+            // Get vehicle info to check if it's known
+            let vehicle: wref<VehicleObject> = this.GetVehicle();
+            let claimedVehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(vehicle.GetRecordID());
+            let claimedVehicleModel: String = GetLocalizedItemNameByCName(claimedVehicleRecord.DisplayName());
+            _playerPuppetPS.m_claimedVehicleTracking.getVehicleStringFromModel(vehicle.GetRecordID(), claimedVehicleModel);
+            
+            // Only report crime for known vehicles (valid tweakID in database)
+            let isVehicleKnown: Bool = TDBID.IsValid(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID) && !Equals(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID, t"");
+            
+            if (isVehicleKnown) {
+              // Skip crime reporting if vehicle is from El Capitan courier mission
+              let isQuestVehicle: Bool = vehicle.IsQuest();
+              let isCourierMissionActive: Bool = GameInstance.GetQuestsSystem(_playerPuppet.GetGame()).GetFact(n"sa_ep1_couriers_active") >= 1;
+              
+              if (!isQuestVehicle && !isCourierMissionActive) {
+                _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+              }
+            } else {
+              _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnRemoteControlEvent - skipped crime reporting (unknown vehicle)"  );
+            }
           }
         } else if (_playerPuppetPS.m_claimedVehicleTracking.warningsON) {
           _playerPuppet.SetWarningMessage("N.C.L.A.I.M: Remote Control claiming is disabled");

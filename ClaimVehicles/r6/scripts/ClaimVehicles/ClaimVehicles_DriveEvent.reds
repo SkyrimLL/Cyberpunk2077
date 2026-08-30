@@ -172,22 +172,36 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
               // LogChannel(n"DEBUG", "::: OnExit - matchVehicleUnlocked: "+ToString(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked)  );
             }
 
-
-            if (isVehicleHackable){ 
+            // Check if vehicle is already owned BEFORE attempting claim
+            // This prevents re-claiming vehicles after loading a save while sitting in them
+            if (_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked) || (_playerPuppetPS.m_claimedVehicleTracking.checkVehicleInSavedGarage(vehicle.GetRecordID())) || (_playerPuppetPS.m_claimedVehicleTracking.checkVehicleVariantInGarage(vehicle.GetRecordID())){
+              // Vehicle is already unlocked - skip claim attempt entirely
+              if (_playerPuppetPS.m_claimedVehicleTracking.debugON) {
+                _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnExit - vehicle already owned, skipping claim attempt");
+              }
+            } else if (isVehicleHackable){ 
               _playerPuppetPS.m_claimedVehicleTracking.tryClaimVehicle(vehicle, true);   
 
             }  else {
-
-              // check if vehicle is already owned in both old and new lists
-              if (_playerPuppetPS.m_claimedVehicleTracking.matchVehicleUnlocked) || (_playerPuppetPS.m_claimedVehicleTracking.checkVehicleInSavedGarage(vehicle.GetRecordID())){
-                // Vehicle is already unlocked
-              } else {
-                _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
-
-              }
+              // Vehicle not owned and hack failed - report crime for known vehicles
+              // Only report crime for known vehicles (valid tweakID in database)
+              let isVehicleKnown: Bool = TDBID.IsValid(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID) && !Equals(_playerPuppetPS.m_claimedVehicleTracking.matchVehicleRecordID, t"");
               
-
- 
+              if (isVehicleKnown) {
+                // Skip crime reporting if vehicle is from El Capitan courier mission
+                let isQuestVehicle: Bool = vehicle.IsQuest();
+                let isCourierMissionActive: Bool = GameInstance.GetQuestsSystem(_playerPuppet.GetGame()).GetFact(n"sa_ep1_couriers_active") >= 1;
+                
+                if (!isQuestVehicle && !isCourierMissionActive) {
+                  _playerPuppetPS.m_claimedVehicleTracking.tryReportCrime(false);
+                } else {
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnExit - skipped crime reporting (quest/courier)"  );
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnExit - isQuestVehicle: "+ToString(isQuestVehicle)  );
+                  _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnExit - isCourierMissionActive: "+ToString(isCourierMissionActive)  );
+                }
+              } else {
+                _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage("::: OnExit - skipped crime reporting (unknown vehicle)"  );
+              }
             }
 
             // Commented out for 2.0.2 testing
@@ -206,7 +220,9 @@ public final func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<S
     // let recordID: TweakDBID = vehicle.GetRecordID();
     // let record: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(recordID);
     // LogChannel(n"DEBUG", "::: OnExit - HasVisualCustomization: "+ToString(record.HasVisualCustomization())  );
+    _playerPuppetPS.m_claimedVehicleTracking.refreshGarage();
 
+    if (_playerPuppetPS.m_claimedVehicleTracking.debugON) { _playerPuppetPS.m_claimedVehicleTracking.printGarage(); }
 
     this.SetIsVehicleDriver(stateContext, false);
     this.SendAnimFeature(stateContext, scriptInterface);
