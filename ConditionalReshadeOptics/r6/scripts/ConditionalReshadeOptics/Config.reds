@@ -103,6 +103,20 @@ public class ConditionalReshadeOpticsConfig {
     @runtimeProperty("ModSettings.description", "Allow profile switching to NoCyberware for fallback/default state.")
     let effectNoCyberwareON: Bool = true;
 
+    @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
+    @runtimeProperty("ModSettings.category", "Profile detection")
+    @runtimeProperty("ModSettings.category.order", "30")
+    @runtimeProperty("ModSettings.displayName", "Enable surveillance camera profile")
+    @runtimeProperty("ModSettings.description", "Allow profile switching to SurveillanceCamera when the player is remote-controlling a hacked surveillance camera.")
+    let effectSurveillanceCameraON: Bool = true;
+
+    @runtimeProperty("ModSettings.mod", "CONDITIONAL RESHADE OPTICS")
+    @runtimeProperty("ModSettings.category", "Profile detection")
+    @runtimeProperty("ModSettings.category.order", "31")
+    @runtimeProperty("ModSettings.displayName", "Enable drone remote control profile")
+    @runtimeProperty("ModSettings.description", "Allow profile switching to Drone when the player is remote-controlling a hacked drone or non-camera device.")
+    let effectDroneON: Bool = true;
+
 
     public func RegisterMyListeners() {
         // Automatically updates your class variables when changed in the UI

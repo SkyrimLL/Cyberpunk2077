@@ -1,0 +1,35 @@
+# -------------------------------------------------------------------------
+# 1. ITEM DEFINITIONS
+# -------------------------------------------------------------------------
+ 
+# NOTE: Items.MedicalDisinfectant is defined in custom_items.yaml.
+# NOTE: Items.MedicalGauze is defined in junk_consumables.yaml (vanilla-ID promotion).
+
+# Define the required ingredients: 1x Bloody Bandage + 1x Disinfectant
+Crafting.GauzeRecipe_Ingredients:
+  $type: CraftingPackage
+  craftingGlobalXP: 10
+  craftingSkill: "Proficiency.Crafting"
+  costStat: "BaseStats.CraftingCost"
+  ingredients:
+    - !append-once
+      $type: Ingredient
+      invItem: Items.FieldMedic_BloodyBandage
+      quantity: 1
+    - !append-once
+      $type: Ingredient
+      invItem: Items.FieldMedic_AntisepticDisinfectant
+      quantity: 1
+
+# Define the recipe record itself
+Crafting.Craft_MedicalGauze:
+  $type: ItemRecipe
+  craftingPackage: Crafting.GauzeRecipe_Ingredients
+  targetItem: Items.FieldMedic_MedicalGauze
+  amount: 1
+  hideOnItemsLimit: false
+ 
+# Registers the blueprint automatically in V's known crafting specs list
+CraftingSystem.DefaultRecipes:
+  recipes:
+    - !append-once Crafting.Craft_MedicalGauze

@@ -573,3 +573,4 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.camaro_ss_2010_base
   - !append Vehicle.beat_base
   - !append Vehicle.yv_pantera_customisable
+  - !append Vehicle.rs6_gt

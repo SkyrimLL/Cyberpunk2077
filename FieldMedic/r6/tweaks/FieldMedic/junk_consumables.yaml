@@ -1,0 +1,64 @@
+# FieldMedic — Convert passive junk items into improvised consumables.
+#
+# NOTE: Overriding vanilla junk records does NOT work because TweakXL cannot change an
+# existing record's class. Instead, this file defines NEW ConsumableItem_Record clones
+# and a redscript hook (see FieldMedic.reds) swaps the vanilla junk out for the
+# FieldMedic version at container-fill / pickup / player-attach time.
+
+# --- Medical Gauze (FieldMedic clone) -------------------------------------------------------
+# Slow heal-over-time bandage. Cloned from BounceBack L1 so it inherits objectActions,
+# gameplayLogicPackage, animations, and the Consume flow. Name/description come from the
+# vanilla junk record at runtime (see FieldMedic.reds UI wraps).
+Items.FieldMedic_MedicalGauze:
+  $base: Items.BonesMcCoy70V0 
+  itemType: ItemType.Con_Edible
+  displayName: LocKey#4947
+  iconPath: "MedicalGauze" 
+  tags:
+    - Consumable
+    - Medical
+    - FieldMedic
+    - FieldMedic_Bandage
+
+# --- Antiseptic Disinfectant (FieldMedic clone) ---------------------------------------------
+# Instant status cleanser. Cloned from a first-aid medkit so it inherits the Consume flow.
+# iconPath overrides the base medkit icon so the backpack shows the disinfectant bottle
+# rather than a health injector.
+Items.FieldMedic_AntisepticDisinfectant:
+  $base: Items.FirstAidMedikitCommon
+  itemType: ItemType.Con_Edible
+  displayName: LocKey#4964
+  iconPath: "AntisepticDisinfectant"
+  tags:
+    - Consumable
+    - Medical
+    - FieldMedic
+    - FieldMedic_Antiseptic
+    - CraftingMaterial
+  
+# --- Bloody Bandage -------------------------------------------------------------------------
+# Emergency heal — clears Bleeding and restores a small flat chunk of health, but has a
+# chance of applying Poisoned (infection risk).
+Items.FieldMedic_BloodyBandage:
+  $type: ConsumableItem_Record
+  $base: Items.BonesMcCoy70V0
+  itemCategory: ItemCategory.Consumable
+  itemType: ItemType.Con_Edible
+  consumableBaseName: ConsumableBaseName.BonesMcCoy70
+  quality: Quality.Common
+  displayName: LocKey#5024
+  localizedDescription: FieldMedic-BloodyBandage-Desc
+  tags:
+    - Consumable
+    - Medical
+    - FieldMedic
+    - FieldMedic_Bandage
+    - FieldMedic_Risky
+    - CraftingMaterial
+  OnEquip:
+    - !append-once ItemAction.Consume
+  OnUse:
+    - !append-once ItemAction.Consume
+
+
+

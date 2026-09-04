@@ -469,6 +469,7 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
     let playerLevelContribution: Int32 = this.getPlayerLevelContribution();
     let cyberwareContribution: Int32 = this.getCyberwareContribution();
     let relicMetaquestContribution: Int32 = this.getRelicMetaquestContribution();
+    let relicPerkPointsContribution: Int32 = this.getRelicPerkPointsAllocated();
     let tarotCardsContribution: Int32 = this.getTarotCardsContribution();
 
     // Check fact for Jackie's tomb 
@@ -483,9 +484,10 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
         // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: playerLevelContribution = " + ToString(playerLevelContribution) );
         // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: cyberwareContribution = " + ToString(cyberwareContribution) );
         // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicMetaquestContribution = " + ToString(relicMetaquestContribution) );
+        // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicPerkPointsContribution = " + ToString(relicPerkPointsContribution) );
         // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: tarotCardsContribution = " + ToString(tarotCardsContribution) );
 
-        this.resurrectCountMax = Cast<Int32>( (Cast<Float>(playerLevelContribution + relicMetaquestContribution + cyberwareContribution + resurrectionFacts + tarotCardsContribution)) * this.scaleResurrectionsModifier); 
+        this.resurrectCountMax = Cast<Int32>( (Cast<Float>(playerLevelContribution + relicMetaquestContribution + relicPerkPointsContribution + cyberwareContribution + resurrectionFacts + tarotCardsContribution)) * this.scaleResurrectionsModifier); 
       } else {
         this.resurrectCountMax = this.capResurrectionsOverride;
       }
@@ -617,6 +619,37 @@ public class SantaMuerteTracking extends ScriptedPuppetPS {
 
     return(_relicMetaquestContribution);
   } 
+
+  // Sums points spent in the Relic (Espionage) perk tree; costs come from IsEspionageMilestonePerk (3 pts) vs regular perks (1 pt)
+  public func getRelicPerkPointsAllocated() -> Int32 {
+    let devSystem: ref<PlayerDevelopmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"PlayerDevelopmentSystem") as PlayerDevelopmentSystem;
+    let relicPerks: array<gamedataNewPerkType> = [
+      gamedataNewPerkType.Espionage_Central_Milestone_1,
+      gamedataNewPerkType.Espionage_Central_Perk_1_1,
+      gamedataNewPerkType.Espionage_Central_Perk_1_2,
+      gamedataNewPerkType.Espionage_Central_Perk_1_3,
+      gamedataNewPerkType.Espionage_Central_Perk_1_4,
+      gamedataNewPerkType.Espionage_Left_Milestone_Perk,
+      gamedataNewPerkType.Espionage_Left_Perk_1_2,
+      gamedataNewPerkType.Espionage_Right_Milestone_1,
+      gamedataNewPerkType.Espionage_Right_Perk_1_1
+    ];
+    let _relicPerkPointsAllocated: Int32 = 0;
+    let i: Int32 = 0;
+
+    while i < ArraySize(relicPerks) {
+      if devSystem.GetPerkLevel(this.player, relicPerks[i]) > 0 {
+        _relicPerkPointsAllocated += (Equals(relicPerks[i], gamedataNewPerkType.Espionage_Central_Milestone_1)
+                                    || Equals(relicPerks[i], gamedataNewPerkType.Espionage_Left_Milestone_Perk)
+                                    || Equals(relicPerks[i], gamedataNewPerkType.Espionage_Right_Milestone_1)) ? 3 : 1;
+      }
+      i += 1;
+    }
+
+    // this.showDebugMessage( ">>> Santa Muerte: updateMaxResurrections: relicPerkPointsAllocated = " + ToString(_relicPerkPointsAllocated) );
+
+    return(_relicPerkPointsAllocated);
+  }
 
   public func getTarotCardsContribution() -> Int32 {
     let manager: ref<JournalManager> = GameInstance.GetJournalManager(this.player.GetGame());

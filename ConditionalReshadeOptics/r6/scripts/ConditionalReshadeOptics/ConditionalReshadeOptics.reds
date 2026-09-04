@@ -73,6 +73,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     public let effectGlitchedCyberwareON: Bool;
     public let effectNoCyberwareON: Bool;
     public let effectArcadeGameON: Bool;
+    public let effectSurveillanceCameraON: Bool;
+    public let effectDroneON: Bool;
 
     public func init(player: wref<PlayerPuppet>) -> Void {
         // Essential: Tells Mod Settings to trigger callbacks on this object
@@ -107,6 +109,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.effectGlitchedCyberwareON = this.config.effectGlitchedCyberwareON;
         this.effectNoCyberwareON = this.config.effectNoCyberwareON;
         this.effectArcadeGameON = this.config.effectArcadeGameON;
+        this.effectSurveillanceCameraON = this.config.effectSurveillanceCameraON;
+        this.effectDroneON = this.config.effectDroneON;
     }
 
     public cb func OnModSettingsChange() -> Void {
@@ -227,6 +231,12 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         let isBraindanceON: Bool = bdSystem.isInBraindance; // Not tested
         let isBraindanceEditorON: Bool = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"Braindance"); // Confirmed working
         let isPrologueStarted: Bool = GameInstance.GetQuestsSystem(this.player.GetGame()).GetFact(n"q001_active") >= 1; // Confirmed working
+        let psmBB = GameInstance.GetBlackboardSystem(this.player.GetGame())
+            .GetLocalInstanced(this.player.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+        let isPiloting = psmBB.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsControllingDevice);
+        let isControllingCamera = psmBB.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsControllingCamera);
+        // IsControllingDevice covers cameras and drones; drones are the non-camera case.
+        let isControllingDrone = isPiloting && !isControllingCamera;
 
         let newReshadeProfile: String;
 
@@ -241,6 +251,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isVictorHUDInstalled is " + questSystem.GetFact(n"q001_ripperdoc_done") );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isPrologueStarted is " + questSystem.GetFact(n"q001_active") );
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isArcadeMachineON is " + this.isArcadeMachineON );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isControllingCamera is " + isControllingCamera );
+        this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isControllingDrone is " + isControllingDrone );
 
         if !RB_IsRuntimeReady() {
             this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: forcing a refresh of runtime state. Current profile path: " + RB_GetPreset());
@@ -249,7 +261,13 @@ public class ConditionalOptics extends ScriptedPuppetPS {
         this.reshadeProfilePath = RB_GetPreset();
         this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: current profile path is " + this.reshadeProfilePath);
 
-        if this.effectCyberspaceON && isCyberspaceON {
+        if this.effectSurveillanceCameraON && isControllingCamera {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isControllingCamera is True - switching to " + "SurveillanceCamera");
+            newReshadeProfile = "SurveillanceCamera";
+        } else if this.effectDroneON && isControllingDrone {
+            this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isControllingDrone is True - switching to " + "Drone");
+            newReshadeProfile = "Drone";
+        } else if this.effectCyberspaceON && isCyberspaceON {
             this.showDebugMessage("[ConditionalReshadeOptics] refreshReshadeProfile: isCyberspaceON is True - switching to " + "Cyberspace");
             newReshadeProfile = "Cyberspace";
         } else if this.effectVRON && isVRTutorialON {
@@ -409,6 +427,8 @@ public class ConditionalOptics extends ScriptedPuppetPS {
     // - Kyroshi
     // - VR
     // - Cyberspace
+    // - SurveillanceCamera
+    // - Drone
 
     public func switchProfile(profileName: String) -> Void {
         this.showDebugMessage("[ConditionalReshadeOptics] switchProfile: profileName: " + profileName);
