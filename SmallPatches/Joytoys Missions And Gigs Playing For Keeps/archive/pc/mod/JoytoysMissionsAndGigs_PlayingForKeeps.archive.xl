@@ -1,0 +1,8 @@
+localization:
+  subtitles:
+    en-us: mod\playing_for_keeps_joytoy_route\localization\en-us\subtitles\playing_for_keeps_joytoy_route.json
+
+quest:
+  phases:
+    - path: mod\playing_for_keeps_joytoy_route\quest\playing_for_keeps_joytoy_route.questphase
+      parent: base\quest\cyberpunk2077.quest

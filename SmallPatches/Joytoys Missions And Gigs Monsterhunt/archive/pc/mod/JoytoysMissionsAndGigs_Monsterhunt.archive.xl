@@ -1,0 +1,8 @@
+localization:
+  subtitles:
+    en-us: mod\jotaro_joytoy_route\localization\en-us\subtitles\jotaro_joytoy_route.json
+
+quest:
+  phases:
+    - path: mod\jotaro_joytoy_route\quest\jotaro_joytoy_route.questphase
+      parent: base\quest\cyberpunk2077.quest

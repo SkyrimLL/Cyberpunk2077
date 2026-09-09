@@ -49,6 +49,10 @@ local RESTRICTIONS = {
 }
 
 local VIEW_OFFSET = { x = 0.0, y = -3.20, z = 0.55, w = 0.0 }
+-- FreeFly's speed setting persists globally in its own config and can be left
+-- at its 0.001 floor (e.g. from repeated PreviousWeapon presses while flying),
+-- which is visually indistinguishable from the camera not moving at all.
+local MIN_SCENE_VIEW_SPEED = 1.0
 
 local singleton = nil
 
@@ -314,6 +318,9 @@ local function createDirector(logger)
                 pcall(function() Game.GetTimeSystem():SetTimeDilation("console", 0.000000001) end)
             end
         end
+        if mod and active.savedFreeFlySpeed ~= nil and mod.settings then
+            mod.settings.speed = active.savedFreeFlySpeed
+        end
 
         -- FreeFly moves the invisible live player to act as the viewing camera.
         -- Return V to the owned bedroom anchor when the scene finishes, unless
@@ -372,13 +379,20 @@ local function createDirector(logger)
         local mod = getFreeFly()
         if not mod or type(mod.runtimeData) ~= "table" or type(mod.logic) ~= "table"
             or type(mod.logic.toggleFlight) ~= "function" then
+            log("FreeFly diagnostic: getFreeFly() unavailable (mod=" .. tostring(mod) .. ")")
             return false
         end
 
         active.freeFly = mod
         active.freeFlyWasActive = mod.runtimeData.active == true
         active.savedFreeFlyTimeStop = mod.settings and mod.settings.timeStop or false
-        if mod.settings then mod.settings.timeStop = false end
+        active.savedFreeFlySpeed = mod.settings and mod.settings.speed or nil
+        if mod.settings then
+            mod.settings.timeStop = false
+            if type(mod.settings.speed) ~= "number" or mod.settings.speed < MIN_SCENE_VIEW_SPEED then
+                mod.settings.speed = MIN_SCENE_VIEW_SPEED
+            end
+        end
 
         local ok = pcall(function()
             local camera = player:GetFPPCameraComponent()
@@ -394,9 +408,9 @@ local function createDirector(logger)
             )
             Game.GetTeleportationFacility():Teleport(player, position, rotationFrom(active.anchor.rotation))
 
+            mod.runtimeData.active = true
+            mod.logic.toggleFlight(mod, true)
             if not active.freeFlyWasActive then
-                mod.runtimeData.active = true
-                mod.logic.toggleFlight(mod, true)
                 active.freeFlyActivatedByScene = true
             else
                 Game.GetTimeSystem():UnsetTimeDilation("console")
@@ -404,6 +418,14 @@ local function createDirector(logger)
         end)
         if not ok then return false end
         director.lastEvent = "FreeFly scene view active"
+        local tierOK, tier = pcall(function() return player:GetSceneTier() end)
+        log(string.format(
+            "FreeFly diagnostic: wasActive=%s active=%s inGame=%s inMenu=%s sceneTier=%s savedSpeed=%s speed=%s",
+            tostring(active.freeFlyWasActive), tostring(mod.runtimeData.active),
+            tostring(mod.runtimeData.inGame), tostring(mod.runtimeData.inMenu),
+            tostring(tierOK and tier or "?"), tostring(active.savedFreeFlySpeed),
+            tostring(mod.settings and mod.settings.speed)
+        ))
         return true
     end
 
