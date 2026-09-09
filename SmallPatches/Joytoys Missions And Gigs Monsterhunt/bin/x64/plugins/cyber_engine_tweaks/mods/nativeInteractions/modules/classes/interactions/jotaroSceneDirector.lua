@@ -166,7 +166,7 @@ local function createDirector(logger)
 
     local function log(message)
         if type(logger) == "function" then
-            logger("Scene director: " .. tostring(message))
+            -- logger("Scene director: " .. tostring(message))
         end
     end
 

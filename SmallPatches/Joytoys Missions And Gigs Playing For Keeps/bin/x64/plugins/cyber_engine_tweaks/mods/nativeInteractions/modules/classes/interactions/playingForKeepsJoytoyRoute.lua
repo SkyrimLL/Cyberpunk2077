@@ -502,6 +502,8 @@ function route:new(mod, project)
     o.modulePath = "interactions/playingForKeepsJoytoyRoute"
     o.name = "Playing for Keeps - undercover manager booking"
     o.worldIcon = "ChoiceIcons.UseIcon"
+    o.useWorldIconColor = true
+    o.worldIconColor = { Red = 1.8, Green = 0.25, Blue = 1.35, Alpha = 1.0 }
     o.scene = PROMPT_SCENE
     o.skipFact = "pfk_skip_teleport"
     o.endEvent = PROMPT_END_EVENT
@@ -1037,7 +1039,7 @@ function route:interactionArrive()
     self:queueDialogue({
         "Keisuke: Huh. KabukiRose. I am liking what I am seeing.",
         "V: So where do you want to do this?",
-        "Keisuke: Come around behind the bar. The gang are waiting for you in the back office.",
+        "Keisuke: Come around behind the bar and undress in the kitchen. The gang are waiting for you in the back office.",
         "[Undercover] Head to the private area at the back and meet Keisuke look to swipe the eye when you have the opportunity."
     })
     log("Arrived: nude group staged in the back; awaiting the oral-5 trigger")

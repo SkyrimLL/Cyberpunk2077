@@ -434,9 +434,9 @@ local function createDirector(logger)
             )
             Game.GetTeleportationFacility():Teleport(player, position, rotationFrom(active.anchor.rotation))
 
+            mod.runtimeData.active = true
+            mod.logic.toggleFlight(mod, true)
             if not active.freeFlyWasActive then
-                mod.runtimeData.active = true
-                mod.logic.toggleFlight(mod, true)
                 active.freeFlyActivatedByScene = true
             else
                 Game.GetTimeSystem():UnsetTimeDilation("console")

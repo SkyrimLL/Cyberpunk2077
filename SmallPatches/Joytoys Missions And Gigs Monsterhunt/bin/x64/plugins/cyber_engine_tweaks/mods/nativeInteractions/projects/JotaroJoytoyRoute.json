@@ -6,9 +6,9 @@
       "name": "Monsterhunt - Ho-Oh joytoy route",
       "modulePath": "interactions/jotaroJoytoyRoute",
       "worldIcon": "ChoiceIcons.UseIcon",
-      "worldIconRange": 3.5,
+      "worldIconRange": 8.0,
       "interactionAngle": 85.0,
-      "interactionRange": 2.25,
+      "interactionRange": 2.5,
       "worldIconPosition": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
       "choiceUniqueID": 407240001,
       "locStringIDOverride": "945077401258010624",
@@ -43,9 +43,9 @@
       "bedroomSexYawOffset": 0.0,
       "bedroomCowgirlYawOffset": 0.0,
       "bedroomDoggyYawOffset": 0.0,
-      "stageInteractionRange": 2.0,
-      "stageInteractionAngle": 90.0,
-      "stageIconRange": 4.0
+      "stageInteractionRange": 2.5,
+      "stageInteractionAngle": 120.0,
+      "stageIconRange": 12.0
     }
   ]
 }

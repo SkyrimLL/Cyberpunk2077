@@ -26,6 +26,8 @@ local FACT = {
 local PROMPT_SCENE = "mod\\jotaro_joytoy_route\\quest\\bartender_prompt.scene"
 local PROMPT_END_EVENT = "nif_exit_teleport"
 local SECURITY_NODE_REF = "#kab_07_security_system"
+-- Consecutive onUpdate polls the alerted fact must stay set before we treat it as a real break.
+local ALERT_DEBOUNCE_POLLS = 2
 
 local POSES = {
     oral01 = {
@@ -69,7 +71,7 @@ local POSES = {
 }
 
 local function log(message)
-    print("[JoytoysMissionsAndGigs:Monsterhunt] " .. tostring(message))
+    -- print("[JoytoysMissionsAndGigs:Monsterhunt] " .. tostring(message))
 end
 
 local function quests()
@@ -158,11 +160,20 @@ local function authorizeHoOhSecurity(authorize)
     return authorizationOK and stateOK
 end
 
+local bridgeMissingLogged = false
+
 local function getBridge()
     local ok, bridge = pcall(function()
         return Game.GetScriptableSystemsContainer():Get("JJR_RouteBridge")
     end)
-    if not ok then return nil end
+    if not ok or not bridge then
+        if not bridgeMissingLogged then
+            bridgeMissingLogged = true
+            log("JJR_RouteBridge is unavailable (redscript system not found); truce logic cannot run")
+        end
+        return nil
+    end
+    bridgeMissingLogged = false
     return bridge
 end
 
@@ -172,6 +183,9 @@ function route:new(mod, project)
     o.modulePath = "interactions/jotaroJoytoyRoute"
     o.name = "Monsterhunt - Ho-Oh joytoy route"
     o.worldIcon = "ChoiceIcons.UseIcon"
+    -- Hot-pink HDR tint so the route pins stand out from NIF's default blue icons.
+    o.useWorldIconColor = true
+    o.worldIconColor = { Red = 1.8, Green = 0.25, Blue = 1.35, Alpha = 1.0 }
     o.scene = PROMPT_SCENE
     o.skipFact = "nif_skip_teleport"
     o.endEvent = PROMPT_END_EVENT
@@ -213,9 +227,9 @@ function route:new(mod, project)
     o.bedroomSexYawOffset = 0.0
     o.bedroomCowgirlYawOffset = 0.0
     o.bedroomDoggyYawOffset = 0.0
-    o.stageInteractionRange = 2.0
-    o.stageInteractionAngle = 90.0
-    o.stageIconRange = 4.0
+    o.stageInteractionRange = 2.5
+    o.stageInteractionAngle = 120.0
+    o.stageIconRange = 12.0
 
     o.promptResolved = false
     o.sceneDirector = sceneDirectorModule.get(log)
@@ -225,6 +239,7 @@ function route:new(mod, project)
     o.lastPoll = 0.0
     o.directorLastUpdate = os.clock()
     o.securityLastUpdate = 0.0
+    o.alertedStreak = 0
     o.stageInteractionIDs = {}
 
     setmetatable(o, { __index = self })
@@ -295,7 +310,7 @@ function route:addStageInteraction(roleName)
         self.stageInteractionAngle,
         self.worldIcon,
         self.stageIconRange,
-        nil,
+        self.useWorldIconColor and self.worldIconColor or nil,
         function(state)
             if state then self:startRolePrompt(roleName) else self:stopRolePrompt(roleName) end
         end
@@ -321,9 +336,19 @@ function route:remove()
     interaction.remove(self)
 end
 
+local maintainCallCounter = 0
+
 function route:callBridge(methodName)
     local bridge = getBridge()
     if not bridge then return false end
+    if methodName == "BeginInfiltration" then
+        log("callBridge: dispatching BeginInfiltration")
+    elseif methodName == "MaintainInfiltration" then
+        maintainCallCounter = maintainCallCounter + 1
+        if maintainCallCounter % 10 == 1 then
+            log("callBridge: dispatching MaintainInfiltration (call #" .. maintainCallCounter .. ")")
+        end
+    end
     local ok, result = pcall(function()
         if methodName == "CanStart" then return bridge:CanStart() end
         if methodName == "BeginInfiltration" then return bridge:BeginInfiltration() end
@@ -345,6 +370,17 @@ function route:gigAllowsRoute()
         and getFact(FACT.gigFailed) == 0
         and getFact(FACT.jotaroKilled) == 0
         and getFact(FACT.alerted) == 0
+end
+
+-- Gig-ended conditions only; deliberately excludes the alerted fact, which is
+-- debounced separately in onUpdate so a same-frame set/reset by the redscript
+-- bridge doesn't tear down the truce before it can self-heal.
+function route:gigTerminated()
+    return getFact(FACT.gigStart) == 0
+        or getFact(FACT.gigDone) > 0
+        or getFact(FACT.gigFinished) > 0
+        or getFact(FACT.gigFailed) > 0
+        or getFact(FACT.jotaroKilled) > 0
 end
 
 function route:isRoleAvailable(roleName)
@@ -527,9 +563,9 @@ function route:completeStage(roleName)
     setFact(FACT.state, 3)
 
     if roleName == "bartender" then
-        screenMessage("Take your clothes off and head upstairs.", 6.0)
+        screenMessage("Take your clothes off and head upstairs to the bar.", 6.0)
     elseif roleName == "upstairs_oral" then
-        screenMessage("A Tyger Claw upstairs calls you over and demands you ride him.", 6.0)
+        screenMessage("A Tyger Claw upstairs calls you over and demands you ride him on the couch.", 6.0)
     elseif roleName == "hallway_cowgirl" then
         screenMessage("Head to Jotaro's room. Maybe I can turn off the cameras on the way there.", 7.0)
     elseif roleName == "bedroom_sex" then
@@ -640,6 +676,7 @@ function route:sessionStart()
     self.lastPoll = 0.0
     self.directorLastUpdate = os.clock()
     self.securityLastUpdate = 0.0
+    self.alertedStreak = 0
 
     local state = getFact(FACT.state)
     local stage = getFact(FACT.stage)
@@ -680,6 +717,7 @@ function route:sessionEnd()
 end
 
 function route:updateStageInteractions(stage, state)
+    self.lastInteractionEnabled = self.lastInteractionEnabled or {}
     for roleName, id in pairs(self.stageInteractionIDs or {}) do
         local roleData = self:getRole(roleName)
         local enabled = state == 3
@@ -687,6 +725,19 @@ function route:updateStageInteractions(stage, state)
             and self:gigAllowsRoute()
             and getFact(FACT.truce) > 0
         world.disableInteraction(id, not enabled)
+
+        if enabled ~= self.lastInteractionEnabled[roleName] then
+            self.lastInteractionEnabled[roleName] = enabled
+            if not enabled then
+                log(roleName .. " interaction disabled: state=" .. state ..
+                    " stage=" .. stage .. "/" .. roleData.availableStage ..
+                    " gigAllowsRoute=" .. tostring(self:gigAllowsRoute()) ..
+                    " alerted=" .. getFact(FACT.alerted) ..
+                    " truce=" .. getFact(FACT.truce))
+            else
+                log(roleName .. " interaction enabled")
+            end
+        end
     end
 end
 
@@ -725,12 +776,35 @@ function route:onUpdate(_playerPosition)
     world.disableInteraction(self.worldInteractionID, not self:canOffer())
     self:updateStageInteractions(stage, state)
 
-    if state ~= 0 and not self:gigAllowsRoute() then
+    -- Give the redscript bridge a chance to reconcile a transient alerted fact
+    -- before we decide whether to tear the truce down below.
+    if state ~= 0 then
+        self:callBridge("MaintainInfiltration")
+    end
+
+    local alertedNow = getFact(FACT.alerted) > 0
+    if alertedNow then
+        self.alertedStreak = self.alertedStreak + 1
+        log("Alerted fact still set after MaintainInfiltration; streak=" .. self.alertedStreak .. "/" .. ALERT_DEBOUNCE_POLLS)
+    else
+        if self.alertedStreak > 0 then
+            log("Alerted fact cleared; truce holding")
+        end
+        self.alertedStreak = 0
+    end
+
+    if state ~= 0 and (self:gigTerminated() or self.alertedStreak >= ALERT_DEBOUNCE_POLLS) then
+        if self:gigTerminated() then
+            log("Route teardown: gig ended (done/finished/failed/jotaroKilled)")
+        else
+            log("Route teardown: alerted fact persisted for " .. self.alertedStreak .. " consecutive polls")
+        end
         self.sceneDirector.shutdown()
         utils.removeSaveLock()
         self.pendingRole = nil
         self.activeRole = nil
         self.encounterStartedAt = 0.0
+        self.alertedStreak = 0
         setFact(FACT.sceneSignal, 0)
         setFact(FACT.sceneID, 0)
         clearSharedNifState()
@@ -746,7 +820,6 @@ function route:onUpdate(_playerPosition)
         return
     end
 
-    self:callBridge("MaintainInfiltration")
     if getFact(FACT.jotaroKilled) > 0 then
         if getFact(FACT.security) > 0 and authorizeHoOhSecurity(false) then
             log("Jotaro killed; Ho-Oh security authorization revoked")
