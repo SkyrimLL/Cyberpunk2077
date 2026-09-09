@@ -18,7 +18,8 @@ Crafting.GauzeRecipe_Ingredients:
       quantity: 1
     - !append-once
       $type: Ingredient
-      invItem: Items.FieldMedic_AntisepticDisinfectant
+      # invItem: Items.FieldMedic_AntisepticDisinfectant
+      invItem: Items.GenericPoorJunkItem1
       quantity: 1
 
 # Define the recipe record itself

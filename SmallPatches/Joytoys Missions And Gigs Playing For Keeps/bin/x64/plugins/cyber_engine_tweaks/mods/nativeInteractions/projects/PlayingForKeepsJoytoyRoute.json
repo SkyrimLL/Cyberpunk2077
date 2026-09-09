@@ -1,0 +1,35 @@
+{
+  "name": "PlayingForKeepsJoytoyRoute",
+  "removals": [],
+  "interactions": [
+    {
+      "name": "Playing for Keeps - undercover manager booking",
+      "modulePath": "interactions/playingForKeepsJoytoyRoute",
+      "worldIcon": "ChoiceIcons.UseIcon",
+      "worldIconRange": 3.5,
+      "interactionAngle": 85.0,
+      "interactionRange": 2.25,
+      "worldIconPosition": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+      "choiceUniqueID": 407240201,
+      "locStringIDOverride": "945077401258010800",
+      "oral5LocStringIDOverride": "945077401258010806",
+      "groupLocStringIDOverride": "945077401258010801",
+      "promptNodeRef": "#lch_05_tr_bar",
+      "anchorNodeRef": "#lch_05_tr_office",
+      "markerOffset": { "x": 0.0, "y": 0.0, "z": 0.20 },
+      "scenePosition": { "x": -1919.756, "y": 1158.130, "z": 12.175, "w": 1.0 },
+      "sceneOffset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "playerOffset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "sceneYawOffset": 0.0,
+      "sceneDuration": 45.0,
+      "continueNodeRef": "#lch_05_tr_office",
+      "continueMarkerOffset": { "x": 0.0, "y": 0.0, "z": 0.20 },
+      "guestFemaleOffset": { "x": 1.720, "y": -0.400, "z": 0.0 },
+      "guestOgawaOffset": { "x": -1.415, "y": -2.605, "z": 0.0 },
+      "guestMaleOffset": { "x": 1.356, "y": 0.855, "z": 0.0 },
+      "guestFemaleYaw": 101.0,
+      "guestOgawaYaw": -34.0,
+      "guestMaleYaw": 146.0
+    }
+  ]
+}

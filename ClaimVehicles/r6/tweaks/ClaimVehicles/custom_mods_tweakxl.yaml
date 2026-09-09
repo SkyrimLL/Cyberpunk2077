@@ -574,3 +574,12 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.beat_base
   - !append Vehicle.yv_pantera_customisable
   - !append Vehicle.rs6_gt
+  - !append Vehicle.yv_a60_customisable
+  - !append Vehicle.yv_a60_livery_custom
+  - !append Vehicle.yv_a60_livery_green
+  - !append Vehicle.yv_a60_livery_kiroshi
+  - !append Vehicle.yv_a60_livery_orange_white
+  - !append Vehicle.yv_a60_livery_red_grey
+  - !append Vehicle.yv_a60_livery_trd
+  - !append Vehicle.priora_se_bs_01
+  - !append Vehicle.priora_se_bs_nkh_ed_01

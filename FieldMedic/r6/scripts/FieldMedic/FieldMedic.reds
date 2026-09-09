@@ -61,7 +61,7 @@ protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
   }
   return result;
 }
-
+ 
 // Because our clones use raw-string displayNames (which the game treats as invalid
 // LocKey lookups and resolves to empty), fall back to the paired vanilla junk record's
 // resolved display name / description in the backpack UI.
@@ -83,33 +83,54 @@ public final func GetDescription() -> String {
   return FieldMedicLootInjector.GetVanillaDescriptionFor(this.GetTweakDBID());
 }
 
-// The vanilla injector bases (BonesMcCoy70V0 etc.) set removeAfterUse=false on their
-// Consume action and rely on a delayed event driven by the injector animation state
-// machine. Switching itemType to Con_Edible breaks that timing, so we force the stack
-// to decrement immediately for our clones.
+// Safety net: force-remove the stack a couple seconds after consumption if vanilla
+// removal didn't already handle it (kept in case a future clone reintroduces the issue).
+// Disabled for testing (2026-09-04) — vanilla removal works correctly now that clones
+// use a real Con_Edible $base (Items.LowQualityFood) instead of a Con_Injector base.
+/*
+public class FieldMedicConsumeVerifyEvent extends Event {
+  public let itemID: ItemID;
+  public let quantityBeforeConsume: Int32;
+}
+
+@addMethod(PlayerPuppet)
+protected cb func OnFieldMedicConsumeVerifyEvent(evt: ref<FieldMedicConsumeVerifyEvent>) -> Bool {
+  let ts: ref<TransactionSystem> = GameInstance.GetTransactionSystem(this.GetGame());
+  if !IsDefined(ts) || !ItemID.IsValid(evt.itemID) {
+    return true;
+  }
+  let currentQty: Int32 = ts.GetItemQuantity(this, evt.itemID);
+  if currentQty > 0 && currentQty >= evt.quantityBeforeConsume {
+    ts.RemoveItem(this, evt.itemID, 1);
+  }
+  return true;
+}
+
 @wrapMethod(ConsumeAction)
 public func CompleteAction(gameInstance: GameInstance) -> Void {
+  let itemData: wref<gameItemData> = this.GetItemData();
+  let isOurs: Bool = IsDefined(itemData) && itemData.HasTag(n"FieldMedic");
+  let itemID: ItemID;
+  let qtyBefore: Int32 = 0;
+  let executor: wref<GameObject>;
+  if isOurs {
+    itemID = itemData.GetID();
+    qtyBefore = itemData.GetQuantity();
+    executor = this.GetExecutor();
+  }
+
   wrappedMethod(gameInstance);
 
-  let itemData: wref<gameItemData> = this.GetItemData();
-  if !IsDefined(itemData) {
-    LogChannel(n"DEBUG", s"[FieldMedic] ConsumeAction.CompleteAction: no itemData");
+  if !isOurs || !IsDefined(executor) {
     return;
   }
-  let tdbid: TweakDBID = ItemID.GetTDBID(itemData.GetID());
-  let isOurs: Bool = FieldMedicLootInjector.IsFieldMedicClone(tdbid);
-  let shouldRemove: Bool = this.ShouldRemoveAfterUse();
-  let qty: Int32 = itemData.GetQuantity();
-  LogChannel(n"DEBUG", s"[FieldMedic] ConsumeAction.CompleteAction fired: id=\(TDBID.ToStringDEBUG(tdbid)) isOurs=\(isOurs) shouldRemove=\(shouldRemove) qty=\(qty)");
-  if !isOurs {
-    return;
-  }
-  if shouldRemove {
-    return;
-  }
-  let removed: Bool = GameInstance.GetTransactionSystem(gameInstance).RemoveItem(this.GetExecutor(), itemData.GetID(), 1);
-  LogChannel(n"DEBUG", s"[FieldMedic] Forced consume-remove for \(TDBID.ToStringDEBUG(tdbid)) [removed=\(removed)]");
+
+  let evt: ref<FieldMedicConsumeVerifyEvent> = new FieldMedicConsumeVerifyEvent();
+  evt.itemID = itemID;
+  evt.quantityBeforeConsume = qtyBefore;
+  GameInstance.GetDelaySystem(gameInstance).DelayEvent(executor, evt, 2.0);
 }
+*/
 
 public abstract final class FieldMedicLootInjector {
 
@@ -128,7 +149,7 @@ public abstract final class FieldMedicLootInjector {
     }
 
     if cfg.injectBleachBottles && FieldMedicLootInjector.IsIndustrialContainer(lootID) {
-      FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_BleachBottle", cfg.bleachBottleChance, cfg);
+      FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_AntisepticDisinfectant", cfg.bleachBottleChance, cfg);
     }
   }
 
@@ -137,7 +158,8 @@ public abstract final class FieldMedicLootInjector {
   // mapping (Items.MedicalGauze etc.) was fictional.
   public final static func SwapAllJunkConsumables(owner: ref<GameObject>, cfg: ref<FieldMedicConfig>) -> Void {
     FieldMedicLootInjector.SwapItem(owner, t"Items.GenericJunkItem4",     t"Items.FieldMedic_MedicalGauze",           cfg);
-    FieldMedicLootInjector.SwapItem(owner, t"Items.GenericPoorJunkItem1", t"Items.FieldMedic_AntisepticDisinfectant", cfg);
+    FieldMedicLootInjector.SwapItem(owner, t"Items.WraithsJunkItem2",     t"Items.FieldMedic_BloodyBandage",           cfg);
+    // FieldMedicLootInjector.SwapItem(owner, t"Items.GenericPoorJunkItem1", t"Items.FieldMedic_AntisepticDisinfectant", cfg);
   }
 
   // Reverse map: FieldMedic clone -> vanilla junk source. Used by the UI wraps below
@@ -145,7 +167,8 @@ public abstract final class FieldMedicLootInjector {
   // empty for our raw-string displayName values.
   public final static func GetVanillaSourceFor(fieldMedicID: TweakDBID) -> TweakDBID {
     if fieldMedicID == t"Items.FieldMedic_MedicalGauze"           { return t"Items.GenericJunkItem4"; }
-    if fieldMedicID == t"Items.FieldMedic_AntisepticDisinfectant" { return t"Items.GenericPoorJunkItem1"; } 
+    if fieldMedicID == t"Items.FieldMedic_BloodyBandage" { return t"Items.WraithsJunkItem2"; } 
+    // if fieldMedicID == t"Items.FieldMedic_AntisepticDisinfectant" { return t"Items.GenericPoorJunkItem1"; } 
     return TDBID.None();
   }
 
@@ -187,8 +210,10 @@ public abstract final class FieldMedicLootInjector {
     let target: TweakDBID;
     if tdbid == t"Items.GenericJunkItem4" {
       target = t"Items.FieldMedic_MedicalGauze";
-    } else if tdbid == t"Items.GenericPoorJunkItem1" {
-      target = t"Items.FieldMedic_AntisepticDisinfectant";
+    } else if tdbid == t"Items.WraithsJunkItem2" {
+      target = t"Items.FieldMedic_BloodyBandage";
+    // } else if tdbid == t"Items.GenericPoorJunkItem1" {
+    //   target = t"Items.FieldMedic_AntisepticDisinfectant";
     } else {
       return;
     }

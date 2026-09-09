@@ -68,26 +68,26 @@ public class CinematicImmunityConfig {
 
     // ── Prologue scenes ─────────────────────────────────────────────
 
-    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
-    @runtimeProperty("ModSettings.category", "Prologue Scenes")
-    @runtimeProperty("ModSettings.category.order", "30")
-    @runtimeProperty("ModSettings.displayName", "Corpo lifepath intro")
-    @runtimeProperty("ModSettings.description", "Grant immunity while the Arasaka UI is active during the corpo lifepath boardroom opening.")
-    public let immunityCorpoIntroON: Bool = true;
+    // @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    // @runtimeProperty("ModSettings.category", "Prologue Scenes")
+    // @runtimeProperty("ModSettings.category.order", "30")
+    // @runtimeProperty("ModSettings.displayName", "Corpo lifepath intro")
+    // @runtimeProperty("ModSettings.description", "Grant immunity while the Arasaka UI is active during the corpo lifepath boardroom opening.")
+    // public let immunityCorpoIntroON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")
     @runtimeProperty("ModSettings.category.order", "31")
     @runtimeProperty("ModSettings.displayName", "Nomad prologue")
-    @runtimeProperty("ModSettings.description", "Grant immunity during the Nomad lifepath prologue (before The Rescue begins).")
+    @runtimeProperty("ModSettings.description", "Grant immunity during the car chase in the Nomad lifepath prologue (before The Rescue begins).")
     public let immunityNomadPrologueON: Bool = true;
 
-    @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
-    @runtimeProperty("ModSettings.category", "Prologue Scenes")
-    @runtimeProperty("ModSettings.category.order", "32")
-    @runtimeProperty("ModSettings.displayName", "Street Kid prologue")
-    @runtimeProperty("ModSettings.description", "Grant immunity during the Street Kid lifepath prologue (before The Rescue begins).")
-    public let immunityStreetKidPrologueON: Bool = true;
+    // @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
+    // @runtimeProperty("ModSettings.category", "Prologue Scenes")
+    // @runtimeProperty("ModSettings.category.order", "32")
+    // @runtimeProperty("ModSettings.displayName", "Street Kid prologue")
+    // @runtimeProperty("ModSettings.description", "Grant immunity during the Street Kid lifepath prologue (before The Rescue begins).")
+    // public let immunityStreetKidPrologueON: Bool = true;
 
     @runtimeProperty("ModSettings.mod", "CINEMATIC IMMUNITY")
     @runtimeProperty("ModSettings.category", "Prologue Scenes")

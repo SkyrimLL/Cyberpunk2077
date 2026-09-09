@@ -21,9 +21,9 @@ public class CinematicImmunity extends ScriptedPuppetPS {
     public let immunityJohnnyON: Bool;
     public let immunityAguilarAssassinON: Bool;
     public let immunityKurtHanssenON: Bool;
-    public let immunityCorpoIntroON: Bool;
+    // public let immunityCorpoIntroON: Bool;
     public let immunityNomadPrologueON: Bool;
-    public let immunityStreetKidPrologueON: Bool;
+    // public let immunityStreetKidPrologueON: Bool;
     public let immunityRescueSceneON: Bool;
     public let immunityCyberspaceON: Bool;
     public let immunityBraindanceON: Bool;
@@ -59,9 +59,9 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.immunityJohnnyON        = this.config.immunityJohnnyON;
         this.immunityAguilarAssassinON    = this.config.immunityAguilarAssassinON;
         this.immunityKurtHanssenON   = this.config.immunityKurtHanssenON;
-        this.immunityCorpoIntroON    = this.config.immunityCorpoIntroON;
+        // this.immunityCorpoIntroON    = this.config.immunityCorpoIntroON;
         this.immunityNomadPrologueON    = this.config.immunityNomadPrologueON;
-        this.immunityStreetKidPrologueON = this.config.immunityStreetKidPrologueON;
+        // this.immunityStreetKidPrologueON = this.config.immunityStreetKidPrologueON;
         this.immunityRescueSceneON   = this.config.immunityRescueSceneON;
         this.immunityCyberspaceON    = this.config.immunityCyberspaceON;
         this.immunityBraindanceON    = this.config.immunityBraindanceON;
@@ -159,25 +159,29 @@ public class CinematicImmunity extends ScriptedPuppetPS {
 
         // Corpo lifepath: Arasaka UI is active during the intro boardroom scene
         // Confirmed working fact.
-        let isCorpoIntro: Bool = this.immunityCorpoIntroON
-                               && qs.GetFact(n"q000_var_arasaka_ui_on") >= 1;
+        // let isCorpoIntro: Bool = this.immunityCorpoIntroON
+        //                        && qs.GetFact(n"q000_var_arasaka_ui_on") >= 1;
 
-        // Nomad lifepath prologue: lifepath flag is set but The Rescue (q001) has not yet started.
+        // Nomad prologue AV chase: the scripted escape from the border patrol.
+        // q000_nomad_chase_started is set by q000_nomad_06_av_chase.questphase when the chase begins;
+        // q000_nomad_finale_started (same phase / q000_nomad_07_hideout.scene) marks the chase ending.
+        // Scoped to this window rather than the whole prologue so it can't latch on permanently
+        // (q001_active is reset to 0 once The Rescue ends) and stays correct for mods that replay lifepaths.
         let isNomadPrologue: Bool = this.immunityNomadPrologueON
-                                  && qs.GetFact(n"q000_nomad") >= 1
-                                  && qs.GetFact(n"q001_active") < 1;
+                                  && qs.GetFact(n"q000_nomad_chase_started") >= 1
+                                  && qs.GetFact(n"q000_nomad_finale_started") < 1;
 
         // Street Kid lifepath prologue: lifepath flag is set but The Rescue (q001) has not yet started.
-        let isStreetKidPrologue: Bool = this.immunityStreetKidPrologueON
-                                      && qs.GetFact(n"q000_street_kid") >= 1
-                                      && qs.GetFact(n"q001_active") < 1;
+        // Same caveat: the real fact is q000_street_kid_background.
+        // let isStreetKidPrologue: Bool = this.immunityStreetKidPrologueON
+        //                               && qs.GetFact(n"q000_street_kid_background") >= 1
+        //                               && qs.GetFact(n"q001_active") < 1;
 
-        // The Rescue: digital-sickness / wakeup sequence.
-        // Active while q001 is running AND Viktor's ripperdoc visit is not yet done.
-        // q001_active is a confirmed working fact; q001_digital_sickness may not fire
-        // on all save states, so we use the ripperdoc gate as a broader guard.
+        // The Rescue: return ride home after the scavenger rescue is complete.
+        // q001_mission0_complete marks the end of the Rescue gameplay; the
+        // MaxTac markers bound the subsequent ride sequence.
         let isRescueScene: Bool = this.immunityRescueSceneON
-                                && qs.GetFact(n"q001_active") >= 1
+                    && qs.GetFact(n"q001_mission0_complete") >= 1
                                 && qs.GetFact(n"q001_aft_maxtac_scene") < 1
                                 && qs.GetFact(n"q001_aft_maxtac_scene_skip") < 1;
 
@@ -270,9 +274,9 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.showDebugMessage("[CinematicImmunity] -----");
         this.showDebugMessage("[CinematicImmunity] isVRTutorial=" + BoolToString(isVRTutorial));
         this.showDebugMessage("[CinematicImmunity] isJohnnyPossession=" + BoolToString(isJohnnyPossession));
-        this.showDebugMessage("[CinematicImmunity] isCorpoIntro=" + BoolToString(isCorpoIntro));
+        // this.showDebugMessage("[CinematicImmunity] isCorpoIntro=" + BoolToString(isCorpoIntro));
         this.showDebugMessage("[CinematicImmunity] isNomadPrologue=" + BoolToString(isNomadPrologue));
-        this.showDebugMessage("[CinematicImmunity] isStreetKidPrologue=" + BoolToString(isStreetKidPrologue));
+        //this.showDebugMessage("[CinematicImmunity] isStreetKidPrologue=" + BoolToString(isStreetKidPrologue));
         this.showDebugMessage("[CinematicImmunity] isRescueScene=" + BoolToString(isRescueScene));
         this.showDebugMessage("[CinematicImmunity] isCyberspace=" + BoolToString(isCyberspace));
         this.showDebugMessage("[CinematicImmunity] isBraindance=" + BoolToString(isBraindance));
@@ -287,9 +291,9 @@ public class CinematicImmunity extends ScriptedPuppetPS {
 
         let shouldBeImmune: Bool = isVRTutorial
                                 || isJohnnyPossession
-                                || isCorpoIntro
+                                // || isCorpoIntro
                                 || isNomadPrologue
-                                || isStreetKidPrologue
+                                // || isStreetKidPrologue
                                 || isRescueScene
                                 || isCyberspace
                                 || isBraindance
