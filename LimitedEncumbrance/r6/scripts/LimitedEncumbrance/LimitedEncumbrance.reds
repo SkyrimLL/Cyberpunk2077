@@ -34,7 +34,14 @@ For redscript mod developers
 
 :: New classes
 public class LimitedEncumbranceTracking
+public class InitialWeightCheckEvent extends Event {
+  public let tracker: wref<LimitedEncumbranceTracking>;
+}
 */
+
+public class InitialWeightCheckEvent extends Event {
+  public let tracker: wref<LimitedEncumbranceTracking>;
+}
 
 public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let player: wref<PlayerPuppet>;
@@ -45,6 +52,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let debugON: Bool;
   public let warningsON: Bool;
   public let newEncumbranceDisplayON: Bool;
+  public let needsInitialWeightCheck: Bool;
 
   public let limitedCarryCapacity: Float;
   public let carryCapacityContribution: Float;
@@ -70,6 +78,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   private func reset(player: wref<PlayerPuppet>) -> Void {
     this.player = player;
+    this.needsInitialWeightCheck = false;
 
     this.refreshConfig();
 
@@ -111,6 +120,14 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public cb func OnModSettingsChange() -> Void {
       this.showDebugMessage("[LimitedEncumbrance] Settings changed – applying update.");
       this.refreshConfig();  
+  }
+
+  public func ScheduleInitialWeightCheck() -> Void {
+    if IsDefined(this.player) {
+      let evt: ref<InitialWeightCheckEvent> = new InitialWeightCheckEvent();
+      evt.tracker = this;
+      GameInstance.GetDelaySystem(this.player.GetGame()).DelayEvent(this.player, evt, 0.5);
+    }
   }
   
   public func refreshConfig() -> Void {

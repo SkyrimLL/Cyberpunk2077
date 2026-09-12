@@ -14,6 +14,7 @@ TygerClaws_LGM_chemicals : Faction_Loot
 
 TygerClaws_LGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -41,6 +42,7 @@ TygerClaws_LGM_freezer : Faction_Loot
 
 TygerClaws_LGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -175,6 +177,7 @@ TygerClaws_LGS_valuable : Faction_Loot
 
 TygerClaws_LGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -222,6 +225,7 @@ TygerClaws_MGM_chemicals : Faction_Loot
 
 TygerClaws_MGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -245,6 +249,7 @@ TygerClaws_MGM_equipment : Faction_Loot
 
 TygerClaws_MGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -268,6 +273,7 @@ TygerClaws_MGM_locker : Faction_Loot
 
 TygerClaws_MGM_safe : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -400,6 +406,7 @@ TygerClaws_MGS_decorative : Faction_Loot
 
 TygerClaws_MGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -514,6 +521,7 @@ Maelstrom_LGM_decorative : Faction_Loot
 
 Maelstrom_LGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -528,15 +536,12 @@ Maelstrom_LGM_equipment : Faction_Loot
 			dropChance = 0.6;
 			query = "Query.PunkClothingNoFaction";
 		}, 
-		{
-			dropChance = 0.2;
-			query = "Query.RecipeSimpleFabricEnhancerQuery";
-		}
 	];
 }
 
 Maelstrom_LGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -556,6 +561,7 @@ Maelstrom_LGM_locker : Faction_Loot
 
 Maelstrom_LGM_safe : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -603,6 +609,7 @@ Maelstrom_LGS_ammo : Faction_Loot
 
 Maelstrom_LGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -683,6 +690,7 @@ Maelstrom_LGS_weapon : Faction_Loot
 
 Maelstrom_MGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -698,6 +706,7 @@ Maelstrom_MGM_equipment : Faction_Loot
 
 Maelstrom_MGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -713,6 +722,7 @@ Maelstrom_MGM_locker : Faction_Loot
 
 Maelstrom_MGM_safe : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -808,6 +818,7 @@ Maelstrom_MGS_gadgets : Faction_Loot
 
 SixthStreet_LGM_safe : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -834,6 +845,7 @@ Sixthstreet_LGS_consumables : Faction_Loot
 
 Sixthstreet_LGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -933,6 +945,7 @@ Animals_LGM_decorative : Faction_Loot
 
 Animals_LGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -944,6 +957,7 @@ Animals_LGM_equipment : Faction_Loot
 
 Animals_LGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1091,6 +1105,7 @@ Animals_MGS_consumables : Faction_Loot
 
 Animals_MGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1114,6 +1129,7 @@ Animals_MGS_equipment : Faction_Loot
 
 Scavengers_LGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1125,6 +1141,7 @@ Scavengers_LGM_locker : Faction_Loot
 
 Scavengers_LGM_safe : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -1234,6 +1251,7 @@ Wraiths_LGM_chemicals : Faction_Loot
 
 Wraiths_LGM_locker : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1350,6 +1368,7 @@ Wraiths_LGS_crate : Faction_Loot
 
 Wraiths_LGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1368,10 +1387,6 @@ Wraiths_LGS_equipment : Faction_Loot
 			dropChance = 0.6;
 			query = "Query.WraithsBoots";
 		}, 
-		{
-			dropChance = 0.4;
-			query = "Query.RecipeSimpleFabricEnhancerQuery";
-		}
 	];
 }
 
@@ -1423,15 +1438,12 @@ Wraiths_LGS_valuable : Faction_Loot
 
 Valentinos_LGM_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
 			dropChance = 0.6;
 			query = "Query.ValentinosClothing";
-		}, 
-		{
-			dropChance = 0.2;
-			query = "Query.RecipeSimpleFabricEnhancerQuery";
 		}
 	];
 }
@@ -1542,15 +1554,12 @@ Valentinos_LGS_crate : Faction_Loot
 
 Valentinos_LGS_equipment : Faction_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
 			dropChance = 0.6;
 			query = "Query.ValentinosHead";
-		}, 
-		{
-			dropChance = 0.6;
-			query = "Query.ValentinosFace";
 		}, 
 		{
 			dropChance = 0.6;

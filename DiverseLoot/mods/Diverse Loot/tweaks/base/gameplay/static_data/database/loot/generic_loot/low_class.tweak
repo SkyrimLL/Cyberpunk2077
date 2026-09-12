@@ -62,8 +62,8 @@ LCL_decorative : LowClass_Loot
 
 LCM_chemicals : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 3;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.BoostersTable", "LootTables.HealingItemsTable", "LootTables.MedicalJunkItemsTable"
@@ -72,8 +72,8 @@ LCM_chemicals : LowClass_Loot
 
 LCM_freezer : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	queries = 
 	[
 		{
@@ -108,6 +108,7 @@ LCM_decorative : LowClass_Loot
 
 LCM_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -139,6 +140,7 @@ LCM_equipment : LowClass_Loot
 
 LCM_locker : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -170,8 +172,8 @@ LCM_locker : LowClass_Loot
 
 LCM_ripperdoc : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -180,6 +182,7 @@ LCM_ripperdoc : LowClass_Loot
 
 LCM_safe : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -317,19 +320,7 @@ LCS_suitcase : LowClass_Loot
 		{
 			dropChance = 0.05;
 			query = "Query.IndustrialClothing";
-		},
-		{
-			dropChance = 0.2;
-			query = "Query.LowQualityAlcohol";
-		}, 
-		{
-			dropChance = 0.2;
-			query = "Query.LowQualityDrink";
-		}, 
-		{
-			dropChance = 0.2;
-			query = "Query.LowQualityFood";
-		}
+		} 
 	];
 }
 
@@ -372,6 +363,7 @@ LCS_decorative : LowClass_Loot
 
 LCS_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -403,18 +395,18 @@ LCS_equipment : LowClass_Loot
 
 LCS_first_aid : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
 LCS_freezer : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	queries = 
 	[
 		{
@@ -574,8 +566,8 @@ LRL_decorative : LowClass_Loot
 
 LRM_chemicals : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -584,8 +576,8 @@ LRM_chemicals : LowClass_Loot
 
 LRM_freezer : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	queries = 
 	[
 		{
@@ -620,6 +612,7 @@ LRM_decorative : LowClass_Loot
 
 LRM_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -651,6 +644,7 @@ LRM_equipment : LowClass_Loot
 
 LRM_locker : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -682,8 +676,8 @@ LRM_locker : LowClass_Loot
 
 LRM_ripperdoc : LCM_freezer
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -692,6 +686,7 @@ LRM_ripperdoc : LCM_freezer
 
 LRM_safe : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -872,6 +867,7 @@ LRS_decorative : LowClass_Loot
 
 LRS_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -903,9 +899,11 @@ LRS_equipment : LowClass_Loot
 
 LRS_first_aid : LowClass_Loot
 {
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.CraftingMaterialsTable", "LootTables.FirstAidKits"
+		"LootTables.CraftingMaterialsTable", "LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
@@ -1047,8 +1045,8 @@ LIL_decorative : LowClass_Loot
 
 LIM_chemicals : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -1057,8 +1055,8 @@ LIM_chemicals : LowClass_Loot
 
 LIM_freezer : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	queries = 
 	[
 		{
@@ -1097,6 +1095,7 @@ LIM_decorative : LowClass_Loot
 
 LIM_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1136,6 +1135,7 @@ LIM_equipment : LowClass_Loot
 
 LIM_locker : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1175,8 +1175,8 @@ LIM_locker : LowClass_Loot
 
 LIM_ripperdoc : LCM_freezer
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -1185,6 +1185,7 @@ LIM_ripperdoc : LCM_freezer
 
 LIM_safe : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -1365,6 +1366,7 @@ LIS_decorative : LowClass_Loot
 
 LIS_equipment : LowClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1404,18 +1406,18 @@ LIS_equipment : LowClass_Loot
 
 LIS_first_aid : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
 LIS_freezer : LowClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 4;
+	maxItemsToLoot = 6;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"

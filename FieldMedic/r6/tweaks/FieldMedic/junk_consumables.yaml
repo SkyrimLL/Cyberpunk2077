@@ -26,6 +26,15 @@ FieldMedic.Stamina_StatsPackageDamage_Mid:
   modifierType: Multiplier
   statType: BaseStats.Stamina
 
+# Item weight is a stat (BaseStats.Weight) read from the item's own statModifiers list —
+# NOT the `mass` field (that's a physics/visual property only). Applied via statModifiers:,
+# not OnEquip: (OnEquip only buffs the player, it doesn't set the item's own stats).
+FieldMedic.Weight_Light:
+  $type: gamedataConstantStatModifier_Record
+  value: 0.1
+  modifierType: Additive
+  statType: BaseStats.Weight
+
 # OnEquip only accepts GameplayLogicPackage_Record refs, not raw stat modifiers directly —
 # wrap each stat modifier combo in a package so the game actually applies it on consume.
 FieldMedic.GLP_MedicalGauze:
@@ -37,6 +46,11 @@ FieldMedic.GLP_AntisepticDisinfectant:
   $type: GameplayLogicPackage_Record
   stats:
     - FieldMedic.Health_StatsPackageBonus_Mid
+
+FieldMedic.GLP_Bubblegum:
+  $type: GameplayLogicPackage_Record
+  stats:
+    - FieldMedic.Stamina_StatsPackageBonus_Low
 
 FieldMedic.GLP_BloodyBandage:
   $type: GameplayLogicPackage_Record
@@ -55,12 +69,26 @@ Items.FieldMedic_MedicalGauze:
   displayName: LocKey#4947
   iconPath: "MedicalGauze" 
   localizedDescription: Gameplay-Misc-Junk-DisplayName-GenericJunkItem4
+  mass: 0.1
+  statModifiers:
+    - FieldMedic.Weight_Light
   tags:
     - Consumable
     - Edible
     - Medical
     - FieldMedic
     - FieldMedic_Bandage
+  CraftingData:
+    $type: CraftingPackage_Record
+    craftingExpModifier: 1
+    overcraftPenaltyModifier: 1
+    craftingRecipe:
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.FieldMedic_BloodyBandage
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.FieldMedic_AntisepticDisinfectant
   OnEquip:
     - FieldMedic.GLP_MedicalGauze
 
@@ -74,6 +102,9 @@ Items.FieldMedic_AntisepticDisinfectant:
   itemType: ItemType.Con_LongLasting
   displayName: LocKey#4964
   iconPath: "hygenic_bag"
+  mass: 0.1
+  statModifiers:
+    - FieldMedic.Weight_Light
   tags:
     - Consumable
     - Edible
@@ -81,7 +112,7 @@ Items.FieldMedic_AntisepticDisinfectant:
     - FieldMedic
     - FieldMedic_Antiseptic
     - CraftingMaterial
-  dropObject: defaultItemDrop
+  dropObject: defaultItemDrop 
   OnEquip:
     - FieldMedic.GLP_AntisepticDisinfectant
   
@@ -97,6 +128,9 @@ Items.FieldMedic_BloodyBandage:
   displayName: LocKey#5024
   localizedDescription: Gameplay-Misc-Junk-DisplayName-GenericCorporationJunkItem3
   iconPath: "bloody_bandage"
+  mass: 0.1
+  statModifiers:
+    - FieldMedic.Weight_Light
   tags:
     - Consumable
     - Edible
@@ -109,41 +143,49 @@ Items.FieldMedic_BloodyBandage:
   OnEquip:
     - FieldMedic.GLP_BloodyBandage
 
+# Bubblegum
+# Items.GenericJunkItem29:  
+# Items.GenericJunkItem30:   
+Items.FieldMedic_Bubblegum:
+  $base: Items.HealthBooster
+  itemCategory: ItemCategory.Consumable
+  itemType: ItemType.Con_LongLasting
+  displayName: LocKey#45749
+  iconPath: "gum_b_GenericJunkItem30" 
+  localizedDescription: Gameplay-Misc-Junk-LocalizedDescription-GenericJunkItem30
+  mass: 0.1
+  statModifiers:
+    - FieldMedic.Weight_Light
+  tags:
+    - Consumable
+    - Edible
+    - Medical
+    - FieldMedic
+    - FieldMedic_Bubblegum
+  OnEquip: 
+    - FieldMedic.GLP_Bubblegum
+
 # --- End of FieldMedic junk consumables ------------------------------------------------------
 
-# Test of override of a vanilla junk item
-# Bubblegum
-Items.GenericJunkItem29: 
-  itemCategory: ItemCategory.Consumable
-  itemType: ItemType.Con_LongLasting 
-  tags:
-    - Consumable
-    - Edible
-    - Medical
-    - FieldMedic  
-  OnEquip:
-    - FieldMedic.GLP_MedicalGauze
-
-# Bubblegum
-Items.GenericJunkItem30: 
-  itemCategory: ItemCategory.Consumable
-  itemType: ItemType.Con_LongLasting 
-  tags:
-    - Consumable
-    - Edible
-    - Medical
-    - FieldMedic  
-  OnEquip:
-    - FieldMedic.GLP_MedicalGauze
-
-# Disinfectant
-Items.GenericPoorJunkItem1: 
-  itemCategory: ItemCategory.Consumable
-  itemType: ItemType.Con_LongLasting 
-  tags:
-    - Consumable
-    - Edible
-    - Medical
-    - FieldMedic  
-  OnEquip:
-    - FieldMedic.GLP_AntisepticDisinfectant
+# Test of override of a vanilla item 
+Items.HealthBooster:  
+  CraftingData:
+    $type: CraftingPackage_Record
+    craftingExpModifier: 1
+    overcraftPenaltyModifier: 1
+    craftingRecipe:
+      - $type: RecipeElement_Record
+        amount: 2
+        ingredient: Items.FieldMedic_MedicalGauze
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.FieldMedic_AntisepticDisinfectant
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.GenericJunkItem18 # Forceps
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.GenericJunkItem19 # Scissors
+      - $type: RecipeElement_Record
+        amount: 1
+        ingredient: Items.GenericRichJunkItem1 # Champagne Bucket

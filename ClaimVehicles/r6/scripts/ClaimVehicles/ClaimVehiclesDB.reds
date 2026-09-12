@@ -34,11 +34,12 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
   public func lookupVehicle(_id: TweakDBID) -> ref<VehicleProperties> {
     let ownableVehicleList = TweakDBInterface.GetForeignKeyArray(t"Vehicle.vehicle_list.list"); 
     let vehicleIsOwnable = ArrayFindFirst(ownableVehicleList, _id) != -1;
+    let rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_id);
 
     this.showDebugMessage(">>> ClaimVehicleDB: lookupVehicle()..." );
     this.showDebugMessage(">>> ClaimVehicleDB: searching for:" + TDBID.ToStringDEBUG(_id));  
 
-    if (vehicleIsOwnable) {
+    if (vehicleIsOwnable || IsDefined(rec) || TDBID.IsValid(_id)) {
       this.showDebugMessage(">>>>>> ClaimVehicleDB: entry found!");
 
       let Item = new VehicleProperties();
@@ -64,14 +65,13 @@ public class ClaimVehicleDB extends ScriptedPuppetPS {
 
     let thisVehicle: ref<VehicleProperties> = this.lookupVehicle(_id);
 
-    // if (Equals(thisVehicle.vehicleString, "")) {
-    //  LogChannel(n"DEBUG",">>> ClaimVehicleDB: entry not found (slot empty / unregistered item)"); 
-    // } else {
-    //  LogChannel(n"DEBUG",">>> ClaimVehicleDB: entry found!"); 
-    // }
-    	  
-    return thisVehicle.vehicleString;
- 
+    if (!Equals(thisVehicle.vehicleString, "")) {
+      return thisVehicle.vehicleString;
+    }
+    if (TDBID.IsValid(_id)) {
+      return TDBID.ToStringDEBUG(_id);
+    }
+    return "";
   };
 
   public func lookupVehicleUnlockState(_id: TweakDBID) -> Bool { 

@@ -89,6 +89,13 @@ public class ClaimVehiclesConfig {
   @runtimeProperty("ModSettings.mod", "N.C.L.A.I.M.S")
   @runtimeProperty("ModSettings.category", "Crime Reporting")
   @runtimeProperty("ModSettings.category.order", "30")
+  @runtimeProperty("ModSettings.displayName", "Enable Crime Reports")
+  @runtimeProperty("ModSettings.description", "Toggle crime reporting on or off without changing slider values.")
+  let enableCrimeReports: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "N.C.L.A.I.M.S")
+  @runtimeProperty("ModSettings.category", "Crime Reporting")
+  @runtimeProperty("ModSettings.category.order", "31")
   @runtimeProperty("ModSettings.displayName", "Chance of Crime Report on FAIL")
   @runtimeProperty("ModSettings.description", "Percent chance a failed Claim attempt will result in an increased Wanted level.")
   @runtimeProperty("ModSettings.step", "5")
@@ -98,7 +105,7 @@ public class ClaimVehiclesConfig {
 
   @runtimeProperty("ModSettings.mod", "N.C.L.A.I.M.S")
   @runtimeProperty("ModSettings.category", "Crime Reporting")
-  @runtimeProperty("ModSettings.category.order", "31")
+  @runtimeProperty("ModSettings.category.order", "32")
   @runtimeProperty("ModSettings.displayName", "Chance of Crime Report on SUCCESS")
   @runtimeProperty("ModSettings.description", "Percent chance a successful Claim attempt will result in an increased Wanted level.")
   @runtimeProperty("ModSettings.step", "5")

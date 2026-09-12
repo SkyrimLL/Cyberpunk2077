@@ -110,6 +110,7 @@ HCM_decorative : HighClass_Loot
 
 HCM_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -133,6 +134,7 @@ HCM_equipment : HighClass_Loot
 
 HCM_locker : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -166,6 +168,7 @@ HCM_ripperdoc : HCS_first_aid
 
 HCM_safe : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -346,6 +349,7 @@ HCS_decorative : HighClass_Loot
 
 HCS_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -369,9 +373,11 @@ HCS_equipment : HighClass_Loot
 
 HCS_first_aid : HighClass_Loot
 {
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
@@ -585,6 +591,7 @@ HRM_decorative : HighClass_Loot
 
 HRM_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -616,6 +623,7 @@ HRM_equipment : HighClass_Loot
 
 HRM_locker : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -647,6 +655,7 @@ HRM_ripperdoc : HCS_first_aid
 
 HRM_safe : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -842,6 +851,7 @@ HRS_decorative : HighClass_Loot
 
 HRS_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -873,9 +883,11 @@ HRS_equipment : HighClass_Loot
 
 HRS_first_aid : HighClass_Loot
 {
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
@@ -1078,6 +1090,7 @@ HIM_decorative : HighClass_Loot
 
 HIM_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1101,6 +1114,7 @@ HIM_equipment : HighClass_Loot
 
 HIM_locker : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1132,6 +1146,7 @@ HIM_ripperdoc : HCS_first_aid
 
 HIM_safe : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -1293,6 +1308,7 @@ HIS_crate : HighClass_Loot
 
 HIS_equipment : HighClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1316,11 +1332,11 @@ HIS_equipment : HighClass_Loot
 
 HIS_first_aid : HighClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 

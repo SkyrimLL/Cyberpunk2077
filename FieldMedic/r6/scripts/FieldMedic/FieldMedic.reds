@@ -13,9 +13,9 @@
 
 @wrapMethod(gameLootContainerBase)
 protected cb func OnInventoryFilledEvent(evt: ref<ContainerFilledEvent>) -> Bool {
-  let result: Bool = wrappedMethod(evt);
+  let result: Bool = wrappedMethod(evt);  
 
-  LogChannel(n"DEBUG", s"[FieldMedic] OnInventoryFilledEvent fired on \(this.GetClassName())");
+  // LogChannel(n"DEBUG", s"[FieldMedic] OnInventoryFilledEvent fired on \(this.GetClassName())");
   let cfg: ref<FieldMedicConfig> = FieldMedicConfig.Get();
   if cfg.modON {
     FieldMedicLootInjector.InjectContainer(this, cfg);
@@ -29,10 +29,15 @@ protected cb func OnInventoryFilledEvent(evt: ref<ContainerFilledEvent>) -> Bool
 private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
   wrappedMethod(playerPuppet);
 
-  LogChannel(n"DEBUG", s"[FieldMedic] PlayerAttachedCallback fired; this==arg: \(playerPuppet == this)");
+  // LogChannel(n"DEBUG", s"[FieldMedic] PlayerAttachedCallback fired; this==arg: \(playerPuppet == this)");
   let cfg: ref<FieldMedicConfig> = FieldMedicConfig.Get();
   if cfg.modON && playerPuppet == this {
     FieldMedicLootInjector.SwapAllJunkConsumables(playerPuppet, cfg);
+
+    // There's no TweakDB list that grants recipes by default; CraftBook.m_knownRecipes is
+    // runtime-only and must be populated via AddRecipe (idempotent, safe to call every attach).
+    CraftingSystem.GetInstance(playerPuppet.GetGame()).GetPlayerCraftBook().AddRecipe(t"Items.FieldMedic_MedicalGauze");
+    CraftingSystem.GetInstance(playerPuppet.GetGame()).GetPlayerCraftBook().AddRecipe(t"Items.HealthBooster");
   }
 }
 
@@ -52,7 +57,7 @@ protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
       localized = rec.LocalizedName();
       friendly  = rec.FriendlyName();
     }
-    LogChannel(n"DEBUG", s"[FieldMedic] Pickup: id=\(TDBID.ToStringDEBUG(tdbid)) friendly=\"\(friendly)\" localized=\"\(localized)\"");
+    // LogChannel(n"DEBUG", s"[FieldMedic] Pickup: id=\(TDBID.ToStringDEBUG(tdbid)) friendly=\"\(friendly)\" localized=\"\(localized)\"");
   }
 
   let cfg: ref<FieldMedicConfig> = FieldMedicConfig.Get();
@@ -148,8 +153,12 @@ public abstract final class FieldMedicLootInjector {
       FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_BloodyBandage", cfg.bloodyBandageChance, cfg);
     }
 
-    if cfg.injectBleachBottles && FieldMedicLootInjector.IsIndustrialContainer(lootID) {
-      FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_AntisepticDisinfectant", cfg.bleachBottleChance, cfg);
+    if cfg.injectDisinfectantBottles && FieldMedicLootInjector.IsIndustrialContainer(lootID) {
+      FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_AntisepticDisinfectant", cfg.disinfectantBottleChance, cfg);
+    }
+
+    if cfg.injectBubblegum && FieldMedicLootInjector.IsIndustrialContainer(lootID) {
+      FieldMedicLootInjector.RollAndAdd(container, t"Items.FieldMedic_Bubblegum", cfg.bubblegumChance, cfg);
     }
   }
 
@@ -159,7 +168,9 @@ public abstract final class FieldMedicLootInjector {
   public final static func SwapAllJunkConsumables(owner: ref<GameObject>, cfg: ref<FieldMedicConfig>) -> Void {
     FieldMedicLootInjector.SwapItem(owner, t"Items.GenericJunkItem4",     t"Items.FieldMedic_MedicalGauze",           cfg);
     FieldMedicLootInjector.SwapItem(owner, t"Items.WraithsJunkItem2",     t"Items.FieldMedic_BloodyBandage",           cfg);
-    // FieldMedicLootInjector.SwapItem(owner, t"Items.GenericPoorJunkItem1", t"Items.FieldMedic_AntisepticDisinfectant", cfg);
+    FieldMedicLootInjector.SwapItem(owner, t"Items.GenericPoorJunkItem1", t"Items.FieldMedic_AntisepticDisinfectant", cfg);
+    FieldMedicLootInjector.SwapItem(owner, t"Items.GenericJunkItem29", t"Items.FieldMedic_Bubblegum", cfg);
+    FieldMedicLootInjector.SwapItem(owner, t"Items.GenericJunkItem30", t"Items.FieldMedic_Bubblegum", cfg);
   }
 
   // Reverse map: FieldMedic clone -> vanilla junk source. Used by the UI wraps below
@@ -168,7 +179,9 @@ public abstract final class FieldMedicLootInjector {
   public final static func GetVanillaSourceFor(fieldMedicID: TweakDBID) -> TweakDBID {
     if fieldMedicID == t"Items.FieldMedic_MedicalGauze"           { return t"Items.GenericJunkItem4"; }
     if fieldMedicID == t"Items.FieldMedic_BloodyBandage" { return t"Items.WraithsJunkItem2"; } 
-    // if fieldMedicID == t"Items.FieldMedic_AntisepticDisinfectant" { return t"Items.GenericPoorJunkItem1"; } 
+    if fieldMedicID == t"Items.FieldMedic_AntisepticDisinfectant" { return t"Items.GenericPoorJunkItem1"; } 
+    if fieldMedicID == t"Items.FieldMedic_Bubblegum" { return t"Items.GenericJunkItem29"; }
+    if fieldMedicID == t"Items.FieldMedic_Bubblegum" { return t"Items.GenericJunkItem30"; }
     return TDBID.None();
   }
 
@@ -212,8 +225,12 @@ public abstract final class FieldMedicLootInjector {
       target = t"Items.FieldMedic_MedicalGauze";
     } else if tdbid == t"Items.WraithsJunkItem2" {
       target = t"Items.FieldMedic_BloodyBandage";
-    // } else if tdbid == t"Items.GenericPoorJunkItem1" {
-    //   target = t"Items.FieldMedic_AntisepticDisinfectant";
+    } else if tdbid == t"Items.GenericPoorJunkItem1" {
+      target = t"Items.FieldMedic_AntisepticDisinfectant";
+    } else if tdbid == t"Items.GenericJunkItem29" {
+      target = t"Items.FieldMedic_Bubblegum";
+    } else if tdbid == t"Items.GenericJunkItem30" {
+      target = t"Items.FieldMedic_Bubblegum";
     } else {
       return;
     }
@@ -229,7 +246,7 @@ public abstract final class FieldMedicLootInjector {
     let removed: Bool = ts.RemoveItem(owner, evt.itemID, qty);
     let given: Bool = ts.GiveItemByTDBID(owner, target, qty);
     let targetRecOk: Bool = IsDefined(TweakDBInterface.GetItemRecord(target));
-    LogChannel(n"DEBUG", s"[FieldMedic] SwapOnAdd \(qty)x \(TDBID.ToStringDEBUG(tdbid)) -> \(TDBID.ToStringDEBUG(target)) on \(owner.GetClassName()) [removed=\(removed) given=\(given) targetRecExists=\(targetRecOk)]");
+    // LogChannel(n"DEBUG", s"[FieldMedic] SwapOnAdd \(qty)x \(TDBID.ToStringDEBUG(tdbid)) -> \(TDBID.ToStringDEBUG(target)) on \(owner.GetClassName()) [removed=\(removed) given=\(given) targetRecExists=\(targetRecOk)]");
   }
 
   public final static func SwapItem(owner: ref<GameObject>, fromID: TweakDBID, toID: TweakDBID, cfg: ref<FieldMedicConfig>) -> Void {
@@ -243,7 +260,7 @@ public abstract final class FieldMedicLootInjector {
 
     let items: array<wref<gameItemData>>;
     ts.GetItemList(owner, items);
-    LogChannel(n"DEBUG", s"[FieldMedic] SwapItem scanning \(ArraySize(items)) items on \(owner.GetClassName()) for \(TDBID.ToStringDEBUG(fromID))");
+    // LogChannel(n"DEBUG", s"[FieldMedic] SwapItem scanning \(ArraySize(items)) items on \(owner.GetClassName()) for \(TDBID.ToStringDEBUG(fromID))");
 
     let i: Int32 = 0;
     while i < ArraySize(items) {
@@ -253,7 +270,7 @@ public abstract final class FieldMedicLootInjector {
         let removed: Bool = ts.RemoveItem(owner, itemID, qty);
         let given: Bool = ts.GiveItemByTDBID(owner, toID, qty);
         let targetRecOk: Bool = IsDefined(TweakDBInterface.GetItemRecord(toID));
-        LogChannel(n"DEBUG", s"[FieldMedic] Swapped \(qty)x \(TDBID.ToStringDEBUG(fromID)) -> \(TDBID.ToStringDEBUG(toID)) on \(owner.GetClassName()) [removed=\(removed) given=\(given) targetRecExists=\(targetRecOk)]");
+        // LogChannel(n"DEBUG", s"[FieldMedic] Swapped \(qty)x \(TDBID.ToStringDEBUG(fromID)) -> \(TDBID.ToStringDEBUG(toID)) on \(owner.GetClassName()) [removed=\(removed) given=\(given) targetRecExists=\(targetRecOk)]");
       }
       i += 1;
     }
@@ -277,7 +294,7 @@ public abstract final class FieldMedicLootInjector {
     transactionSystem.GiveItemByTDBID(container, itemID, 1);
 
     if cfg.debugLog {
-      LogChannel(n"DEBUG", s"[FieldMedic] Injected \(TDBID.ToStringDEBUG(itemID)) into container \(TDBID.ToStringDEBUG(container.GetContentAssignment()))");
+      // LogChannel(n"DEBUG", s"[FieldMedic] Injected \(TDBID.ToStringDEBUG(itemID)) into container \(TDBID.ToStringDEBUG(container.GetContentAssignment()))");
     }
   }
 

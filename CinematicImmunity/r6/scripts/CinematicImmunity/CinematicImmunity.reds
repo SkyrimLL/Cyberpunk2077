@@ -278,8 +278,8 @@ public class CinematicImmunity extends ScriptedPuppetPS {
         this.showDebugMessage("[CinematicImmunity] isNomadPrologue=" + BoolToString(isNomadPrologue));
         //this.showDebugMessage("[CinematicImmunity] isStreetKidPrologue=" + BoolToString(isStreetKidPrologue));
         this.showDebugMessage("[CinematicImmunity] isRescueScene=" + BoolToString(isRescueScene));
-        this.showDebugMessage("[CinematicImmunity] isCyberspace=" + BoolToString(isCyberspace));
-        this.showDebugMessage("[CinematicImmunity] isBraindance=" + BoolToString(isBraindance));
+        // this.showDebugMessage("[CinematicImmunity] isCyberspace=" + BoolToString(isCyberspace));
+        // this.showDebugMessage("[CinematicImmunity] isBraindance=" + BoolToString(isBraindance));
         // this.showDebugMessage("[CinematicImmunity] isInScene=" + BoolToString(isInScene));
         this.showDebugMessage("[CinematicImmunity] isHeistEscape=" + BoolToString(isHeistEscape));
         this.showDebugMessage("[CinematicImmunity] isActTransition=" + BoolToString(isActTransition));
@@ -291,12 +291,12 @@ public class CinematicImmunity extends ScriptedPuppetPS {
 
         let shouldBeImmune: Bool = isVRTutorial
                                 || isJohnnyPossession
+                                || isNomadPrologue // Car chase during Nomad prologue
                                 // || isCorpoIntro
-                                || isNomadPrologue
                                 // || isStreetKidPrologue
+                                // || isCyberspace
+                                // || isBraindance
                                 || isRescueScene
-                                || isCyberspace
-                                || isBraindance
                                 || isHeistEscape
                                 || isActTransition
                                 || isDontFearTheReaper

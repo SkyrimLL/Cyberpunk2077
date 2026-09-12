@@ -1,6 +1,56 @@
 Vehicle.vehicle_list.list: 
   - !append Vehicle.maelstrom__yaiba_kusanagi
   - !append Vehicle.mox__yaiba_kusanagi
+  - !append Vehicle.tyger__brennan_apollo
+  - !append Vehicle.tyger__yaiba_kusanagi
+  - !append Vehicle.tyger__sportbike2_arch
+  - !append Vehicle.tyger__archer_quartz
+  - !append Vehicle.tyger__mizutani_shion
+  - !append Vehicle.tyger__villefort_columbus
+  - !append Vehicle.tyger__quadra_turbo
+  - !append Vehicle.scavengers__brennan_apollo_sport
+  - !append Vehicle.scavengers__villefort_columbus
+  - !append Vehicle.scavengers__thorton_colby
+  - !append Vehicle.scavengers__archer_hella_01
+  - !append Vehicle.scavengers__archer_hella_02
+  - !append Vehicle.scavengers__chevalier_thrax
+  - !append Vehicle.valentinos__brennan_apollo_sport
+  - !append Vehicle.valentinos__thorton_colby
+  - !append Vehicle.valentinos__thorton_mackinaw
+  - !append Vehicle.valentinos__villefort_alvarado
+  - !append Vehicle.valentinos__villefort_alvarado_cabrio
+  - !append Vehicle.valentinos__chevalier_thrax
+  - !append Vehicle.voodoo__thorton_galena
+  - !append Vehicle.voodoo__mahir_supron
+  - !append Vehicle.sixthstreet__brennan_apollo
+  - !append Vehicle.sixthstreet__villefort_columbus
+  - !append Vehicle.sixthstreet__thorton_mackinaw
+  - !append Vehicle.sixthstreet__archer_hella
+  - !append Vehicle.sixthstreet__chevalier_thrax
+  - !append Vehicle.wraith__thorton_colby
+  - !append Vehicle.wraith__thorton_galena
+  - !append Vehicle.wraith__archer_quartz
+  - !append Vehicle.wraith__mizutani_shion
+  - !append Vehicle.wraith__quadra_type66
+  - !append Vehicle.animals__yaiba_kusanagi
+  - !append Vehicle.animals__quadra_type66_poor
+  - !append Vehicle.animals__thorton_colby_pickup
+  - !append Vehicle.animals__thorton_mackinaw
+  - !append Vehicle.animals__chevalier_thrax
+  - !append Vehicle.animals__villefort_columbus
+  - !append Vehicle.aldelcaldos__archer_quartz
+  - !append Vehicle.aldelcaldos__thorton_colby
+  - !append Vehicle.aldelcaldos__thorton_galena_01
+  - !append Vehicle.aldelcaldos__thorton_galena_02
+  - !append Vehicle.mox__mahir_supron
+  - !append Vehicle.mox__archer_quartz
+  - !append Vehicle.mox__villefort_alvarado
+  - !append Vehicle.police__brennan_apollo
+  - !append Vehicle.police__biker_brennan_apollo
+  - !append Vehicle.police__archer_hella
+  - !append Vehicle.police__villefort_cortes
+  - !append Vehicle.police__chevalier_emperor
+  - !append Vehicle.police__thorton_merrimac
   - !append Vehicle.NCA.cs_savable_v_standard25_thorton_merrimac_police_siren
   - !append Vehicle.NCA.v_sportbike3_brennan_apollo_sport
   - !append Vehicle.NCA.v_sportbike2_arch_courier

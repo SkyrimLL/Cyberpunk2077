@@ -20,10 +20,16 @@ public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
 @wrapMethod(PlayerPuppet)
   private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
     let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+    let _encumbranceTracker: ref<LimitedEncumbranceTracking>;
 
     // LogChannel(n"DEBUG", "::::: PlayerAttachedCallback: PLAYER ATTACHED ");
     _playerPuppetPS.InitLimitedEncumbranceSystem(playerPuppet);
-    this.EvaluateEncumbrance();
+    
+    // Schedule weight calculation after a delay to ensure player equipment is fully loaded
+    _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
+    if IsDefined(_encumbranceTracker) {
+      _encumbranceTracker.ScheduleInitialWeightCheck();
+    }
 
     wrappedMethod(playerPuppet);
 }
@@ -89,6 +95,17 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
 
     }
 
+  }
+
+@addMethod(PlayerPuppet)
+  protected cb func OnInitialWeightCheckEvent(evt: ref<InitialWeightCheckEvent>) -> Bool {
+    if IsDefined(evt.tracker) {
+      this.EvaluateEncumbrance();
+      if (evt.tracker.debugON) {
+        evt.tracker.showDebugMessage("[LimitedEncumbrance] Initial weight check executed after player load delay");
+      }
+    }
+    return true;
   }
 
 @wrapMethod(PlayerPuppet) 

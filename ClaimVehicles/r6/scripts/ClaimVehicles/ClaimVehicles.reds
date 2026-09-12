@@ -43,7 +43,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   public let chanceMidPerkHack: Float;
   public let chanceHighPerkHack: Float;
   public let chanceCrimeReportFail: Float;
-  public let chanceCrimeReportSuccess: Float; 
+  public let chanceCrimeReportSuccess: Float;
+  public let enableCrimeReports: Bool;
   public let summonMode: vehicleSummonMode;
 
   public persistent let lastVehicleRecordID: TweakDBID; 
@@ -83,17 +84,14 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     // For developers only 
     // this.debugON = true; 
 
-    // Persistence - New database only if vehicle unlock state size is 0
-    if (ArraySize(this.vehicleDB.vehiclesUnlockStateDB)==0) {
+    // Persistence - New database only if vehicleDB is null or vehicle unlock state size is 0
+    if (!IsDefined(this.vehicleDB) || ArraySize(this.vehicleDB.vehiclesUnlockStateDB) == 0) {
       this.vehicleDB = new ClaimVehicleDB();
-    }
-    
-    this.vehicleDB.init();
-
-    // First time - save garage
-    if (ArraySize(this.vehicleDB.vehiclesUnlockStateDB)==0) { 
+      this.vehicleDB.init();
       this.saveGarage();
       this.useOriginalGarage = true; 
+    } else {
+      this.vehicleDB.init();
     }
   }
 
@@ -114,7 +112,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     this.chanceMidPerkHack = Cast<Float>(this.config.chanceMidPerkHack); 
     this.chanceHighPerkHack = Cast<Float>(this.config.chanceHighPerkHack);   
     this.chanceCrimeReportFail = Cast<Float>(this.config.chanceCrimeReportFail);   
-    this.chanceCrimeReportSuccess = Cast<Float>(this.config.chanceCrimeReportSuccess);   
+    this.chanceCrimeReportSuccess = Cast<Float>(this.config.chanceCrimeReportSuccess);
+    this.enableCrimeReports = this.config.enableCrimeReports;
     this.summonMode = this.config.summonMode;  
     this.remoteControlQuickhackON = this.config.remoteControlQuickhackON;   
     this.forceBrakesQuickhackON = this.config.forceBrakesQuickhackON;   
@@ -224,6 +223,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
       // Retrieve RecordID and vehicle type for the matched vehicle model
       if (!matchFound) {
         if  (this.useOriginalGarage) {
+          i = 0;
           while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
             let _this_vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
             let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
@@ -253,6 +253,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           };    
         } else {
           // If alternate garage is used, compare with saved list of vehicles
+          i = 0;
           while i < ArraySize(this.originalGarage) { 
             let _this_vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(this.originalGarage[i]);
             let _this_vehicleModel: String = GetLocalizedItemNameByCName(_this_vehicleRecord.DisplayName());
@@ -338,6 +339,11 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   }
 
   public func tryReportCrime(crimeOnSuccess: Bool) -> Void {
+    // Check if crime reports are enabled
+    if (!this.enableCrimeReports) {
+      return;
+    }
+
     let chanceCrimeReportFail: Int32 = Cast<Int32>(this.chanceCrimeReportFail); 
     let chanceCrimeReportSuccess: Int32 = Cast<Int32>(this.chanceCrimeReportSuccess);
 
@@ -476,56 +482,24 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
   }
 
   public func refreshClaimedVehicles() -> Void { 
-    let m_vehicleSystem: ref<VehicleSystem>  = GameInstance.GetVehicleSystem(this.player.GetGame());
-    let vehiclesList: array<PlayerVehicle> ;
-    let allVehiclesList: array<PlayerVehicle>;
-    let i = 0;
+    let m_vehicleSystem: ref<VehicleSystem> = GameInstance.GetVehicleSystem(this.player.GetGame());
+    let vehiclesList: array<PlayerVehicle>;
+    let i: Int32 = 0;
 
     m_vehicleSystem.GetPlayerUnlockedVehicles(vehiclesList); 
-     
-    // Invalidate persistent history
-    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-      this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
-
-      i += 1;
-    }; 
-
-    // Refresh history from current owned list
-    i = 0;
 
     this.showDebugMessage(">>> N.C.L.A.I.M:  Garage list: " + ToString(ArraySize(vehiclesList)) + " vehicles currently registered.");
 
     while i < ArraySize(vehiclesList) {    
-      this.showDebugMessage(">>> N.C.L.A.I.M:  Claimed vehicles state refresh: " + TDBID.ToStringDEBUG(vehiclesList[i].recordID)  );
- 
-      this.vehicleDB.setVehicleUnlockState(vehiclesList[i].recordID, true);
-
+      if TDBID.IsValid(vehiclesList[i].recordID) {
+        this.showDebugMessage(">>> N.C.L.A.I.M:  Claimed vehicles state refresh: " + TDBID.ToStringDEBUG(vehiclesList[i].recordID));
+        this.vehicleDB.setVehicleUnlockState(vehiclesList[i].recordID, true);
+        if this.useOriginalGarage && !this.checkVehicleInSavedGarage(vehiclesList[i].recordID) {
+          ArrayPush(this.originalGarage, vehiclesList[i].recordID);
+        }
+      }
       i += 1;
     };
-
-    // Sync originalGarage against the full player vehicle list (includes disabled vehicles,
-    // but excludes sold ones) to detect vehicles removed via other mods.
-    // Without this, loadGarage() will blindly re-enable sold vehicles the next time
-    // the garage is restored (e.g. when switching back to Normal mode).
-    m_vehicleSystem.GetPlayerVehicles(allVehiclesList);
-    i = 0;
-    while i < ArraySize(this.originalGarage) {
-      let bStillOwned: Bool = false;
-      let j: Int32 = 0;
-      while j < ArraySize(allVehiclesList) {
-        if this.originalGarage[i] == allVehiclesList[j].recordID {
-          bStillOwned = true;
-        }
-        j += 1;
-      };
-      if !bStillOwned {
-        this.showDebugMessage(">>> refreshClaimedVehicles: pruning sold vehicle from originalGarage: " + TDBID.ToStringDEBUG(this.originalGarage[i]));
-        ArrayErase(this.originalGarage, i);
-        // Do NOT increment i — the next element has shifted into position i
-      } else {
-        i += 1;
-      };
-    };       
   }
 
   public func refreshGarage() -> Void { 
@@ -547,14 +521,20 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           this.useOriginalGarage = true; 
         }
         
-        /*
-        while i < ArraySize(vehiclesList) {     
-          this.enablePlayerVehicle( vehiclesList[i].recordID, true, false);
-          this.vehicleDB.setVehicleUnlockState(vehiclesList[i].recordID, true);
-
+        i = 0;
+        while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {     
+          if this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked {
+            let _recId: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+            let _rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_recId);
+            if IsDefined(_rec) {
+              m_vehicleSystem.TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_recId), _rec.Type().Type(), true);
+              this.enablePlayerVehicle(_recId, true, false);
+              // VCD Compatibility: trigger buyback for vehicles that may have been sold
+              this.triggerVCDBuyback(_recId);
+            }
+          }
           i += 1;
-        };  
-        */  
+        };
             
         break;
       // Last mode - enable only last vehicle claimed 
@@ -594,33 +574,34 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           
           i = 0;
           while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) { 
-            _this_vehicleString = this.vehicleDB.lookupVehicleString(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
             let _vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
-            let _vehicleType: gamedataVehicleType = _vehicleRecord.Type().Type();
             let _vehicleModel: String = GetLocalizedItemNameByCName(_vehicleRecord.DisplayName());
-            // Only process vehicles that should be enabled (match lastVehicleRecordID)
+            
+            // Disable all vehicles except the last one claimed
             if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID == this.lastVehicleRecordID) {
-                // Only enable if the vehicle is actually unlocked in our database
-                if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked) {
-                  this.showDebugMessage(">>> Enabling last vehicle: " + _vehicleModel);
-                  m_vehicleSystem.TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID), _vehicleType, true);
-                  this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
-                  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
-                  matchFound = true;
-                } else {
-                  // Last vehicle was removed, disable it and pick a random one
-                  this.showDebugMessage(">>> Last vehicle was removed, disabling: " + _vehicleModel);
-                  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
-                }
-
-              } else {
-                // Just update database state - don't call TogglePlayerActiveVehicle
-                // since clearGarage() already removed all vehicles from the active garage
-                if (this.debugON) {
-                  this.showDebugMessage(">>> Marking vehicle as disabled in DB: " + _vehicleModel);
-                }
-                this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
+              let _enableId: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+              
+              this.enablePlayerVehicle(_enableId, true, false);
+              this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
+              
+              // VCD Compatibility: trigger buyback for vehicles that may have been sold
+              this.triggerVCDBuyback(_enableId);
+              
+              if IsDefined(_vehicleRecord) {
+                this.showDebugMessage(">>>   [" + ToString(i) + "] ENABLING: " + _vehicleModel);
               }
+              matchFound = true;
+              
+            } else {
+              let _disableId: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+              
+              this.enablePlayerVehicle(_disableId, false, false);
+              this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
+              
+              if IsDefined(_vehicleRecord) {
+                this.showDebugMessage(">>>   [" + ToString(i) + "] DISABLING: " + _vehicleModel);
+              }
+            }
 
             i += 1;
           };  
@@ -672,6 +653,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
             // Disable all vehicles except Delamains
             if (_isDelamain) {
               this.enablePlayerVehicle(  _currentTweakID, true, false);
+              // VCD Compatibility: trigger buyback for vehicles that may have been sold
+              this.triggerVCDBuyback(_currentTweakID);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
 
             } else {
@@ -697,6 +680,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
           // Disable all vehicles except favorites
           if (this.vehicleDB.vehiclesUnlockStateDB[i].vehicleFavorite) {
               this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
+              // VCD Compatibility: trigger buyback for vehicles that may have been sold
+              this.triggerVCDBuyback(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
               this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
               matchFound = true;
 
@@ -727,6 +712,8 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
         while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
           this.enablePlayerVehicle(  this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
+          // VCD Compatibility: trigger buyback for vehicles that may have been sold
+          this.triggerVCDBuyback(this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
 
           i += 1;
@@ -767,28 +754,47 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
   // Pick a random vehicle from history and enables it
   public func enableRandomVehicle() -> Void { 
-    let _this_vehicleString: String;
-    let i = 0;
+    let i: Int32 = 0;
+    let dbSize: Int32 = ArraySize(this.vehicleDB.vehiclesUnlockStateDB);
 
-    i = 0;
-    let randomNum: Int32 = RandRange(0,ArraySize(this.vehicleDB.vehiclesUnlockStateDB)-1);
+    // RandRange(0, n) returns a value in [0, n), so for array size n, we need RandRange(0, n)
+    // to get indices 0 through n-1
+    let randomNum: Int32 = RandRange(0, dbSize);
 
-    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
-      // Disable all vehicles except a random one
+    this.showDebugMessage(">>> enableRandomVehicle: selecting random vehicle from " + ToString(dbSize) + " total (index: " + ToString(randomNum) + ")");
+
+    while i < dbSize {  
+      // Disable all vehicles except the randomly selected one
       if (i == randomNum) {
-          this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, true, false);
+          let _enableId: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+          let _enableRec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_enableId);
+          
+          this.enablePlayerVehicle(_enableId, true, false);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
-          // Update lastVehicleRecordID when in Last mode
-          if (Equals(this.summonMode, vehicleSummonMode.Last)) {
-            this.lastVehicleRecordID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
-            if (this.debugON) {
-              this.showDebugMessage(">>> Updated lastVehicleRecordID to random vehicle");
-            }
+          
+          // VCD Compatibility: trigger buyback for vehicles that may have been sold
+          this.triggerVCDBuyback(_enableId);
+          
+          if IsDefined(_enableRec) {
+            this.showDebugMessage(">>>   [" + ToString(i) + "] ENABLING: " + GetLocalizedItemNameByCName(_enableRec.DisplayName()));
+          }
+          
+          // Update lastVehicleRecordID when in Last or Random mode
+          if (Equals(this.summonMode, vehicleSummonMode.Last) || Equals(this.summonMode, vehicleSummonMode.Random)) {
+            this.lastVehicleRecordID = _enableId;
+            this.showDebugMessage(">>> Updated lastVehicleRecordID to random vehicle: " + TDBID.ToStringDEBUG(this.lastVehicleRecordID));
           }
 
         } else {
-          this.enablePlayerVehicle( this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID, false, false);
+          let _disableId: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+          let _disableRec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_disableId);
+          
+          this.enablePlayerVehicle(_disableId, false, false);
           this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
+          
+          if IsDefined(_disableRec) {
+            this.showDebugMessage(">>>   [" + ToString(i) + "] DISABLING: " + GetLocalizedItemNameByCName(_disableRec.DisplayName()));
+          }
         }
 
       i += 1;
@@ -918,14 +924,18 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
   // Restore original garage state
   public func loadGarage() -> Void {  
-    let _this_vehicleString: String;
-    let i = 0;
+    let m_vehicleSystem: ref<VehicleSystem> = GameInstance.GetVehicleSystem(this.player.GetGame());
+    let i: Int32 = 0;
 
     while i < ArraySize(this.originalGarage) {      
-      this.showDebugMessage(">>> N.C.L.A.I.M:  loadGarage: " + TDBID.ToStringDEBUG(this.originalGarage[i] ) );
-      this.enablePlayerVehicle(  this.originalGarage[i], true, false);
-      this.vehicleDB.setVehicleUnlockState(this.originalGarage[i], true);
-
+      let _recId: TweakDBID = this.originalGarage[i];
+      let _rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_recId);
+      if IsDefined(_rec) {
+        this.showDebugMessage(">>> N.C.L.A.I.M:  loadGarage: " + TDBID.ToStringDEBUG(_recId));
+        m_vehicleSystem.TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_recId), _rec.Type().Type(), true);
+        this.enablePlayerVehicle(_recId, true, false);
+        this.vehicleDB.setVehicleUnlockState(_recId, true);
+      }
       i += 1;
     }; 
   }
@@ -941,27 +951,86 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
     this.showDebugMessage(">>> Current summon mode: " + ToString(this.summonMode));
     this.showDebugMessage(">>> Last vehicle ID: " + TDBID.ToStringDEBUG(this.lastVehicleRecordID));
     
+    // In Normal/All modes, re-enable all claimed vehicles
+    // In Random/Delamain/Favorites modes, only re-enable what's marked as unlocked (already filtered by refreshGarage)
+    let isFilteredMode: Bool = Equals(this.summonMode, vehicleSummonMode.Random) 
+                             || Equals(this.summonMode, vehicleSummonMode.Last)
+                             || Equals(this.summonMode, vehicleSummonMode.Delamain)
+                             || Equals(this.summonMode, vehicleSummonMode.Favorites);
+    
     while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {
       let _id: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
+      
+      // In Normal/All mode, ensure ALL vehicles are marked unlocked for re-registration
+      // In filtered modes (Random/Delamain/Favorites), respect the unlocked flags set by refreshGarage
+      if !isFilteredMode {
+        this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = true;
+      }
+
       let _unlocked: Bool = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked;
       let _rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_id);
-      let _name: String = GetLocalizedItemNameByCName(_rec.DisplayName());
       
-      this.showDebugMessage(">>> [" + ToString(i) + "] " + _name + " - unlocked: " + ToString(_unlocked));
-      
-      if _unlocked {
-        let _type: gamedataVehicleType = _rec.Type().Type();
-        this.showDebugMessage(">>>   -> Re-registering: " + TDBID.ToStringDEBUG(_id));
-        GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_id), _type, true);
-        this.enablePlayerVehicle(_id, true, false);
-      } else {
-        if (this.debugON) {
-          this.showDebugMessage(">>>   -> Skipping (marked as locked in DB)");
+      if IsDefined(_rec) {
+        let _name: String = GetLocalizedItemNameByCName(_rec.DisplayName());
+        this.showDebugMessage(">>> [" + ToString(i) + "] " + _name + " - unlocked: " + ToString(_unlocked));
+        
+        if _unlocked {
+          // Check if vehicle has valid Type data before trying to register
+          let _typeRecord = _rec.Type();
+          if IsDefined(_typeRecord) {
+            let _type: gamedataVehicleType = _typeRecord.Type();
+            this.showDebugMessage(">>>   -> Re-registering: " + TDBID.ToStringDEBUG(_id) + " (type: " + ToString(_type) + ")");
+            this.enablePlayerVehicle(_id, true, false);
+            GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_id), _type, true);
+            
+            // DEBUG: Verify vehicle was actually registered
+            let _verifyList: array<PlayerVehicle>;
+            GameInstance.GetVehicleSystem(this.player.GetGame()).GetPlayerUnlockedVehicles(_verifyList);
+            let _found: Bool = false;
+            let _vIdx: Int32 = 0;
+            while _vIdx < ArraySize(_verifyList) {
+              if _verifyList[_vIdx].recordID == _id {
+                _found = true;
+              }
+              _vIdx += 1;
+            }
+            if _found {
+              this.showDebugMessage(">>>      ✓ Verified: Vehicle is in GetPlayerUnlockedVehicles");
+            } else {
+              this.showDebugMessage(">>>      ✗ ERROR: Vehicle NOT in GetPlayerUnlockedVehicles after registration!");
+            }
+          } else {
+            this.showDebugMessage(">>>   -> ERROR: Vehicle record has no Type() data - cannot register");
+          }
+        } else {
+          if (this.debugON) {
+            this.showDebugMessage(">>>   -> Skipping (marked as locked in DB)");
+          }
         }
+      } else {
+        this.showDebugMessage(">>> [" + ToString(i) + "] ERROR: Vehicle record not found in TweakDB: " + TDBID.ToStringDEBUG(_id));
       }
       i += 1;
     };
     
+    // Also re-register originalGarage vehicles if in Normal mode
+    if Equals(this.summonMode, vehicleSummonMode.Normal) {
+      i = 0;
+      while i < ArraySize(this.originalGarage) {
+        let _origId: TweakDBID = this.originalGarage[i];
+        let _origRec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_origId);
+        if IsDefined(_origRec) {
+          let _origTypeRecord = _origRec.Type();
+          if IsDefined(_origTypeRecord) {
+            this.enablePlayerVehicle(_origId, true, false);
+            GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_origId), _origTypeRecord.Type(), true);
+            this.vehicleDB.setVehicleUnlockState(_origId, true);
+          }
+        }
+        i += 1;
+      };
+    }
+
     this.showDebugMessage(">>> reapplyClaimedVehicles: complete");
   }
 
@@ -1010,37 +1079,19 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 
   public func refreshClaimedVehiclesOnLoad() -> Void {
     let m_vehicleSystem: ref<VehicleSystem> = GameInstance.GetVehicleSystem(this.player.GetGame());
-    let allVehiclesList: array<PlayerVehicle>;
-    let i = 0;
-
-    // Fetch the full player vehicle roster (includes mode-disabled vehicles,
-    // excludes vehicles that were sold or removed by other mods).
-    m_vehicleSystem.GetPlayerVehicles(allVehiclesList);
+    let i: Int32 = 0;
 
     while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {  
       let _this_vehicleUnlockState: Bool = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked;
       let _this_vehicleRecordID: TweakDBID = this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID;
 
-      // Verify the vehicle is still in the player's roster before restoring its state.
-      // Without this check a vehicle sold via another mod would be silently re-added on
-      // every session load because refreshClaimedVehiclesOnLoad runs before any
-      // refreshClaimedVehicles call can correct the stale vehicleUnlocked = true entry.
-      let bStillOwned: Bool = false;
-      let j: Int32 = 0;
-      while j < ArraySize(allVehiclesList) {
-        if allVehiclesList[j].recordID == _this_vehicleRecordID {
-          bStillOwned = true;
+      if _this_vehicleUnlockState {
+        let _rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_this_vehicleRecordID);
+        if IsDefined(_rec) {
+          this.showDebugMessage(">>> refreshClaimedVehiclesOnLoad: restoring vehicle: " + TDBID.ToStringDEBUG(_this_vehicleRecordID));
+          m_vehicleSystem.TogglePlayerActiveVehicle(Cast<GarageVehicleID>(_this_vehicleRecordID), _rec.Type().Type(), true);
+          this.enablePlayerVehicle(_this_vehicleRecordID, true, false);
         }
-        j += 1;
-      };
-
-      if bStillOwned {
-        this.enablePlayerVehicle(_this_vehicleRecordID, _this_vehicleUnlockState, false);
-      } else if _this_vehicleUnlockState {
-        // Vehicle is no longer owned; clear the stale unlock flag so it cannot
-        // be re-enabled by a later refreshClaimedVehiclesOnLoad call.
-        this.vehicleDB.vehiclesUnlockStateDB[i].vehicleUnlocked = false;
-        this.showDebugMessage(">>> refreshClaimedVehiclesOnLoad: sold vehicle pruned from unlock state: " + TDBID.ToStringDEBUG(_this_vehicleRecordID));
       }
 
       i += 1;
@@ -1090,6 +1141,7 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
         this.showDebugMessage(">>> Attempting to register vehicle: " + TDBID.ToStringDEBUG(this.matchVehicleRecordID));
         this.showDebugMessage(">>> Original claimed vehicle: " + TDBID.ToStringDEBUG(claimedVehicle.recordID));
         
+        this.enablePlayerVehicle( this.matchVehicleRecordID, true, false);
         GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(this.matchVehicleRecordID), claimedVehicle.vehicleType, true);
 
         // IMPORTANT: The game engine may map the requested variant to a different canonical variant.
@@ -1114,13 +1166,13 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
               this.showDebugMessage(">>> Requested tweakID: " + TDBID.ToStringDEBUG(actualRegisteredID));
               this.showDebugMessage(">>> Actually registered tweakID: " + TDBID.ToStringDEBUG(garageVehicles[k].recordID));
               actualRegisteredID = garageVehicles[k].recordID;
+              this.enablePlayerVehicle( actualRegisteredID, true, false);
+              GameInstance.GetVehicleSystem(this.player.GetGame()).TogglePlayerActiveVehicle(Cast<GarageVehicleID>(actualRegisteredID), claimedVehicle.vehicleType, true);
             }
             break;
           }
           k += 1;
         }
-
-        this.enablePlayerVehicle( actualRegisteredID, true, false);
 
         this.vehicleDB.setVehicleUnlockState(actualRegisteredID, true);
 
@@ -1273,6 +1325,45 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
    
   }
 
+  // Remove a vehicle from the claimed vehicles DB by ID (used when vehicle is evicted by game engine)
+  // This is called when a vehicle fails SetupData() validation and gets silently evicted
+  public func removeVehicleFromClaimed(_vehicleID: TweakDBID) -> Void {
+    let _rec: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(_vehicleID);
+    let _name: String = GetLocalizedItemNameByCName(_rec.DisplayName());
+    
+    this.showDebugMessage(">>> removeVehicleFromClaimed: " + _name + " [" + TDBID.ToStringDEBUG(_vehicleID) + "]");
+    
+    // Find and remove from vehiclesUnlockStateDB
+    let i: Int32 = 0;
+    while i < ArraySize(this.vehicleDB.vehiclesUnlockStateDB) {
+      if this.vehicleDB.vehiclesUnlockStateDB[i].vehicleRecordID == _vehicleID {
+        this.showDebugMessage(">>>   Removing from DB at index " + ToString(i));
+        ArrayErase(this.vehicleDB.vehiclesUnlockStateDB, i);
+        break;
+      }
+      i += 1;
+    }
+    
+    // Remove from originalGarage if present
+    i = 0;
+    while i < ArraySize(this.originalGarage) {
+      if this.originalGarage[i] == _vehicleID {
+        this.showDebugMessage(">>>   Removing from originalGarage");
+        ArrayErase(this.originalGarage, i);
+        break;
+      }
+      i += 1;
+    }
+    
+    // Clear lastVehicleRecordID if we just removed it
+    if _vehicleID == this.lastVehicleRecordID {
+      this.showDebugMessage(">>>   Clearing lastVehicleRecordID");
+      this.lastVehicleRecordID = t"";
+    }
+    
+    this.showDebugMessage(">>> removeVehicleFromClaimed: complete");
+  }
+
  
   private func checkPlayerFunds(price: Int32) -> Bool {
     let playerMoney: Int32; 
@@ -1310,13 +1401,17 @@ public class ClaimedVehicleTracking extends ScriptedPuppetPS {
 @if(!ModuleExists("Codeware"))
   public func enablePlayerVehicle(_vehicleId: TweakDBID, _enable: Bool, _despawnIfDisabling: Bool) -> Void {
       let _this_vehicleString: String = this.vehicleDB.lookupVehicleString(_vehicleId);
-      GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, _enable, _despawnIfDisabling );
+      if Equals(_this_vehicleString, "") && TDBID.IsValid(_vehicleId) {
+        _this_vehicleString = TDBID.ToStringDEBUG(_vehicleId);
+      }
+      if !Equals(_this_vehicleString, "") {
+        GameInstance.GetVehicleSystem(this.player.GetGame()).EnablePlayerVehicle( _this_vehicleString, _enable, _despawnIfDisabling );
+      }
   }
 
 @if(ModuleExists("Codeware"))
   public func enablePlayerVehicle(_vehicleId: TweakDBID, _enable: Bool, _despawnIfDisabling: Bool) -> Void { 
-      // this.showDebugMessage(">>> enablePlayerVehicle: codeware version");   
-      let vehicleSystem = GameInstance.GetVehicleSystem(GetGameInstance());
+      let vehicleSystem = GameInstance.GetVehicleSystem(this.player.GetGame());
       vehicleSystem.EnablePlayerVehicleID(_vehicleId, _enable, _despawnIfDisabling);
   }
 

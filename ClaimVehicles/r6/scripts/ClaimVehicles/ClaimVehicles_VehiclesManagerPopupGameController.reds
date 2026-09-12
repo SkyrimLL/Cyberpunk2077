@@ -81,7 +81,31 @@ public func forceRefreshVehicleList() -> Void {
       _playerPuppetPS.m_claimedVehicleTracking.printGarage();
     }
 
+    // Capture vehicle state BEFORE wrappedMethod for validation
+    let _preWrappedVehicles: array<PlayerVehicle>;
+    GameInstance.GetVehicleSystem(playerPuppet.GetGame()).GetPlayerUnlockedVehicles(_preWrappedVehicles);
+    let _preWrappedCount: Int32 = ArraySize(_preWrappedVehicles);
+    let _preWrappedTarget: TweakDBID = _playerPuppetPS.m_claimedVehicleTracking.lastVehicleRecordID;
+
     wrappedMethod(playerPuppet);
+
+    // VALIDATION: Check if a vehicle was evicted by SetupData()
+    // This happens with some NCTO faction vehicles that lack proper player-variant data
+    let _postWrappedVehicles: array<PlayerVehicle>;
+    GameInstance.GetVehicleSystem(playerPuppet.GetGame()).GetPlayerUnlockedVehicles(_postWrappedVehicles);
+    let _postWrappedCount: Int32 = ArraySize(_postWrappedVehicles);
+    
+    if _postWrappedCount == 0 && _preWrappedCount > 0 {
+      // Vehicle was evicted - likely invalid player variant
+      if (Equals(_playerPuppetPS.m_claimedVehicleTracking.summonMode, vehicleSummonMode.Random)) {
+        _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> ERROR: Vehicle evicted by SetupData during Random mode: " + TDBID.ToStringDEBUG(_preWrappedTarget));
+        _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>>   This vehicle lacks proper player-variant data and cannot be used in Random mode.");
+        _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>>   Removing from claimed vehicles DB to prevent future issues.");
+        
+        // Remove this problematic vehicle from the claimed DB
+        _playerPuppetPS.m_claimedVehicleTracking.removeVehicleFromClaimed(_preWrappedTarget);
+      }
+    }
 
     // SetupData() (called inside super.OnPlayerAttach inside wrappedMethod) may have
     // snapshotted the vehicle list before TogglePlayerActiveVehicle finished committing
@@ -96,6 +120,69 @@ public func forceRefreshVehicleList() -> Void {
       _playerPuppetPS.m_claimedVehicleTracking.showDebugMessage(">>> OnPlayerAttach: FINAL garage state after all processing:");
       _playerPuppetPS.m_claimedVehicleTracking.printGarage();
     }
+}
+
+@wrapMethod(VehiclesManagerPopupGameController)
+protected func Select(previous: ref<inkVirtualCompoundItemController>, next: ref<inkVirtualCompoundItemController>) -> Void {
+  let selectedVehicle: ref<VehiclesManagerListItemController> = next as VehiclesManagerListItemController;
+  if IsDefined(selectedVehicle) {
+    let selectedVehicleData: ref<VehicleListItemData> = selectedVehicle.GetVehicleData();
+    if IsDefined(selectedVehicleData) {
+      inkWidgetRef.SetOpacity(this.m_vehicleIconContainer, selectedVehicleData.m_repairTimeRemaining == 0.00 ? 1.00 : 0.08);
+      if IsDefined(selectedVehicleData.m_icon) {
+        InkImageUtils.RequestSetImage(this, this.m_vehicleIcon, selectedVehicleData.m_icon.GetID());
+      }
+      inkWidgetRef.SetVisible(this.m_repairOverlay, selectedVehicleData.m_repairTimeRemaining > 0.00);
+      inkWidgetRef.SetVisible(this.m_confirmButton, selectedVehicleData.m_repairTimeRemaining == 0.00);
+      inkTextRef.SetLocalizedTextScript(this.m_favoriteInputHint, selectedVehicleData.m_data.uiFavoriteIndex >= 0 ? "LocKey#96331" : "LocKey#95061");
+      return;
+    }
+  }
+  wrappedMethod(previous, next);
+}
+
+@replaceMethod(VehiclesManagerListItemController)
+protected cb func OnDataChanged(value: Variant) -> Bool {
+  let repairTextParams: ref<inkTextParams>;
+  this.m_vehicleData = FromVariant<ref<IScriptable>>(value) as VehicleListItemData;
+  if !IsDefined(this.m_vehicleData) {
+    return false;
+  }
+  let vehicleRecord: ref<Vehicle_Record> = TweakDBInterface.GetVehicleRecord(this.m_vehicleData.m_data.recordID);
+  if this.m_vehicleData.m_data.overrideDisplay {
+    inkImageRef.SetTexturePart(this.m_typeIcon, this.m_vehicleData.m_data.icon);
+  } else {
+    if Equals(this.m_vehicleData.m_data.vehicleType, gamedataVehicleType.Bike) {
+      inkImageRef.SetTexturePart(this.m_typeIcon, n"motorcycle");
+    } else {
+      if IsDefined(vehicleRecord) && IsDefined(vehicleRecord.VehDataPackageHandle()) && IsDefined(vehicleRecord.VehDataPackageHandle().DriverCombat()) && Equals(vehicleRecord.VehDataPackageHandle().DriverCombat().Type(), gamedataDriverCombatType.MountedWeapons) {
+        inkImageRef.SetTexturePart(this.m_typeIcon, n"vehicle_weaponized");
+      } else {
+        inkImageRef.SetTexturePart(this.m_typeIcon, n"car");
+      };
+    };
+  };
+  if IsDefined(vehicleRecord) {
+    inkWidgetRef.SetVisible(this.m_customizableIcon, vehicleRecord.HasVisualCustomization() && !vehicleRecord.VisualCustomizationTeaser());
+  } else {
+    inkWidgetRef.SetVisible(this.m_customizableIcon, false);
+  };
+  inkTextRef.SetLocalizedTextScript(this.m_label, this.m_vehicleData.m_displayName);
+  if this.m_vehicleData.m_repairTimeRemaining > 0.00 {
+    inkTextRef.SetText(this.m_repairTime, "{TIME,time,mm:ss}");
+    repairTextParams = new inkTextParams();
+    repairTextParams.AddTime("TIME", GameTime.MakeGameTime(0, 0, 0, Cast<Int32>(this.m_vehicleData.m_repairTimeRemaining)));
+    inkTextRef.SetTextParameters(this.m_repairTime, repairTextParams);
+    inkWidgetRef.SetVisible(this.m_repairTime, true);
+    this.GetRootWidget().SetState(n"Disabled");
+  } else {
+    inkWidgetRef.SetVisible(this.m_repairTime, false);
+    if this.m_vehicleData.m_data.overrideDisplay {
+      this.GetRootWidget().SetState(this.m_vehicleData.m_data.activeState);
+    } else {
+      this.GetRootWidget().SetState(n"Default");
+    };
+  };
 }
 
 //public class scannerDetailsGameController extends inkHUDGameController {

@@ -82,10 +82,9 @@ public let m_playerPuppet: ref<PlayerPuppet>;
 
     if (!this.MalwareAttack()) {
       this.SpawnVehiclesManagerPopupBlocking();
-    } else {
-      // Reset 'data term open' flag to allow activation again
-      _playerPuppetPS.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      
     }
+    // Reset 'data term open' flag to allow activation again
+    _playerPuppetPS.m_vehicleFasTravelTracking.iVehicleMenuOpen = false;      
   }
 
 

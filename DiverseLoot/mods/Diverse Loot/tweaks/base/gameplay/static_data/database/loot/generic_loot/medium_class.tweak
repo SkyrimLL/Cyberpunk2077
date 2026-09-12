@@ -56,8 +56,8 @@ MCL_decorative : MediumClass_Loot
 
 MCM_chemicals : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.HealingItemsTable", "LootTables.BoostersTable", "LootTables.MedicalJunkItemsTable"
@@ -66,8 +66,8 @@ MCM_chemicals : MediumClass_Loot
 
 MCM_freezer : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	queries = 
 	[
 		{
@@ -106,6 +106,7 @@ MCM_decorative : MediumClass_Loot
 
 MCM_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -129,6 +130,7 @@ MCM_equipment : MediumClass_Loot
 
 MCM_locker : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -152,8 +154,8 @@ MCM_locker : MediumClass_Loot
 
 MCM_ripperdoc : MIM_freezer
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -162,6 +164,7 @@ MCM_ripperdoc : MIM_freezer
 
 MCM_safe : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -337,6 +340,7 @@ MCS_decorative : MediumClass_Loot
 
 MCS_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -360,18 +364,18 @@ MCS_equipment : MediumClass_Loot
 
 MCS_first_aid : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
 MCS_freezer : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	queries = 
 	[
 		{
@@ -570,8 +574,8 @@ MRL_decorative : MediumClass_Loot
 
 MRM_chemicals : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -580,8 +584,8 @@ MRM_chemicals : MediumClass_Loot
 
 MRM_freezer : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	queries = 
 	[
 		{
@@ -624,6 +628,7 @@ MRM_decorative : MediumClass_Loot
 
 MRM_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -655,6 +660,7 @@ MRM_equipment : MediumClass_Loot
 
 MRM_locker : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -686,8 +692,8 @@ MRM_locker : MediumClass_Loot
 
 MRM_ripperdoc : MIM_freezer
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 1;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -696,6 +702,7 @@ MRM_ripperdoc : MIM_freezer
 
 MRM_safe : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -876,6 +883,7 @@ MRS_decorative : MediumClass_Loot
 
 MRS_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[ 
 		{
@@ -907,11 +915,11 @@ MRS_equipment : MediumClass_Loot
 
 MRS_first_aid : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
@@ -1069,8 +1077,8 @@ MIL_decorative : MediumClass_Loot
 
 MIM_chemicals : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -1079,8 +1087,8 @@ MIM_chemicals : MediumClass_Loot
 
 MIM_freezer : MediumClass_Loot
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	queries = 
 	[
 		{
@@ -1108,6 +1116,7 @@ MIM_decorative : MediumClass_Loot
 
 MIM_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1131,6 +1140,7 @@ MIM_equipment : MediumClass_Loot
 
 MIM_locker : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1154,8 +1164,8 @@ MIM_locker : MediumClass_Loot
 
 MIM_ripperdoc : MIM_freezer
 {
-	minItemsToLoot = 1;
-	maxItemsToLoot = 2;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
 		"LootTables.FirstAidKits"
@@ -1164,6 +1174,7 @@ MIM_ripperdoc : MIM_freezer
 
 MIM_safe : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancerRecipes"];
 	lootItems = 
 	[
 		{
@@ -1344,6 +1355,7 @@ MIS_decorative : MediumClass_Loot
 
 MIS_equipment : MediumClass_Loot
 {
+	lootTableInclusions = ["LootTables.SimpleFabricEnhancers"];
 	queries = 
 	[
 		{
@@ -1365,12 +1377,51 @@ MIS_equipment : MediumClass_Loot
 	];
 }
 
+SimpleFabricEnhancers : LootTable
+{
+	lootItems = 
+	[
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer01"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer02"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer03"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer04"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer05"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer06"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer07"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer08"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer09"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer10"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer11"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer12"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer13"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer14"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer15"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer16"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer17"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer18"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer19"; },
+		{ dropChance = 0.1; itemID = "Items.SimpleFabricEnhancer20"; }
+	];
+}
+
+SimpleFabricEnhancerRecipes : LootTable
+{
+	queries = 
+	[
+		{
+			dropChance = 0.2;
+			query = "Query.RecipeSimpleFabricEnhancerQuery";
+		}
+	];
+}
+
 MIS_first_aid : MediumClass_Loot
 {
-	maxItemsToLoot = 1;
+	minItemsToLoot = 2;
+	maxItemsToLoot = 4;
 	lootTableInclusions = 
 	[
-		"LootTables.FirstAidKits"
+		"LootTables.FirstAidKits", "LootTables.MedicalJunkItemsTable"
 	];
 }
 
