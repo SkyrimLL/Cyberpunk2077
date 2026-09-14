@@ -114,6 +114,8 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
     let maxAmount: Float;
     let itemType: gamedataItemType = gamedataItemType.Invalid;
     let eqSystem: wref<EquipmentSystem> = GameInstance.GetScriptableSystemsContainer(this.GetGame()).Get(n"EquipmentSystem") as EquipmentSystem;
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+    let _encumbranceTracker: ref<LimitedEncumbranceTracking>;
 
     if IsDefined(eqSystem) {
       itemData = evt.itemData;
@@ -128,6 +130,32 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
         };
       };
     };
+
+    // Weapon Limit System - Check if item being added is a weapon and enforce slot limits
+    _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
+    if IsDefined(_encumbranceTracker) && _encumbranceTracker.weaponLimitON && IsDefined(itemData) {
+      let slotCost: Float = _encumbranceTracker.GetWeaponSlotCost(itemData);
+      
+      // If this is a weapon being added
+      if slotCost > 0.0 {
+        // Check if we have capacity for this weapon
+        if !_encumbranceTracker.HasWeaponSlotCapacity(slotCost) {
+          if _encumbranceTracker.autoDropExcessWeapons {
+            // Drop the weapon - will need to handle this via quest system or other means
+            // For now, just log the message
+            if _encumbranceTracker.debugON {
+              _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Weapon limit reached - would need to drop weapon");
+            }
+          } else {
+            if _encumbranceTracker.debugON {
+              _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Weapon limit exceeded: " + ToString(itemData.GetName()));
+            }
+            let message: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_FULL(), "%VAL%", FloatToStringPrec(_encumbranceTracker.maxWeaponSlots, 1));
+            this.SetWarningMessage(message);
+          }
+        }
+      }
+    }
 
     wrappedMethod(evt);
 }

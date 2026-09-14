@@ -32,6 +32,7 @@ public class VehicleFastTravelTracking extends ScriptedPuppetPS {
 
   public let enableVehicleRecallKeyON: Bool;
   public let enableVehicleMenuKeyON: Bool;
+  public let enableVehicleMenuAtSubwayGatesON: Bool;
   // public let disableMetroFastTravelON: Bool;
 
   public let debugON: Bool;
@@ -78,6 +79,7 @@ public class VehicleFastTravelTracking extends ScriptedPuppetPS {
  
     this.enableVehicleRecallKeyON = this.config.enableVehicleRecallKeyON;
     this.enableVehicleMenuKeyON = this.config.enableVehicleMenuKeyON;
+    this.enableVehicleMenuAtSubwayGatesON = this.config.enableVehicleMenuAtSubwayGatesON;
     // this.disableMetroFastTravelON = this.config.disableMetroFastTravelON;
 
     this.warningsON = this.config.warningsON;

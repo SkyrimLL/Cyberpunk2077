@@ -27,23 +27,23 @@
   @runtimeProperty("ModSettings.description", "Turn ON to restore the vehicle garage menu on the 'V' key (instead of the Radio menu set by this mod).")
   let enableVehicleMenuKeyON: Bool = false; 
 
-  // @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
-  // @runtimeProperty("ModSettings.category", "Main switch")
-  // @runtimeProperty("ModSettings.category.order", "4")
-  // @runtimeProperty("ModSettings.displayName", "Disable Metro Fast Travel")
-  // @runtimeProperty("ModSettings.description", "Turn ON to REMOVE the Fast Travel option at Metro stations.")
-  // let disableMetroFastTravelON: Bool = false; 
+  @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
+  @runtimeProperty("ModSettings.category", "Main switch")
+  @runtimeProperty("ModSettings.category.order", "4")
+  @runtimeProperty("ModSettings.displayName", "Vehicle Menu at Subway Gates")
+  @runtimeProperty("ModSettings.description", "Turn ON to show the vehicle menu instead of the fast travel menu at subway gates.")
+  let enableVehicleMenuAtSubwayGatesON: Bool = false; 
 
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Malware System")
-  @runtimeProperty("ModSettings.category.order", "4")
+  @runtimeProperty("ModSettings.category.order", "5")
   @runtimeProperty("ModSettings.displayName", "Malware System Toggle")
   @runtimeProperty("ModSettings.description", "Turn ON to enable chances of malware attacks when using data terminals.")
   let malwareON: Bool = false; 
 
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Malware System")
-  @runtimeProperty("ModSettings.category.order", "5")
+  @runtimeProperty("ModSettings.category.order", "6")
   @runtimeProperty("ModSettings.displayName", "Chance of Low Level Malware")
   @runtimeProperty("ModSettings.description", "Percent chance using the data terminal will result in an malware infection (low difficulty).")
   @runtimeProperty("ModSettings.step", "5")
@@ -53,7 +53,7 @@
  
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Malware System")
-  @runtimeProperty("ModSettings.category.order", "6")
+  @runtimeProperty("ModSettings.category.order", "7")
   @runtimeProperty("ModSettings.displayName", "Chance of Mid Level Malware")
   @runtimeProperty("ModSettings.description", "Percent chance using the data terminal will result in a  malware infection (medium difficulty).")
   @runtimeProperty("ModSettings.step", "5")
@@ -63,7 +63,7 @@
  
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Malware System")
-  @runtimeProperty("ModSettings.category.order", "7")
+  @runtimeProperty("ModSettings.category.order", "8")
   @runtimeProperty("ModSettings.displayName", "Chance of High Level Malware")
   @runtimeProperty("ModSettings.description", "Percent chance using the data terminal will result in a malware infection (high difficulty).")
   @runtimeProperty("ModSettings.step", "5")
@@ -73,14 +73,14 @@
  
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Notifications")
-  @runtimeProperty("ModSettings.category.order", "8")
+  @runtimeProperty("ModSettings.category.order", "9")
   @runtimeProperty("ModSettings.displayName", "Display Warning Messages")
   @runtimeProperty("ModSettings.description", "Toggles warnings when hacking a vehicle is successful.")
   let warningsON: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "VEHICLES FAST TRAVEL")
   @runtimeProperty("ModSettings.category", "Testing only")
-  @runtimeProperty("ModSettings.category.order", "9")
+  @runtimeProperty("ModSettings.category.order", "10")
   @runtimeProperty("ModSettings.displayName", "Display Test Messages")
   @runtimeProperty("ModSettings.description", "Display Test Messages in the console and on screen")
   let debugON: Bool = true;

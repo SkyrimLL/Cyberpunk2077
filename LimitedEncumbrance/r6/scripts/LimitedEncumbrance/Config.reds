@@ -118,13 +118,58 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.description", "Changes the carry capacity display with how much you can carry.")
   let newEncumbranceDisplayON: Bool = true;
 
+  // Weapon Limit Settings
+
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  @runtimeProperty("ModSettings.category.order", "40")
+  @runtimeProperty("ModSettings.displayName", "Enable Weapon Slot Limit")
+  @runtimeProperty("ModSettings.description", "Enable the weapon slot limit system to restrict how many weapons you can carry based on their size category.")
+  let weaponLimitON: Bool = true;
+
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  @runtimeProperty("ModSettings.category.order", "41")
+  @runtimeProperty("ModSettings.displayName", "Max Weapon Slots")
+  @runtimeProperty("ModSettings.description", "Total weapon slots available (default 3).")
+  @runtimeProperty("ModSettings.step", "1")
+  @runtimeProperty("ModSettings.min", "1")
+  @runtimeProperty("ModSettings.max", "5")
+  let maxWeaponSlots: Int32 = 3;
+
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  @runtimeProperty("ModSettings.category.order", "42")
+  @runtimeProperty("ModSettings.displayName", "Heavy Weapon Slot Cost")
+  @runtimeProperty("ModSettings.description", "Slot cost for heavy weapons (e.g., 2.0 = 2 slots, 1.0 = 1 slot).")
+  @runtimeProperty("ModSettings.step", "0.1")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "5")
+  let heavyWeaponSlotCost: Float = 2.0;
+
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  @runtimeProperty("ModSettings.category.order", "43")
+  @runtimeProperty("ModSettings.displayName", "Small Blade Slot Cost")
+  @runtimeProperty("ModSettings.description", "Slot cost for small blades/melee (e.g., 0.5 = half a slot, 1.0 = 1 slot).")
+  @runtimeProperty("ModSettings.step", "0.1")
+  @runtimeProperty("ModSettings.min", "0")
+  @runtimeProperty("ModSettings.max", "5")
+  let smallBladeSlotCost: Float = 0.5;
+
+  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  @runtimeProperty("ModSettings.category.order", "44")
+  @runtimeProperty("ModSettings.displayName", "Auto-Drop Excess Weapons")
+  @runtimeProperty("ModSettings.description", "Automatically drop weapons when picking up a new one and weapon slots are full.")
+  let autoDropExcessWeapons: Bool = true;
+
   @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
   @runtimeProperty("ModSettings.category", "Testing only")
-  @runtimeProperty("ModSettings.category.order", "30")
+  @runtimeProperty("ModSettings.category.order", "90")
   @runtimeProperty("ModSettings.displayName", "Display Test Messages")
   @runtimeProperty("ModSettings.description", "Display Test Messages in the console and on screen")
   let debugON: Bool = true;
-
 
   // ── Listener registration ────────────────────────────────────────────────
 

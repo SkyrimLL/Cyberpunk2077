@@ -11,4 +11,11 @@ public class LimitedEncumbranceText {
 
   public static func LIGHTER() -> String { return "Warning: encumbrance restored"; }
 
+  // Weapon Limit System messages
+  // %VAL% is replaced with maximum weapon slots
+  public static func WEAPON_SLOTS_FULL() -> String { return "Weapon slots full! Maximum %VAL% slots"; }
+
+  // %VAL% is replaced with current/max weapon slots (e.g., "4.5 / 3.0")
+  public static func WEAPON_SLOTS_EXCEEDED() -> String { return "Too many weapons! Carrying %VAL% slots"; }
+
 }

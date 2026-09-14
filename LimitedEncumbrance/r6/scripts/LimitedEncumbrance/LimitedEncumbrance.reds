@@ -71,6 +71,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let currentCarryCapacity: Float; 
   public let lastCarryCapacity: Float; 
 
+  // Weapon Limit System
+  public let weaponLimitON: Bool;
+  public let maxWeaponSlots: Float;
+  public let heavyWeaponSlotCost: Float;
+  public let smallBladeSlotCost: Float;
+  public let autoDropExcessWeapons: Bool;
 
   public func init(player: wref<PlayerPuppet>) -> Void {
     this.reset(player);
@@ -149,6 +155,13 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     this.debugON = this.config.debugON;
     this.modON = this.config.modON;
     this.newEncumbranceDisplayON = this.config.newEncumbranceDisplayON;    
+
+    // Weapon Limit System
+    this.weaponLimitON = this.config.weaponLimitON;
+    this.maxWeaponSlots = Cast<Float>(this.config.maxWeaponSlots);
+    this.heavyWeaponSlotCost = this.config.heavyWeaponSlotCost;
+    this.smallBladeSlotCost = this.config.smallBladeSlotCost;
+    this.autoDropExcessWeapons = this.config.autoDropExcessWeapons;
   }  
 
   public func getPlayerSlotItemWeight(object: ref<GameObject>, slot: TweakDBID) -> Float {
@@ -935,7 +948,9 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     let hasExhaustedEffect: Bool;
     let hasEncumbranceEffect: Bool;
     let isApplyingRestricted: Bool; 
-    let ses: ref<StatusEffectSystem>; 
+    let ses: ref<StatusEffectSystem>;
+    let weaponSlotsExceeded: Bool = false;
+    let currentWeaponSlots: Float;
 
     this.currentInventoryWeight = this.player.m_curInventoryWeight;
 
@@ -944,7 +959,23 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     };
 
     this.calculateLimitedEncumbrance();
-    this.currentCarryCapacity = this.getCarryCapacity(); 
+    this.currentCarryCapacity = this.getCarryCapacity();
+
+    // Check if weapon slots are exceeded
+    if this.weaponLimitON {
+      currentWeaponSlots = this.CountWeaponSlots();
+      weaponSlotsExceeded = currentWeaponSlots > this.maxWeaponSlots;
+      
+      if (this.debugON && weaponSlotsExceeded) {
+        this.showDebugMessage("EvaluateEncumbrance: Weapon slots exceeded - " + FloatToStringPrec(currentWeaponSlots, 2) + " / " + FloatToStringPrec(this.maxWeaponSlots, 2));
+      }
+      
+      // Show warning immediately if weapon slots are exceeded
+      if (weaponSlotsExceeded && this.warningsON) {
+        let message: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_EXCEEDED(), "%VAL%", FloatToStringPrec(currentWeaponSlots, 1) + " / " + FloatToStringPrec(this.maxWeaponSlots, 1));
+        this.player.SetWarningMessage(message);
+      }
+    }
 
     ses = GameInstance.GetStatusEffectSystem(this.player.GetGame());
     hasExhaustedEffect = ses.HasStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.PlayerExhausted");
@@ -998,7 +1029,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           }
         }
 
-        if this.currentInventoryWeight <= this.currentCarryCapacity  {
+        // Remove effect only if both weight is OK AND weapon slots are OK
+        if this.currentInventoryWeight <= this.currentCarryCapacity && !weaponSlotsExceeded {
           if (this.debugON) { this.player.SetWarningMessage(LimitedEncumbranceText.LIGHTER()); }
           ses.RemoveStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
           this.showDebugMessage("EvaluateEncumbrance: REMOVING EncumbranceEffect"  ); 
@@ -1006,8 +1038,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         };
       } else {
           // if (debugON) { this.player.SetWarningMessage("hasEncumbranceEffect OFF"); }
-        if (this.currentInventoryWeight > this.currentCarryCapacity) && !isApplyingRestricted && !isLootBroken   { // && !hasEncumbranceEffect
-          if (this.warningsON) { this.player.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); }
+        // Apply effect if weight exceeded OR weapon slots exceeded
+        if ((this.currentInventoryWeight > this.currentCarryCapacity || weaponSlotsExceeded) && !isApplyingRestricted && !isLootBroken) {
+          // Only show weight-based warning here since weapon slots warning is shown above
+          if (!weaponSlotsExceeded && this.warningsON) { 
+            this.player.SetWarningMessage(LimitedEncumbranceText.OVERWEIGHT()); 
+          }
           ses.ApplyStatusEffect(this.player.GetEntityID(), t"BaseStatusEffect.Encumbered");
           this.showDebugMessage("EvaluateEncumbrance: APPLYING EncumbranceEffect"  ); 
 
@@ -1085,10 +1121,189 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
     return isImpersonating;
   }
+
+
+  // ─── Weapon Limit System ───────────────────────────────────────────────
+
+  public func GetWeaponSlotCost(itemData: ref<gameItemData>) -> Float {
+    // Returns the slot cost for a weapon (can be fractional, e.g., 0.5 for small blades, 2.0 for heavy weapons)
+    
+    if !IsDefined(itemData) {
+      return 0.0;
+    }
+
+    let itemType: gamedataItemType = itemData.GetItemType();
+    let slotCost: Float = 1.0; // Default slot cost
+
+    // Heavy weapons (2 slots) - larger, heavier weapons
+    if Equals(itemType, gamedataItemType.Wea_Shotgun) ||
+       Equals(itemType, gamedataItemType.Wea_ShotgunDual) ||
+       Equals(itemType, gamedataItemType.Wea_SniperRifle) ||
+       Equals(itemType, gamedataItemType.Wea_LightMachineGun) ||
+       Equals(itemType, gamedataItemType.Wea_HeavyMachineGun) ||
+       Equals(itemType, gamedataItemType.Wea_AssaultRifle) ||
+       Equals(itemType, gamedataItemType.Wea_Hammer) ||
+       Equals(itemType, gamedataItemType.Wea_Axe) ||
+       Equals(itemType, gamedataItemType.Wea_LongBlade) ||
+       Equals(itemType, gamedataItemType.Wea_TwoHandedClub) ||
+       Equals(itemType, gamedataItemType.Wea_GrenadeLauncher) {
+      slotCost = this.heavyWeaponSlotCost;
+    }
+    // Small blades (0.5 slots) - smaller, lighter melee weapons
+    else if Equals(itemType, gamedataItemType.Wea_Knife) ||
+            Equals(itemType, gamedataItemType.Wea_Katana) ||
+            Equals(itemType, gamedataItemType.Wea_Machete) ||
+            Equals(itemType, gamedataItemType.Wea_ShortBlade) {
+      slotCost = this.smallBladeSlotCost;
+    }
+    // Medium weapons (1 slot) - handguns, single-handed melee, rifles
+    else if Equals(itemType, gamedataItemType.Wea_Handgun) ||
+            Equals(itemType, gamedataItemType.Wea_Revolver) ||
+            Equals(itemType, gamedataItemType.Wea_Rifle) ||
+            Equals(itemType, gamedataItemType.Wea_PrecisionRifle) ||
+            Equals(itemType, gamedataItemType.Wea_SubmachineGun) ||
+            Equals(itemType, gamedataItemType.Wea_Sword) ||
+            Equals(itemType, gamedataItemType.Wea_Chainsword) ||
+            Equals(itemType, gamedataItemType.Wea_OneHandedClub) {
+      slotCost = 1.0;
+    }
+    // Default (1 slot) for other weapon types
+    else if Equals(itemType, gamedataItemType.Wea_Melee) {
+      slotCost = 1.0;
+    }
+    // Fists are not carried items - don't count toward weapon slots
+    else if Equals(itemType, gamedataItemType.Wea_Fists) {
+      return 0.0;
+    }
+    else {
+      // Non-weapon items return 0 slot cost
+      return 0.0;
+    }
+
+    if (this.debugON) {
+      this.showDebugMessage("::: GetWeaponSlotCost - itemType: " + ToString(itemType) + " slotCost: " + FloatToStringPrec(slotCost, 2));
+    }
+
+    return slotCost;
+  }
+
+  public func CountWeaponSlots() -> Float {
+    // Count total weapon slots currently being used (equipped and in inventory)
+    
+    let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(this.player.GetGame());
+    let equipmentSystem: ref<EquipmentSystem> = GameInstance.GetScriptableSystemsContainer(this.player.GetGame()).Get(n"EquipmentSystem") as EquipmentSystem;
+    let totalSlots: Float = 0.0;
+    let i: Int32 = 0;
+    let itemData: ref<gameItemData>;
+    let slotCost: Float;
+    let itemID: ItemID;
+    let countedItemIDs: array<ItemID>;  // Track counted items to avoid duplicates
+    
+    if !IsDefined(equipmentSystem) {
+      if (this.debugON) {
+        this.showDebugMessage("::: CountWeaponSlots - ERROR: EquipmentSystem not available");
+      }
+      return 0.0;
+    }
+    
+    // Get EquipmentSystemPlayerData
+    let playerData: ref<EquipmentSystemPlayerData> = equipmentSystem.GetPlayerData(this.player);
+    if !IsDefined(playerData) {
+      if (this.debugON) {
+        this.showDebugMessage("::: CountWeaponSlots - ERROR: PlayerData not available");
+      }
+      return 0.0;
+    }
+    
+    // Count weapons in inventory (all items)
+    let allItems: array<wref<gameItemData>>;
+    if transactionSystem.GetItemList(this.player, allItems) {
+      i = 0;
+      while i < ArraySize(allItems) {
+        itemData = allItems[i];
+        if IsDefined(itemData) {
+          slotCost = this.GetWeaponSlotCost(itemData);
+          // Only count if it's a weapon
+          if slotCost > 0.0 {
+            itemID = itemData.GetID();
+            
+            // Skip hidden/UI-hidden items that aren't really visible in inventory
+            if itemData.HasTag(n"HideInUI") || itemData.HasTag(n"HideInBackpackUI") || itemData.HasTag(n"Quest") || itemData.HasTag(n"TppHead") {
+              if (this.debugON) {
+                this.showDebugMessage("::: CountWeaponSlots - SKIPPING HIDDEN ITEM: " + ToString(itemData.GetName()) + " (has HideInUI/HideInBackpackUI/Quest/TppHead tag)");
+              }
+            } else {
+              // Check if we've already counted this ItemID to avoid duplicates
+              let alreadyCounted: Bool = false;
+              let j: Int32 = 0;
+              while j < ArraySize(countedItemIDs) {
+                if Equals(itemID, countedItemIDs[j]) {
+                  alreadyCounted = true;
+                  if (this.debugON) {
+                    this.showDebugMessage("::: CountWeaponSlots - SKIPPING DUPLICATE: " + ToString(itemData.GetName()) + " (ItemID already counted)");
+                  }
+                }
+                j = j + 1;
+              }
+              
+              if !alreadyCounted {
+                // Check if this weapon is equipped in one of the 3 weapon slots
+                let isEquipped: Bool = false;
+                let k: Int32 = 0;
+                while k < 3 {
+                  if Equals(itemID, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, k)) {
+                    isEquipped = true;
+                    if (this.debugON) {
+                      this.showDebugMessage("::: CountWeaponSlots - equipped slot " + ToString(k) + ": " + ToString(itemData.GetName()) + " cost: " + FloatToStringPrec(slotCost, 2));
+                    }
+                  }
+                  k = k + 1;
+                }
+                
+                // Count all weapons (both equipped and in inventory) but only once
+                totalSlots += slotCost;
+                ArrayPush(countedItemIDs, itemID);  // Mark as counted
+                
+                if (this.debugON) {
+                  if !isEquipped {
+                    this.showDebugMessage("::: CountWeaponSlots - inventory: " + ToString(itemData.GetName()) + " cost: " + FloatToStringPrec(slotCost, 2));
+                  }
+                }
+              }
+            }
+          }
+        }
+        i = i + 1;
+      }
+    } else {
+      if (this.debugON) {
+        this.showDebugMessage("::: CountWeaponSlots - WARNING: Could not get item list from TransactionSystem");
+      }
+    }
+
+    if (this.debugON) {
+      this.showDebugMessage("::: CountWeaponSlots - total: " + FloatToStringPrec(totalSlots, 2) + " / " + FloatToStringPrec(this.maxWeaponSlots, 2) + " (counted " + ToString(ArraySize(countedItemIDs)) + " unique weapons)");
+    }
+
+    return totalSlots;
+  }
+
+  public func HasWeaponSlotCapacity(slotCost: Float) -> Bool {
+    // Check if adding a weapon with given slot cost would exceed limit
+    
+    let currentSlots: Float = this.CountWeaponSlots();
+    let wouldExceed: Bool = (currentSlots + slotCost) > this.maxWeaponSlots;
+
+    if (this.debugON) {
+      this.showDebugMessage("::: HasWeaponSlotCapacity - current: " + FloatToStringPrec(currentSlots, 2) + " new cost: " + FloatToStringPrec(slotCost, 2) + " max: " + FloatToStringPrec(this.maxWeaponSlots, 2) + " wouldExceed: " + ToString(wouldExceed));
+    }
+
+    return !wouldExceed;
+  }
+
   
   private func showDebugMessage(debugMessage: String) {
-    // LogChannel(n"DEBUG", debugMessage ); 
+    LogChannel(n"DEBUG", debugMessage ); 
   }
 }
 
- 

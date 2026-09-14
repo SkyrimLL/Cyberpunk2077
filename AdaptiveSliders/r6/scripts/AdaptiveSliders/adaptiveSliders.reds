@@ -13,6 +13,7 @@ For redscript mod developers
   private final func SetData() -> Void {
     let itemData: ref<gameItemData>;
     let itemRecord: ref<Item_Record>;
+    let config: ref<AdaptiveSlidersConfig>;
     this.m_maxValue = this.m_data.maxValue;
     this.m_gameData = this.m_data.gameItemData;
     this.m_inventoryItem = this.m_data.inventoryItem;
@@ -25,21 +26,48 @@ For redscript mod developers
     this.m_choosenQuantity = 1;
 
     // Patch - Set slider to max items by default if dropping or selling
-    // LogChannel(n"DEBUG", ">>> this.m_actionType: '"+ToString(this.m_actionType)+"'"  );
-
-    switch this.m_actionType {
-      // case QuantityPickerActionType.TransferToPlayer: // Pick up?
-      // case QuantityPickerActionType.Buy: 
-      case QuantityPickerActionType.Drop:
-      case QuantityPickerActionType.Sell: 
-      case QuantityPickerActionType.Disassembly:
-      case QuantityPickerActionType.Craft:
-      case QuantityPickerActionType.TransferToStorage:
-        this.m_choosenQuantity = this.m_maxValue;
-        break;
-      default:
-        this.m_choosenQuantity = 1;
-        break;
+    config = AdaptiveSlidersConfig.Get();
+    if config.modON {
+      switch this.m_actionType {
+        case QuantityPickerActionType.Drop:
+          if config.setMaxOnDrop {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.Sell:
+          if config.setMaxOnSell {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.Disassembly:
+          if config.setMaxOnDisassembly {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.Craft:
+          if config.setMaxOnCraft {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.TransferToStorage:
+          if config.setMaxOnTransferToStorage {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.TransferToPlayer:
+          if config.setMaxOnTransferToPlayer {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        case QuantityPickerActionType.Buy:
+          if config.setMaxOnBuy {
+            this.m_choosenQuantity = this.m_maxValue;
+          };
+          break;
+        default:
+          this.m_choosenQuantity = 1;
+          break;
+      };
     };
     // End of patch
 
@@ -93,21 +121,64 @@ For redscript mod developers
     this.UpdatePriceText();
     this.UpdateWeight();
 
-    // Patch - Auto-click OK for some actions 
-
-    switch this.m_actionType {
-      // case QuantityPickerActionType.TransferToPlayer: // Pick up?
-      // case QuantityPickerActionType.Buy: 
-      // case QuantityPickerActionType.Drop:
-      // case QuantityPickerActionType.Sell: 
-      case QuantityPickerActionType.Disassembly:
-      // case QuantityPickerActionType.Craft:
-      // case QuantityPickerActionType.TransferToStorage:
-        this.Close(true);
-        break;
-      default:
-        this.GetRootWidget().SetVisible(true);
-        break;
+    // Patch - Auto-click OK for some actions
+    if config.modON {
+      switch this.m_actionType {
+        case QuantityPickerActionType.Drop:
+          if config.autoClickOnDrop {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.Sell:
+          if config.autoClickOnSell {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.Disassembly:
+          if config.autoClickOnDisassembly {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.Craft:
+          if config.autoClickOnCraft {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.TransferToStorage:
+          if config.autoClickOnTransferToStorage {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.TransferToPlayer:
+          if config.autoClickOnTransferToPlayer {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        case QuantityPickerActionType.Buy:
+          if config.autoClickOnBuy {
+            this.Close(true);
+          } else {
+            this.GetRootWidget().SetVisible(true);
+          };
+          break;
+        default:
+          this.GetRootWidget().SetVisible(true);
+          break;
+      };
+    } else {
+      this.GetRootWidget().SetVisible(true);
     };
     // End of patch
   }

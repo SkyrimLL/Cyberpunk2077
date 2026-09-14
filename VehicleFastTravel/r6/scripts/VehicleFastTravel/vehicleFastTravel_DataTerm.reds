@@ -7,8 +7,15 @@
     if Equals(this.GetFastravelDeviceType(), EFastTravelDeviceType.SubwayGate) && (!_playerPuppetPS.m_vehicleFasTravelTracking.modON) {
       this.UpdateFastTravelPointRecord();
       GameInstance.GetUISystem(this.GetGame()).RequestFastTravelMenu();
-    } else {
+    } else if Equals(this.GetFastravelDeviceType(), EFastTravelDeviceType.SubwayGate) && _playerPuppetPS.m_vehicleFasTravelTracking.enableVehicleMenuAtSubwayGatesON {
       this.RequestVehicleMenu();
+    } else {
+      if Equals(this.GetFastravelDeviceType(), EFastTravelDeviceType.SubwayGate) {
+        this.UpdateFastTravelPointRecord();
+        GameInstance.GetUISystem(this.GetGame()).RequestFastTravelMenu();
+      } else {
+        this.RequestVehicleMenu();
+      }
     }
  
   }

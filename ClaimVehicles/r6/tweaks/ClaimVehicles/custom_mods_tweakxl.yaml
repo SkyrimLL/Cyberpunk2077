@@ -633,3 +633,4 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.yv_a60_livery_trd
   - !append Vehicle.priora_se_bs_01
   - !append Vehicle.priora_se_bs_nkh_ed_01
+  - !append Vehicle.rs6

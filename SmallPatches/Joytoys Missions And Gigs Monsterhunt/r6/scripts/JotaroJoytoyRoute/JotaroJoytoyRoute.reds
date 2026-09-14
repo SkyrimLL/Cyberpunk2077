@@ -247,6 +247,7 @@ public class JJR_RouteBridge extends ScriptableSystem {
     let game = this.GetGameInstance();
     let qs = GameInstance.GetQuestsSystem(game);
     let attSystem = GameInstance.GetAttitudeSystem(game);
+    let player = GameInstance.GetPlayerSystem(game).GetLocalPlayerMainGameObject();
     if !IsDefined(qs) { return; };
 
     // Log("[JoytoysMissionsAndGigs:Monsterhunt] EndInfiltration: truce_active=" + ToString(qs.GetFact(n"jjr_jotaro_truce_active")));
@@ -254,7 +255,7 @@ public class JJR_RouteBridge extends ScriptableSystem {
       attSystem.SetAttitudeRelation(n"TygerClaws", n"player", IntEnum<EAIAttitude>(qs.GetFact(n"jjr_jotaro_previous_tyger_attitude")));
       attSystem.SetAttitudeRelation(n"kab_07_Tyger_Claws", n"player", IntEnum<EAIAttitude>(qs.GetFact(n"jjr_jotaro_previous_kab07_attitude")));
       attSystem.SetAttitudeRelation(n"tygerClaws_ow", n"player", IntEnum<EAIAttitude>(qs.GetFact(n"jjr_jotaro_previous_ow_attitude")));
-    };
+    }; 
 
     qs.SetFact(n"jjr_jotaro_truce_active", 0);
     qs.SetFact(n"jjr_jotaro_previous_tyger_attitude", 0);
