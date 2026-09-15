@@ -43,7 +43,7 @@ local PLAYER_CLONE_HIDDEN_Z_OFFSET = -10.0
 
 local RESTRICTIONS = {
     "GameplayRestriction.NoMovement",
-    -- "GameplayRestriction.NoCombat",
+    "GameplayRestriction.NoCombat",
     "GameplayRestriction.NoPhone",
     "GameplayRestriction.NoWorldInteractions"
 }

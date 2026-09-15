@@ -31,7 +31,7 @@
       "hallwayCowgirlPlayerPosition": { "x": -1030.302, "y": 1329.613, "z": 13.281, "w": 1.0 },
       "bedroomSexPosition": { "x": -1045.278, "y": 1343.613, "z": 13.378, "w": 1.0 },
       "bedroomCowgirlPosition": { "x": -1045.233, "y": 1343.808, "z": 13.378, "w": 1.0 },
-      "bedroomDoggyPosition": { "x": -1045.267, "y": 1343.662, "z": 13.378, "w": 1.0 },
+      "bedroomDoggyPosition": { "x": -1025.771, "y": 1350.111, "z": 13.378, "w": 1.0 },
       "entrySceneRotation": { "roll": 0.0, "pitch": 0.0, "yaw": 272.178 },
       "hallwayCowgirlRotation": { "roll": 0.0, "pitch": 0.0, "yaw": 177.961 },
       "bedroomSexRotation": { "roll": 0.0, "pitch": 0.0, "yaw": 257.037 },

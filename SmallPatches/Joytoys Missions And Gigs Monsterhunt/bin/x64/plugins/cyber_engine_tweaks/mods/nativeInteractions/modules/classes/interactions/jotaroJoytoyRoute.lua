@@ -71,7 +71,7 @@ local POSES = {
 }
 
 local function log(message)
-    -- print("[JoytoysMissionsAndGigs:Monsterhunt] " .. tostring(message))
+    print("[JoytoysMissionsAndGigs:Monsterhunt] " .. tostring(message))
 end
 
 local function quests()
@@ -215,7 +215,8 @@ function route:new(mod, project)
     o.hallwayCowgirlPlayerPosition = { x = -1030.302, y = 1329.613, z = 13.281, w = 1.0 }
     o.bedroomSexPosition = { x = -1045.278, y = 1343.613, z = 13.378, w = 1.0 }
     o.bedroomCowgirlPosition = { x = -1045.233, y = 1343.808, z = 13.378, w = 1.0 }
-    o.bedroomDoggyPosition = { x = -1045.267, y = 1343.662, z = 13.378, w = 1.0 }
+    -- o.bedroomDoggyPosition = { x = -1045.267, y = 1343.662, z = 13.378, w = 1.0 }
+    o.bedroomDoggyPosition = { x = -1025.771, y = 1350.111, z = 13.378, w = 1.0 }
     o.entrySceneRotation = { roll = 0.0, pitch = 0.0, yaw = 272.178 }
     o.hallwayCowgirlRotation = { roll = 0.0, pitch = 0.0, yaw = 177.961 }
     o.bedroomSexRotation = { roll = 0.0, pitch = 0.0, yaw = 257.037 }
@@ -340,26 +341,41 @@ local maintainCallCounter = 0
 
 function route:callBridge(methodName)
     local bridge = getBridge()
-    if not bridge then return false end
+    if not bridge then 
+        log("callBridge: bridge is unavailable")
+        return false 
+    end
     if methodName == "BeginInfiltration" then
         log("callBridge: dispatching BeginInfiltration")
     elseif methodName == "MaintainInfiltration" then
         maintainCallCounter = maintainCallCounter + 1
-        if maintainCallCounter % 10 == 1 then
-            log("callBridge: dispatching MaintainInfiltration (call #" .. maintainCallCounter .. ")")
-        end
+        -- if maintainCallCounter % 10 == 1 then
+        --     log("callBridge: dispatching MaintainInfiltration (call #" .. maintainCallCounter .. ")")
+        -- end
+    elseif methodName == "NeutralizeInfiltration" then
+        log("callBridge: dispatching NeutralizeInfiltration")
     end
     local ok, result = pcall(function()
         if methodName == "CanStart" then return bridge:CanStart() end
         if methodName == "BeginInfiltration" then return bridge:BeginInfiltration() end
         if methodName == "MaintainInfiltration" then return bridge:MaintainInfiltration() end
+        if methodName == "NeutralizeInfiltration" then 
+            log("callBridge: about to call bridge:NeutralizeInfiltration()")
+            local result = bridge:NeutralizeInfiltration()
+            log("callBridge: bridge:NeutralizeInfiltration() returned: " .. tostring(result))
+            return result
+        end
         if methodName == "EndInfiltration" then return bridge:EndInfiltration() end
         return false
     end)
     if not ok then
-        log("Bridge call failed: " .. tostring(methodName))
+        log("Bridge call failed with error: " .. tostring(result) .. " for method: " .. tostring(methodName))
         return false
     end
+    if methodName ~= "MaintainInfiltration" then
+        log("Bridge call succeeded, result=" .. tostring(result) .. " for method: " .. tostring(methodName))
+    end
+    
     return result ~= false
 end
 
@@ -556,6 +572,7 @@ end
 function route:completeStage(roleName)
     local roleData = self:getRole(roleName)
     if not roleData then return self:failStart("completed an unknown stage") end
+    log("Completing stage: " .. tostring(roleName) .. " (nextStage=" .. roleData.nextStage .. ")")
     utils.removeSaveLock()
     self.activeRole = nil
     self.encounterStartedAt = 0.0
@@ -571,8 +588,13 @@ function route:completeStage(roleName)
     elseif roleName == "bedroom_sex" then
         screenMessage("Stay on the bed. Jotaro wants you on top.", 5.0)
     elseif roleName == "bedroom_cowgirl" then
-        screenMessage("One more Tyger Claw is waiting nearby.", 5.0)
+        screenMessage("One more Tyger Claw is waiting in the back room to film a movie.", 5.0)
+        -- Neutralize attitudes before the final doggy stage starts while truce is still active
+        -- This prevents combat from triggering during the last scene cleanup
+        log("BEDROOM_COWGIRL COMPLETE - Calling NeutralizeInfiltration() before final stage")
+        self:callBridge("NeutralizeInfiltration")
     elseif roleName == "bedroom_doggy" then
+        -- Last sequence completed
         setFact(FACT.complete, 1)
         screenMessage("I think they are bored of me for now. I just need to find the right time to kill Jotaro.", 9.0)
         log("All route scenes complete; the Ho-Oh truce stays active until Jotaro is killed")
@@ -748,6 +770,9 @@ function route:onUpdate(_playerPosition)
     self.sceneDirector.update(directorDelta)
 
     local result = self.sceneDirector.consumeResult()
+    if result then
+        log("Scene result received: outcome=" .. tostring(result.outcome) .. ", state=" .. getFact(FACT.state) .. ", activeRole=" .. tostring(self.activeRole))
+    end
     if result and getFact(FACT.state) == 2 then
         if result.outcome == "completed" then
             self:completeStage(self.activeRole)
