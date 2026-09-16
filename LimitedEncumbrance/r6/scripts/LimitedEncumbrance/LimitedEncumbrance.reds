@@ -958,9 +958,6 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
       this.currentInventoryWeight = 0.00;
     };
 
-    this.calculateLimitedEncumbrance();
-    this.currentCarryCapacity = this.getCarryCapacity();
-
     // Check if weapon slots are exceeded
     if this.weaponLimitON {
       currentWeaponSlots = this.CountWeaponSlots();
@@ -974,6 +971,16 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
       if (weaponSlotsExceeded && this.warningsON) {
         let message: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_EXCEEDED(), "%VAL%", FloatToStringPrec(currentWeaponSlots, 1) + " / " + FloatToStringPrec(this.maxWeaponSlots, 1));
         this.player.SetWarningMessage(message);
+      }
+    }
+
+    this.calculateLimitedEncumbrance();
+    this.currentCarryCapacity = this.getCarryCapacity();
+
+    if this.weaponLimitON {
+      if weaponSlotsExceeded {
+        // Artificially force carry capacity to 0 when weapon slots are exceeded
+        this.currentCarryCapacity = 0.0;
       }
     }
 
@@ -1303,7 +1310,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   
   private func showDebugMessage(debugMessage: String) {
-    LogChannel(n"DEBUG", debugMessage ); 
+    // LogChannel(n"DEBUG", debugMessage ); 
   }
 }
 

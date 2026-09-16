@@ -134,6 +134,20 @@ public class JJR_RouteBridge extends ScriptableSystem {
     let isNeutralized = qs.GetFact(n"jjr_jotaro_attitudes_neutral") > 0;
     let targetAttitude = isNeutralized ? EAIAttitude.AIA_Neutral : EAIAttitude.AIA_Friendly;
 
+    // Random chance to breach cover when neutralized with slowly increasing likelihood
+    if isNeutralized {
+      let maintainCallCount = qs.GetFact(n"jjr_maintain_call_count") + 1;
+      qs.SetFact(n"jjr_maintain_call_count", maintainCallCount);
+      
+      if maintainCallCount % 10 == 0 {
+        let breachCycles = maintainCallCount / 10;
+        let breachChance = 5 + (breachCycles * 2); // Start at 5%, increase by 2% per cycle
+        if RandRange(1, 100) < breachChance {
+          targetAttitude = EAIAttitude.AIA_Hostile;
+        };
+      };
+    };
+
     // kab_07 NPCs are split across multiple attitude groups (the open-world
     // TygerClaws group plus quest-specific kab_07_Tyger_Claws/tygerClaws_ow
     // groups on the upper floors); all three must be maintained at target attitude.
