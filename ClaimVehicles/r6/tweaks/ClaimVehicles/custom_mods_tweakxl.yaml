@@ -634,3 +634,5 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.priora_se_bs_01
   - !append Vehicle.priora_se_bs_nkh_ed_01
   - !append Vehicle.rs6
+  - !append Vehicle.rr_cullinan_mansory_01 
+  - !append Vehicle.genesis_x_base 

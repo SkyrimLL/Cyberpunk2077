@@ -157,11 +157,11 @@ public class LimitedEncumbranceConfig {
   @runtimeProperty("ModSettings.max", "5")
   let smallBladeSlotCost: Float = 0.5;
 
-  @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
-  @runtimeProperty("ModSettings.category", "Weapon Limit System")
-  @runtimeProperty("ModSettings.category.order", "44")
-  @runtimeProperty("ModSettings.displayName", "Auto-Drop Excess Weapons")
-  @runtimeProperty("ModSettings.description", "Automatically drop weapons when picking up a new one and weapon slots are full.")
+  // @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")
+  // @runtimeProperty("ModSettings.category", "Weapon Limit System")
+  // @runtimeProperty("ModSettings.category.order", "44")
+  // @runtimeProperty("ModSettings.displayName", "Auto-Drop Excess Weapons")
+  // @runtimeProperty("ModSettings.description", "Automatically drop weapons when picking up a new one and weapon slots are full.")
   let autoDropExcessWeapons: Bool = true;
 
   @runtimeProperty("ModSettings.mod", "LIMITED ENCUMBRANCE")

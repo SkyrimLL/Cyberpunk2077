@@ -1,6 +1,10 @@
 @addField(PlayerPuppetPS)
 public let m_limitedEncumbranceTracking: ref<LimitedEncumbranceTracking>;
 
+// Event for delayed encumbrance evaluation to ensure weight is updated
+public class EvaluateEncumbranceDelayedEvent extends Event {
+}
+
 @addMethod(PlayerPuppetPS)
   private final func InitLimitedEncumbranceSystem(playerPuppet: ref<GameObject>) -> Void {
     // set up tracker if it doesn't exist
@@ -55,8 +59,9 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
     _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
     _encumbranceTracker.refreshConfig();
 
-    // Do not apply weight effect if player equipment weight is 0 - likely at start of game
-    if (_encumbranceTracker.calculatePlayerEquipmentWeights() == 0.0) {
+    // Only skip for a zero equipment weight during the initial load window, not on every call
+    // (a player with nothing equipped/no equipped weapon legitimately has 0 equipment weight)
+    if (_encumbranceTracker.needsInitialWeightCheck && _encumbranceTracker.calculatePlayerEquipmentWeights() == 0.0) {
       return;
     }
 
@@ -68,6 +73,8 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
 
       _encumbranceTracker.currentInventoryWeight = this.m_curInventoryWeight;
 
+      // applyWeightEffects already handles weapon slot checks internally (forces carry capacity
+      // to 0 and applies/removes Encumbered effect + warning when slots are exceeded)
       _encumbranceTracker.applyWeightEffects(isLootBroken);
 
     } else {
@@ -100,11 +107,29 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
 @addMethod(PlayerPuppet)
   protected cb func OnInitialWeightCheckEvent(evt: ref<InitialWeightCheckEvent>) -> Bool {
     if IsDefined(evt.tracker) {
+      // Lift the load-window guard regardless of equipment weight so later calls always evaluate
+      evt.tracker.needsInitialWeightCheck = false;
       this.EvaluateEncumbrance();
       if (evt.tracker.debugON) {
         evt.tracker.showDebugMessage("[LimitedEncumbrance] Initial weight check executed after player load delay");
       }
     }
+    return true;
+  }
+
+@addMethod(PlayerPuppet)
+  protected cb func OnEvaluateEncumbranceDelayedEvent(evt: ref<EvaluateEncumbranceDelayedEvent>) -> Bool {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+    let _encumbranceTracker: ref<LimitedEncumbranceTracking>;
+    
+    _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
+    if IsDefined(_encumbranceTracker) && _encumbranceTracker.debugON {
+      _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] OnEvaluateEncumbranceDelayedEvent fired - evaluating encumbrance and weapon slots");
+    }
+    
+    // Evaluate weight effects and weapon slots together
+    this.EvaluateEncumbrance();
+    
     return true;
   }
 
@@ -131,34 +156,40 @@ public final func EvaluateEncumbrance(opt isLootBroken: Bool) -> Void {
       };
     };
 
-    // Weapon Limit System - Check if item being added is a weapon and enforce slot limits
+    // Re-evaluate encumbrance for ANY item change (picks up, drops, looting, etc)
+    // Use QueueEvent which auto-dispatches to OnEvaluateEncumbranceDelayedEvent handler by naming convention
     _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
-    if IsDefined(_encumbranceTracker) && _encumbranceTracker.weaponLimitON && IsDefined(itemData) {
-      let slotCost: Float = _encumbranceTracker.GetWeaponSlotCost(itemData);
-      
-      // If this is a weapon being added
-      if slotCost > 0.0 {
-        // Check if we have capacity for this weapon
-        if !_encumbranceTracker.HasWeaponSlotCapacity(slotCost) {
-          if _encumbranceTracker.autoDropExcessWeapons {
-            // Drop the weapon - will need to handle this via quest system or other means
-            // For now, just log the message
-            if _encumbranceTracker.debugON {
-              _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Weapon limit reached - would need to drop weapon");
-            }
-          } else {
-            if _encumbranceTracker.debugON {
-              _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Weapon limit exceeded: " + ToString(itemData.GetName()));
-            }
-            let message: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_FULL(), "%VAL%", FloatToStringPrec(_encumbranceTracker.maxWeaponSlots, 1));
-            this.SetWarningMessage(message);
-          }
-        }
+    if IsDefined(_encumbranceTracker) && _encumbranceTracker.modON {
+      let delayedEvalEvent: ref<EvaluateEncumbranceDelayedEvent> = new EvaluateEncumbranceDelayedEvent();
+      if _encumbranceTracker.debugON {
+        _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Queueing delayed encumbrance evaluation from OnItemChangedEvent");
       }
+      this.QueueEvent(delayedEvalEvent);
     }
 
     wrappedMethod(evt);
 }
+
+// Additional handler for looting from containers/ground - ensures evaluation even if OnItemChangedEvent is batched
+@wrapMethod(PlayerPuppet)
+  protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
+    let _playerPuppetPS: ref<PlayerPuppetPS> = this.GetPS();
+    let _encumbranceTracker: ref<LimitedEncumbranceTracking>;
+    let itemData: ref<gameItemData>;
+
+    // Re-evaluate encumbrance when item is added (looting, picking up, etc)
+    // Use QueueEvent which auto-dispatches to OnEvaluateEncumbranceDelayedEvent handler by naming convention
+    _encumbranceTracker = _playerPuppetPS.m_limitedEncumbranceTracking;
+    if IsDefined(_encumbranceTracker) && _encumbranceTracker.modON {
+      let delayedEvalEvent: ref<EvaluateEncumbranceDelayedEvent> = new EvaluateEncumbranceDelayedEvent();
+      if _encumbranceTracker.debugON {
+        _encumbranceTracker.showDebugMessage("[LimitedEncumbrance] Queueing delayed encumbrance evaluation from OnItemAddedToInventory");
+      }
+      this.QueueEvent(delayedEvalEvent);
+    }
+
+    wrappedMethod(evt);
+  }
 
 // -- PlayerPuppet
 // @replaceMethod(EquipmentBaseTransition) 

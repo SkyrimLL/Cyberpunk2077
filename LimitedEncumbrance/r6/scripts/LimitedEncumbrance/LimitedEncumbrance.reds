@@ -77,6 +77,8 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public let heavyWeaponSlotCost: Float;
   public let smallBladeSlotCost: Float;
   public let autoDropExcessWeapons: Bool;
+  public let lastWeaponSlotCount: Float;
+  public let lastWeaponSlotsExceededState: Bool;
 
   public func init(player: wref<PlayerPuppet>) -> Void {
     this.reset(player);
@@ -84,7 +86,9 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   private func reset(player: wref<PlayerPuppet>) -> Void {
     this.player = player;
-    this.needsInitialWeightCheck = false;
+    this.needsInitialWeightCheck = true;
+    this.lastWeaponSlotCount = -1.0;
+    this.lastWeaponSlotsExceededState = false;
 
     this.refreshConfig();
 
@@ -162,6 +166,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     this.heavyWeaponSlotCost = this.config.heavyWeaponSlotCost;
     this.smallBladeSlotCost = this.config.smallBladeSlotCost;
     this.autoDropExcessWeapons = this.config.autoDropExcessWeapons;
+    // Do NOT reset weapon slot tracking here - only on initial init
   }  
 
   public func getPlayerSlotItemWeight(object: ref<GameObject>, slot: TweakDBID) -> Float {
@@ -930,12 +935,20 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
   public func printEncumbrance(playerWeight: Float) -> String {
     let carryCapacity: Float; 
     let encumbranceMsg: String;
+    let availableCapacity: Int32;
 
     // this.player.m_curInventoryWeight
     carryCapacity = this.getCarryCapacity();
 
+    // If weapon slots are filled, display 0 available capacity (display only - doesn't affect actual capacity)
+    if (this.weaponLimitON && this.lastWeaponSlotsExceededState) {
+      availableCapacity = 0;
+    } else {
+      availableCapacity = Cast<Int32>(carryCapacity) - Cast<Int32>(playerWeight);
+    }
+
     if (this.newEncumbranceDisplayON) {
-      return IntToString(Cast<Int32>(carryCapacity) - Cast<Int32>(playerWeight)) + " (" + IntToString(Cast<Int32>(carryCapacity)) + ")";
+      return IntToString(availableCapacity) + " (" + IntToString(Cast<Int32>(carryCapacity)) + ")";
       } else {
       return IntToString(Cast<Int32>(playerWeight)) + " / " + IntToString(Cast<Int32>(carryCapacity)); 
       }
@@ -967,11 +980,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
         this.showDebugMessage("EvaluateEncumbrance: Weapon slots exceeded - " + FloatToStringPrec(currentWeaponSlots, 2) + " / " + FloatToStringPrec(this.maxWeaponSlots, 2));
       }
       
-      // Show warning immediately if weapon slots are exceeded
-      if (weaponSlotsExceeded && this.warningsON) {
-        let message: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_EXCEEDED(), "%VAL%", FloatToStringPrec(currentWeaponSlots, 1) + " / " + FloatToStringPrec(this.maxWeaponSlots, 1));
-        this.player.SetWarningMessage(message);
-      }
+      // WARNING: Do NOT show warning here - it's shown in OnItemChangedEvent to avoid duplicates
     }
 
     this.calculateLimitedEncumbrance();
@@ -1067,6 +1076,27 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
       this.lastInventoryWeight = this.currentInventoryWeight;
       this.lastCarryCapacity = this.currentCarryCapacity;
+
+      // Handle weapon slots exceeded state transitions and warnings
+      if this.weaponLimitON {
+        // Check if weapon slots state just changed
+        if (weaponSlotsExceeded && !this.lastWeaponSlotsExceededState) {
+          // Weapon slots just became exceeded - show warning
+          if (this.warningsON) {
+            let weaponMessage: String = StrReplace(LimitedEncumbranceText.WEAPON_SLOTS_EXCEEDED(), "%VAL%", FloatToStringPrec(currentWeaponSlots, 1) + " / " + FloatToStringPrec(this.maxWeaponSlots, 1));
+            this.player.SetWarningMessage(weaponMessage);
+          }
+          this.showDebugMessage("EvaluateEncumbrance: Weapon slots EXCEEDED");
+        } else if (!weaponSlotsExceeded && this.lastWeaponSlotsExceededState) {
+          // Weapon slots were just freed up
+          if (this.debugON) {
+            this.player.SetWarningMessage("Weapon slots available again");
+          }
+          this.showDebugMessage("EvaluateEncumbrance: Weapon slots now available");
+        }
+        // Update state for next check
+        this.lastWeaponSlotsExceededState = weaponSlotsExceeded;
+      }
 
     // }    
 
