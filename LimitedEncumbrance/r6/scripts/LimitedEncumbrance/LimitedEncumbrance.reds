@@ -1179,8 +1179,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
        Equals(itemType, gamedataItemType.Wea_LightMachineGun) ||
        Equals(itemType, gamedataItemType.Wea_HeavyMachineGun) ||
        Equals(itemType, gamedataItemType.Wea_AssaultRifle) ||
+       Equals(itemType, gamedataItemType.Wea_Rifle) ||
+       Equals(itemType, gamedataItemType.Wea_PrecisionRifle) ||
        Equals(itemType, gamedataItemType.Wea_Hammer) ||
        Equals(itemType, gamedataItemType.Wea_Axe) ||
+       Equals(itemType, gamedataItemType.Wea_Katana) ||
+       Equals(itemType, gamedataItemType.Wea_Machete) ||
        Equals(itemType, gamedataItemType.Wea_LongBlade) ||
        Equals(itemType, gamedataItemType.Wea_TwoHandedClub) ||
        Equals(itemType, gamedataItemType.Wea_GrenadeLauncher) {
@@ -1188,16 +1192,12 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
     }
     // Small blades (0.5 slots) - smaller, lighter melee weapons
     else if Equals(itemType, gamedataItemType.Wea_Knife) ||
-            Equals(itemType, gamedataItemType.Wea_Katana) ||
-            Equals(itemType, gamedataItemType.Wea_Machete) ||
             Equals(itemType, gamedataItemType.Wea_ShortBlade) {
       slotCost = this.smallBladeSlotCost;
     }
     // Medium weapons (1 slot) - handguns, single-handed melee, rifles
     else if Equals(itemType, gamedataItemType.Wea_Handgun) ||
             Equals(itemType, gamedataItemType.Wea_Revolver) ||
-            Equals(itemType, gamedataItemType.Wea_Rifle) ||
-            Equals(itemType, gamedataItemType.Wea_PrecisionRifle) ||
             Equals(itemType, gamedataItemType.Wea_SubmachineGun) ||
             Equals(itemType, gamedataItemType.Wea_Sword) ||
             Equals(itemType, gamedataItemType.Wea_Chainsword) ||
@@ -1263,9 +1263,24 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
           // Only count if it's a weapon
           if slotCost > 0.0 {
             itemID = itemData.GetID();
-            
-            // Skip hidden/UI-hidden items that aren't really visible in inventory
-            if itemData.HasTag(n"HideInUI") || itemData.HasTag(n"HideInBackpackUI") || itemData.HasTag(n"Quest") || itemData.HasTag(n"TppHead") {
+
+            // Check if this weapon is equipped in one of the 3 weapon slots first - equipped
+            // melee weapons (e.g. small blades) can carry TppHead/HideInUI tags for their
+            // held-weapon model variant, so equip status must override the hidden-item skip
+            let isEquipped: Bool = false;
+            let k: Int32 = 0;
+            while k < 3 {
+              if Equals(itemID, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, k)) {
+                isEquipped = true;
+                if (this.debugON) {
+                  this.showDebugMessage("::: CountWeaponSlots - equipped slot " + ToString(k) + ": " + ToString(itemData.GetName()) + " cost: " + FloatToStringPrec(slotCost, 2));
+                }
+              }
+              k = k + 1;
+            }
+
+            // Skip hidden/UI-hidden items that aren't really visible in inventory, unless equipped
+            if !isEquipped && (itemData.HasTag(n"HideInUI") || itemData.HasTag(n"HideInBackpackUI") || itemData.HasTag(n"Quest") || itemData.HasTag(n"TppHead")) {
               if (this.debugON) {
                 this.showDebugMessage("::: CountWeaponSlots - SKIPPING HIDDEN ITEM: " + ToString(itemData.GetName()) + " (has HideInUI/HideInBackpackUI/Quest/TppHead tag)");
               }
@@ -1284,19 +1299,6 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
               }
               
               if !alreadyCounted {
-                // Check if this weapon is equipped in one of the 3 weapon slots
-                let isEquipped: Bool = false;
-                let k: Int32 = 0;
-                while k < 3 {
-                  if Equals(itemID, playerData.GetItemInEquipSlot(gamedataEquipmentArea.Weapon, k)) {
-                    isEquipped = true;
-                    if (this.debugON) {
-                      this.showDebugMessage("::: CountWeaponSlots - equipped slot " + ToString(k) + ": " + ToString(itemData.GetName()) + " cost: " + FloatToStringPrec(slotCost, 2));
-                    }
-                  }
-                  k = k + 1;
-                }
-                
                 // Count all weapons (both equipped and in inventory) but only once
                 totalSlots += slotCost;
                 ArrayPush(countedItemIDs, itemID);  // Mark as counted
@@ -1340,7 +1342,7 @@ public class LimitedEncumbranceTracking extends ScriptedPuppetPS {
 
   
   private func showDebugMessage(debugMessage: String) {
-    // LogChannel(n"DEBUG", debugMessage ); 
+    LogChannel(n"DEBUG", debugMessage ); 
   }
 }
 

@@ -636,3 +636,11 @@ Vehicle.vehicle_list.list:
   - !append Vehicle.rs6
   - !append Vehicle.rr_cullinan_mansory_01 
   - !append Vehicle.genesis_x_base 
+  - !append Vehicle.yv_r31_customisable
+  - !append Vehicle.yv_r31_livery_custom
+  - !append Vehicle.yv_r31_livery_groupa
+  - !append Vehicle.yv_r31_livery_kodak
+  - !append Vehicle.yv_r31_livery_kwanon
+  - !append Vehicle.yv_r31_livery_nismo
+  - !append Vehicle.yv_r31_livery_nissan
+  - !append Vehicle.extr_hyperx_01
